@@ -14,7 +14,7 @@ import { Log } from '@athenna/logger'
 import { runCommand } from './runCommand'
 import { File, Folder, String } from '@secjs/utils'
 
-export class MakeHelper {
+export class TemplateHelper {
   private static templatesFolder = new Folder(
     join(__dirname, '..', '..', 'templates'),
   ).loadSync()

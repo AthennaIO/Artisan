@@ -14,7 +14,7 @@ import { existsSync } from 'fs'
 import { Command } from '../Command'
 import { Log } from '@athenna/logger'
 import { File, Path } from '@secjs/utils'
-import { MakeHelper } from '../../Utils/MakeHelper'
+import { TemplateHelper } from '../../Utils/TemplateHelper'
 
 export class Middleware extends Command {
   /**
@@ -37,8 +37,8 @@ export class Middleware extends Command {
 
     process.stdout.write(chalk.bold.green('[ MAKING MIDDLEWARE ]\n'))
 
-    name = MakeHelper.normalizeName(name, 'Middleware')
-    const template = MakeHelper.getTemplate('__name__Middleware', options)
+    name = TemplateHelper.normalizeName(name, 'Middleware')
+    const template = TemplateHelper.getTemplate('__name__Middleware', options)
 
     if (!template) {
       Log.error(
@@ -48,9 +48,9 @@ export class Middleware extends Command {
       return
     }
 
-    const replacedName = MakeHelper.replaceTemplateName(name, template.base)
+    const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
     const path = Path.app(`Http/Middlewares/${replacedName}`)
-    const content = MakeHelper.replaceTemplateValues(
+    const content = TemplateHelper.replaceTemplateValues(
       name,
       template.getContentSync(),
     )
@@ -72,7 +72,7 @@ export class Middleware extends Command {
     )
 
     if (options.lint) {
-      await MakeHelper.runEslintOnFile('Middleware', middleware.path)
+      await TemplateHelper.runEslintOnFile('Middleware', middleware.path)
     }
   }
 }

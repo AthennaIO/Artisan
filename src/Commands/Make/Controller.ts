@@ -14,7 +14,7 @@ import { existsSync } from 'fs'
 import { Command } from '../Command'
 import { Log } from '@athenna/logger'
 import { File, Path } from '@secjs/utils'
-import { MakeHelper } from '../../Utils/MakeHelper'
+import { TemplateHelper } from '../../Utils/TemplateHelper'
 
 export class Controller extends Command {
   /**
@@ -35,8 +35,8 @@ export class Controller extends Command {
   async handle(name: string, options: any): Promise<void> {
     process.stdout.write(chalk.bold.green('[ MAKING CONTROLLER ]\n'))
 
-    name = MakeHelper.normalizeName(name, 'Controller')
-    const template = MakeHelper.getTemplate('__name__Controller', options)
+    name = TemplateHelper.normalizeName(name, 'Controller')
+    const template = TemplateHelper.getTemplate('__name__Controller', options)
 
     if (!template) {
       Log.error(
@@ -46,9 +46,9 @@ export class Controller extends Command {
       return
     }
 
-    const replacedName = MakeHelper.replaceTemplateName(name, template.base)
+    const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
     const path = Path.app(`Http/Controllers/${replacedName}`)
-    const content = MakeHelper.replaceTemplateValues(
+    const content = TemplateHelper.replaceTemplateValues(
       name,
       template.getContentSync(),
     )
@@ -70,7 +70,7 @@ export class Controller extends Command {
     )
 
     if (options.lint) {
-      await MakeHelper.runEslintOnFile('Controller', controller.path)
+      await TemplateHelper.runEslintOnFile('Controller', controller.path)
     }
   }
 }
