@@ -13,6 +13,12 @@ import { exec as ChildProcessExec } from 'child_process'
 const exec = promisify(ChildProcessExec)
 
 export class Exec {
+  /**
+   * Execute a command of child process exec as promise.
+   *
+   * @param command
+   * @return void
+   */
   static async command(command: string): Promise<void> {
     await exec(command)
   }

@@ -14,6 +14,7 @@ import { Log } from '@athenna/logger'
 import { Exec } from 'src/Utils/Exec'
 import { Command as Commander } from 'commander'
 import { NodeExecException } from '../Exceptions/NodeExecException'
+import { Config } from '@athenna/config'
 
 export abstract class Command {
   /**
@@ -34,24 +35,18 @@ export abstract class Command {
   public abstract handle(...args: any[]): Promise<void>
 
   /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @return {void}
-   */
-  protected setFlags(commander: Commander): Commander {
-    return commander
-  }
-
-  /**
    * Create a simple log with Chalk API.
    *
    * @return {void}
    */
-  protected simpleLog(message: string, ...chalkArgs: string[]): void {
+  public simpleLog(message: string, ...chalkArgs: string[]): void {
     let colors = chalk
 
     chalkArgs.forEach(arg => (colors = colors[arg]))
+
+    if (Config.get('logging.channels.console.driver') === 'null') {
+      return
+    }
 
     process.stdout.write('\n' + colors(message) + '\n')
   }
@@ -61,7 +56,7 @@ export abstract class Command {
    *
    * @return {void}
    */
-  protected info(message: string, options?: any): void {
+  public info(message: string, options?: any): void {
     Log.channel('console').info(message, options)
   }
 
@@ -70,7 +65,7 @@ export abstract class Command {
    *
    * @return {void}
    */
-  protected warn(message: string, options?: any): void {
+  public warn(message: string, options?: any): void {
     Log.channel('console').warn(message, options)
   }
 
@@ -79,7 +74,7 @@ export abstract class Command {
    *
    * @return {void}
    */
-  protected error(message: string, options?: any): void {
+  public error(message: string, options?: any): void {
     Log.channel('console').error(message, options)
   }
 
@@ -88,7 +83,7 @@ export abstract class Command {
    *
    * @return {void}
    */
-  protected debug(message: string, options?: any): void {
+  public debug(message: string, options?: any): void {
     Log.channel('console').debug(message, options)
   }
 
@@ -97,7 +92,7 @@ export abstract class Command {
    *
    * @return {void}
    */
-  protected success(message: string, options?: any): void {
+  public success(message: string, options?: any): void {
     Log.channel('console').success(message, options)
   }
 
@@ -106,7 +101,7 @@ export abstract class Command {
    *
    * @return {ora.Ora}
    */
-  protected createSpinner(options: string | ora.Options | undefined): ora.Ora {
+  public createSpinner(options: string | ora.Options | undefined): ora.Ora {
     return ora(options)
   }
 
@@ -117,7 +112,7 @@ export abstract class Command {
    * @param message
    * @protected
    */
-  protected async execCommand(command: string, message?: string) {
+  public async execCommand(command: string, message?: string) {
     const spinner = this.createSpinner(message)
 
     if (message) {
@@ -138,5 +133,15 @@ export abstract class Command {
 
       throw new NodeExecException(command, stdout, stderr)
     }
+  }
+
+  /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  protected setFlags(commander: Commander): Commander {
+    return commander
   }
 }

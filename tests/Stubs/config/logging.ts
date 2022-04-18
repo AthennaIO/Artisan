@@ -30,7 +30,7 @@ export default {
 
   channels: {
     console: {
-      driver: 'console',
+      driver: 'null',
       formatter: 'cli',
       streamType: 'stdout',
       formatterConfig: {
