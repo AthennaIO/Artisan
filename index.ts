@@ -7,4 +7,10 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/Architect'
+export * from './src/Commands/Command'
+
+export * from './src/Facades/Architect'
+
+export * from './src/Kernels/ConsoleKernel'
+
+export * from './src/Providers/ArchitectProvider'
