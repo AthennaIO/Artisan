@@ -7,4 +7,7 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/Architect'
+import { Facade } from '@athenna/ioc'
+import { Architect as IArchitect } from '../Architect'
+
+export const Architect = Facade.createFor<IArchitect>('Athenna/Core/Architect')
