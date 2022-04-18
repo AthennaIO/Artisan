@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Architect } from '../Architect'
+import { Architect } from 'src/Architect'
 import { ServiceProvider } from '@athenna/ioc'
 
 export class ArchitectProvider extends ServiceProvider {

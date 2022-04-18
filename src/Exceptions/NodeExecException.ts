@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Exception } from '@secjs/utils'
 import { Log } from '@athenna/logger'
+import { Exception } from '@secjs/utils'
 
 export class NodeExecException extends Exception {
   public constructor(command: string, stdout: string, stderr: string) {

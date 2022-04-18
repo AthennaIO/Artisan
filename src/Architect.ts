@@ -16,6 +16,11 @@ import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
 export class Architect {
+  /**
+   * Commander API instance.
+   *
+   * @private
+   */
   private readonly commander: Commander
 
   /**

@@ -8,7 +8,7 @@
  */
 
 import { parse } from 'path'
-import { Command } from '../Command'
+import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
 export class Eslint extends Command {

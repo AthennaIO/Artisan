@@ -12,9 +12,9 @@ import chalk from 'chalk'
 
 import { Log } from '@athenna/logger'
 import { Exec } from 'src/Utils/Exec'
-import { Command as Commander } from 'commander'
-import { NodeExecException } from '../Exceptions/NodeExecException'
 import { Config } from '@athenna/config'
+import { Command as Commander } from 'commander'
+import { NodeExecException } from 'src/Exceptions/NodeExecException'
 
 export abstract class Command {
   /**
