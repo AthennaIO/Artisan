@@ -10,16 +10,15 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
-import { Command } from 'commander'
 import { Config } from '@athenna/config'
 import { version } from '../package.json'
-import { Controller } from './Commands/Make/Controller'
+import { Command as Commander } from 'commander'
 
 export class Architect {
-  private readonly commander: Command
+  private readonly commander: Commander
 
   public constructor() {
-    this.commander = new Command()
+    this.commander = new Commander()
 
     const appNameFiglet = figlet.textSync(Config.get('app.name'))
     const appNameFigletColorized = chalkRainbow(appNameFiglet)
@@ -27,8 +26,19 @@ export class Architect {
     process.stdout.write(appNameFigletColorized + '\n')
 
     this.commander.version(`v${version}`, '-v, --version')
+  }
 
-    this.registerDefaults()
+  /**
+   * Call any command from Architect.
+   *
+   * @return Promise<void>
+   */
+  async call(command: string) {
+    await this.commander.parseAsync([
+      'node', // This will be ignored by commander
+      'architect', // This will be ignored by commander
+      ...command.split(' '),
+    ])
   }
 
   /**
@@ -36,17 +46,19 @@ export class Architect {
    *
    * @return Promise<void>
    */
-  getCommander(): Command {
+  getCommander(): Commander {
     return this.commander
   }
 
   /**
-   * Register the default Architect commands.
+   * Register the command inside commander instance.
    *
    * @return {void}
    */
-  registerDefaults(): void {
-    new Controller().register()
+  register(callback: (commander: Commander) => void): void {
+    const commander = this.getCommander()
+
+    callback(commander)
   }
 
   /**

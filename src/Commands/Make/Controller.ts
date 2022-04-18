@@ -7,13 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import chalk from 'chalk'
-
 import { parse } from 'path'
 import { existsSync } from 'fs'
 import { Command } from '../Command'
-import { Log } from '@athenna/logger'
 import { File, Path } from '@secjs/utils'
+import { Command as Commander } from 'commander'
+import { Architect } from 'src/Facades/Architect'
 import { TemplateHelper } from '../../Utils/TemplateHelper'
 
 export class Controller extends Command {
@@ -33,13 +32,13 @@ export class Controller extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    process.stdout.write(chalk.bold.green('[ MAKING CONTROLLER ]\n'))
+    this.simpleLog('[ MAKING CONTROLLER ]', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Controller')
     const template = TemplateHelper.getTemplate('__name__Controller', options)
 
     if (!template) {
-      Log.error(
+      this.error(
         `Template for extension ({yellow} "${options.extension}") has not been found.`,
       )
 
@@ -54,7 +53,7 @@ export class Controller extends Command {
     )
 
     if (existsSync(path)) {
-      Log.error(
+      this.error(
         `The controller ({yellow} "${
           parse(path).name
         }") already exists. Try using another name.`,
@@ -65,12 +64,30 @@ export class Controller extends Command {
 
     const controller = await new File(path, content).create()
 
-    Log.success(
+    this.success(
       `Controller ({yellow} "${controller.name}") successfully created.`,
     )
 
     if (options.lint) {
-      await TemplateHelper.runEslintOnFile('Controller', controller.path)
+      await Architect.call(
+        `eslint:fix ${controller.path} --resource Controller`,
+      )
     }
+  }
+
+  /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  protected setFlags(commander: Commander): Commander {
+    return commander
+      .option(
+        '-e, --extension <extension>',
+        'Current extension available: ts',
+        'ts',
+      )
+      .option('--no-lint', 'Do not run eslint in the controller', true)
   }
 }

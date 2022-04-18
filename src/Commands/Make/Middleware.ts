@@ -7,13 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import chalk from 'chalk'
-
 import { parse } from 'path'
 import { existsSync } from 'fs'
 import { Command } from '../Command'
-import { Log } from '@athenna/logger'
 import { File, Path } from '@secjs/utils'
+import { Command as Commander } from 'commander'
+import { Architect } from 'src/Facades/Architect'
 import { TemplateHelper } from '../../Utils/TemplateHelper'
 
 export class Middleware extends Command {
@@ -35,13 +34,13 @@ export class Middleware extends Command {
   async handle(name: string, options: any): Promise<void> {
     // TODO Add middleware to namedMiddlewares object of HttpKernel
 
-    process.stdout.write(chalk.bold.green('[ MAKING MIDDLEWARE ]\n'))
+    this.simpleLog('[ MAKING MIDDLEWARE ]', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Middleware')
     const template = TemplateHelper.getTemplate('__name__Middleware', options)
 
     if (!template) {
-      Log.error(
+      this.error(
         `Template for extension ({yellow} "${options.extension}") has not been found.`,
       )
 
@@ -56,7 +55,7 @@ export class Middleware extends Command {
     )
 
     if (existsSync(path)) {
-      Log.error(
+      this.error(
         `The middleware ({yellow} "${
           parse(path).name
         }") already exists. Try using another name.`,
@@ -67,12 +66,30 @@ export class Middleware extends Command {
 
     const middleware = await new File(path, content).create()
 
-    Log.success(
+    this.success(
       `Middleware ({yellow} "${middleware.name}") successfully created.`,
     )
 
     if (options.lint) {
-      await TemplateHelper.runEslintOnFile('Middleware', middleware.path)
+      await Architect.call(
+        `eslint:fix ${middleware.path} --resource Middleware`,
+      )
     }
+  }
+
+  /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  protected setFlags(commander: Commander): Commander {
+    return commander
+      .option(
+        '-e, --extension <extension>',
+        'Current extension available: ts',
+        'ts',
+      )
+      .option('--no-lint', 'Do not run eslint in the middleware', true)
   }
 }

@@ -12,7 +12,9 @@ import '@athenna/ioc'
 import { existsSync } from 'fs'
 import { Config } from '@athenna/config'
 import { Folder, Path } from '@secjs/utils'
-import { Middleware } from 'src/Commands/Make/Middleware'
+import { Kernel } from 'tests/Stubs/Kernel'
+import { Architect } from 'src/Facades/Architect'
+import { ArchitectProvider } from 'src/Providers/ArchitectProvider'
 import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 
 describe('\n MakeMiddlewareTest', () => {
@@ -21,13 +23,12 @@ describe('\n MakeMiddlewareTest', () => {
 
     await Config.load()
     new LoggerProvider().register()
+    new ArchitectProvider().register()
+    await new Kernel().registerCommands()
   })
 
   it('should be able to create a middleware file', async () => {
-    await new Middleware().handle('TestMiddleware', {
-      extension: 'ts',
-      lint: true,
-    })
+    await Architect.call('make:middleware TestMiddleware')
 
     const path = Path.app('Http/Middlewares/TestMiddleware.ts')
 
@@ -35,15 +36,8 @@ describe('\n MakeMiddlewareTest', () => {
   }, 60000)
 
   it('should throw an error when the file already exists', async () => {
-    await new Middleware().handle('TestMiddleware', {
-      extension: 'ts',
-      lint: true,
-    })
-
-    await new Middleware().handle('TestMiddleware', {
-      extension: 'ts',
-      lint: true,
-    })
+    await Architect.call('make:middleware TestMiddleware -e ts')
+    await Architect.call('make:middleware TestMiddleware -e ts')
   }, 60000)
 
   afterEach(async () => {

@@ -12,7 +12,7 @@ export default {
   |
   */
 
-  default: 'cli',
+  default: 'console',
 
   /*
   |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ export default {
   */
 
   channels: {
-    cli: {
+    console: {
       driver: 'console',
       formatter: 'cli',
       streamType: 'stdout',
