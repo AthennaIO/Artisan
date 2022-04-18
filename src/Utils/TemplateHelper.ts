@@ -15,6 +15,11 @@ import { runCommand } from './runCommand'
 import { File, Folder, String } from '@secjs/utils'
 
 export class TemplateHelper {
+  /**
+   * The templates' folder instance of architect.
+   *
+   * @private
+   */
   private static templatesFolder = new Folder(
     join(__dirname, '..', '..', 'templates'),
   ).loadSync()
