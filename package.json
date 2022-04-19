@@ -1,12 +1,12 @@
 {
-  "name": "@athenna/architect",
+  "name": "@athenna/artisan",
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
-  "repository": "https://github.com/AthennaIO/Architect.git",
-  "bugs": "https://github.com/AthennaIO/Architect/issues",
-  "homepage": "https://github.com/AthennaIO/Architect#readme",
+  "repository": "https://github.com/AthennaIO/Artisan.git",
+  "bugs": "https://github.com/AthennaIO/Artisan/issues",
+  "homepage": "https://github.com/AthennaIO/Artisan#readme",
   "scripts": {
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s . -o .",
     "test": "npm run lint:fix && cross-env NODE_TS=true cross-env NODE_ENV=testing jest --verbose --runInBand",

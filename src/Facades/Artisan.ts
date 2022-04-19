@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -8,6 +8,6 @@
  */
 
 import { Facade } from '@athenna/ioc'
-import { Architect as IArchitect } from '../Architect'
+import { Artisan as IArtisan } from 'src/Artisan'
 
-export const Architect = Facade.createFor<IArchitect>('Athenna/Core/Architect')
+export const Artisan = Facade.createFor<IArtisan>('Athenna/Core/Artisan')

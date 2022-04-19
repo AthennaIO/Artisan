@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -15,7 +15,7 @@ import { version } from '../package.json'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
-export class Architect {
+export class Artisan {
   /**
    * Commander API instance.
    *
@@ -24,9 +24,9 @@ export class Architect {
   private readonly commander: Commander
 
   /**
-   * Creates a new instance of Architect
+   * Creates a new instance of Artisan
    *
-   * @return {Architect}
+   * @return {Artisan}
    */
   public constructor() {
     this.commander = new Commander()
@@ -45,20 +45,20 @@ export class Architect {
   }
 
   /**
-   * Call any command from Architect.
+   * Call any command from Artisan.
    *
    * @return Promise<void>
    */
   async call(command: string) {
     await this.commander.parseAsync([
       'node', // This will be ignored by commander
-      'architect', // This will be ignored by commander
+      'artisan', // This will be ignored by commander
       ...command.split(' '),
     ])
   }
 
   /**
-   * Get the commander instance of Architect.
+   * Get the commander instance of Artisan.
    *
    * @return Promise<void>
    */

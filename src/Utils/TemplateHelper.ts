@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -14,7 +14,7 @@ import { File, Folder, String } from '@secjs/utils'
 
 export class TemplateHelper {
   /**
-   * The templates' folder instance of architect.
+   * The templates' folder instance of artisan.
    *
    * @private
    */

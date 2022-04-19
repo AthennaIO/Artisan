@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -9,8 +9,8 @@
 
 export * from './src/Commands/Command'
 
-export * from './src/Facades/Architect'
+export * from './src/Facades/Artisan'
 
 export * from './src/Kernels/ConsoleKernel'
 
-export * from './src/Providers/ArchitectProvider'
+export * from './src/Providers/ArtisanProvider'

@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -7,16 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import { Architect } from 'src/Architect'
+import { Artisan } from 'src/Artisan'
 import { ServiceProvider } from '@athenna/ioc'
 
-export class ArchitectProvider extends ServiceProvider {
+export class ArtisanProvider extends ServiceProvider {
   /**
    * Register any application services.
    *
    * @return void
    */
   public register() {
-    this.container.instance('Athenna/Core/Architect', new Architect())
+    this.container.instance('Athenna/Core/Artisan', new Artisan())
   }
 }

@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -8,8 +8,8 @@
  */
 
 import { resolveModule } from '@secjs/utils'
+import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
-import { Architect } from 'src/Facades/Architect'
 
 export abstract class ConsoleKernel {
   /**
@@ -20,7 +20,7 @@ export abstract class ConsoleKernel {
   protected abstract commands: Command[] | Promise<any>[]
 
   /**
-   * Register all the commands to the architect.
+   * Register all the commands to the artisan.
    *
    * @return void
    */
@@ -34,7 +34,7 @@ export abstract class ConsoleKernel {
 
       Command = ioc.safeUse(`App/Commands/${Command.name}`)
 
-      Architect.register(commander => {
+      Artisan.register(commander => {
         commander = commander
           .command(Command.signature)
           .description(Command.description)

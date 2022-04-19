@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -13,8 +13,8 @@ import { existsSync } from 'fs'
 import { Config } from '@athenna/config'
 import { Folder, Path } from '@secjs/utils'
 import { Kernel } from 'tests/Stubs/Kernel'
-import { Architect } from 'src/Facades/Architect'
-import { ArchitectProvider } from 'src/Providers/ArchitectProvider'
+import { Artisan } from 'src/Facades/Artisan'
+import { ArtisanProvider } from 'src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 
 describe('\n MakeControllerTest', () => {
@@ -23,12 +23,12 @@ describe('\n MakeControllerTest', () => {
 
     await Config.load()
     new LoggerProvider().register()
-    new ArchitectProvider().register()
+    new ArtisanProvider().register()
     await new Kernel().registerCommands()
   })
 
   it('should be able to create a controller file', async () => {
-    await Architect.call('make:controller TestController')
+    await Artisan.call('make:controller TestController')
 
     const path = Path.app('Http/Controllers/TestController.ts')
 
@@ -36,8 +36,8 @@ describe('\n MakeControllerTest', () => {
   }, 60000)
 
   it('should throw an error when the file already exists', async () => {
-    await Architect.call('make:controller TestController -e ts')
-    await Architect.call('make:controller TestController -e ts')
+    await Artisan.call('make:controller TestController -e ts')
+    await Artisan.call('make:controller TestController -e ts')
   }, 60000)
 
   afterEach(async () => {

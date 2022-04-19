@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -12,7 +12,7 @@ import { existsSync } from 'fs'
 import { File, Path } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
-import { Architect } from 'src/Facades/Architect'
+import { Artisan } from 'src/Facades/Artisan'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
 
 export class Middleware extends Command {
@@ -71,9 +71,7 @@ export class Middleware extends Command {
     )
 
     if (options.lint) {
-      await Architect.call(
-        `eslint:fix ${middleware.path} --resource Middleware`,
-      )
+      await Artisan.call(`eslint:fix ${middleware.path} --resource Middleware`)
     }
   }
 

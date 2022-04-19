@@ -1,5 +1,5 @@
 /**
- * @athenna/architect
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -12,9 +12,9 @@ import '@athenna/ioc'
 import { existsSync } from 'fs'
 import { Config } from '@athenna/config'
 import { Kernel } from 'tests/Stubs/Kernel'
-import { Architect } from 'src/Facades/Architect'
+import { Artisan } from 'src/Facades/Artisan'
 import { File, Folder, Path } from '@secjs/utils'
-import { ArchitectProvider } from 'src/Providers/ArchitectProvider'
+import { ArtisanProvider } from 'src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 
 describe('\n ConsoleTest', () => {
@@ -23,14 +23,14 @@ describe('\n ConsoleTest', () => {
 
     await Config.load()
     new LoggerProvider().register()
-    new ArchitectProvider().register()
+    new ArtisanProvider().register()
     await new Kernel().registerCommands()
 
     await import('../Stubs/routes/console')
   })
 
   it('should be able to execute commands from routes/console', async () => {
-    await Architect.call('make:hello helloWorld')
+    await Artisan.call('make:hello helloWorld')
 
     const path = Path.pwd('helloWorld.txt')
 
