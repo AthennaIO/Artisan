@@ -19,6 +19,7 @@ export class Kernel extends ConsoleKernel {
     import('src/Commands/Make/Eslint'),
     import('src/Commands/Make/Facade'),
     import('src/Commands/Make/Command'),
+    import('src/Commands/Make/Service'),
     import('src/Commands/Make/Provider'),
     import('src/Commands/Make/Middleware'),
     import('src/Commands/Make/Controller'),

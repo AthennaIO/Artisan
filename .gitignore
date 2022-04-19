@@ -130,3 +130,9 @@ build
 
 # MacOS folder mapper file
 .DS_Store
+
+# Testing stubs that could fail
+./app
+./config
+./routes
+./providers

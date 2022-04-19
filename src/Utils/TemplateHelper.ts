@@ -206,4 +206,66 @@ export class TemplateHelper {
       `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
     )
   }
+
+  /**
+   * Replace the content of the interface property inside a file.
+   *
+   * @param path
+   * @param matcher
+   * @param resource
+   * @param importAlias
+   */
+  static async replaceInterfaceProperty(
+    path: string,
+    matcher: string,
+    resource: string,
+    importString: string,
+  ) {
+    const file = new File(path).loadSync()
+    let content = file.getContentSync().toString()
+    content = `${importString}\n${content}`
+
+    const matches = content.match(
+      new RegExp(`(?:${matcher}\\s*)(?:\\{[^}]*\\})`),
+    )
+
+    if (!matches) {
+      return
+    }
+
+    const match = matches[0]
+
+    const arrayString = match
+      .replace(/ /g, '')
+      .replace(matcher, '')
+      .replace(/(\{|\})/g, '')
+      .split('\n')
+
+    arrayString.shift()
+
+    /**
+     * In case "matcher" is an empty interface.
+     * Example: "matcher" {}
+     */
+    if (arrayString.length) {
+      const last = () => arrayString.length - 1
+
+      if (arrayString[last()] === '') {
+        arrayString.pop()
+      }
+    }
+
+    const name = String.toCamelCase(resource)
+
+    arrayString.push(`${name}:${String.toPascalCase(resource)}`)
+
+    content = content.replace(match, `${matcher}{${arrayString.join('\n')}}`)
+
+    await file.remove()
+    await new File(file.path, Buffer.from(content)).create()
+
+    await Artisan.call(
+      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
+    )
+  }
 }
