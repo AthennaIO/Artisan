@@ -28,11 +28,11 @@ export abstract class ConsoleKernel {
     for (const module of this.commands) {
       let Command = resolveModule(await module)
 
-      if (!ioc.hasDependency(`App/Commands/${Command.name}`)) {
-        ioc.bind(`App/Commands/${Command.name}`, Command)
+      if (!ioc.hasDependency(`App/Console/Commands/${Command.name}`)) {
+        ioc.bind(`App/Console/Commands/${Command.name}`, Command)
       }
 
-      Command = ioc.safeUse(`App/Commands/${Command.name}`)
+      Command = ioc.safeUse(`App/Console/Commands/${Command.name}`)
 
       Artisan.register(commander => {
         commander = commander
