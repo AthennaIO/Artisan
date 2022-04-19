@@ -94,7 +94,7 @@ export class Command extends AbstractCommand {
       )
       .option(
         '--no-register',
-        'Do not register the middleware inside Kernel',
+        'Do not register the command inside Kernel',
         true,
       )
       .option('--no-lint', 'Do not run eslint in the middleware', true)
