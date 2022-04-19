@@ -10,21 +10,21 @@
 import { parse } from 'path'
 import { existsSync } from 'fs'
 import { Artisan } from 'src/Facades/Artisan'
-import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 import { File, Path } from '@secjs/utils'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
+import { Command as AbstractCommand } from 'src/Commands/Command'
 
-export class Middleware extends Command {
+export class Command extends AbstractCommand {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'make:middleware <name>'
+  protected signature = 'make:command <name>'
 
   /**
    * The console command description.
    */
-  protected description = 'Make a new middleware file.'
+  protected description = 'Make a new command file.'
 
   /**
    * Execute the console command.
@@ -32,10 +32,10 @@ export class Middleware extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING MIDDLEWARE ]', 'bold', 'green')
+    this.simpleLog('[ MAKING COMMAND ]', 'bold', 'green')
 
-    name = TemplateHelper.normalizeName(name, 'Middleware')
-    const template = TemplateHelper.getTemplate('__name__Middleware', options)
+    name = TemplateHelper.normalizeName(name, 'Command')
+    const template = TemplateHelper.getTemplate('__name__Command', options)
 
     if (!template) {
       this.error(
@@ -46,7 +46,7 @@ export class Middleware extends Command {
     }
 
     const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
-    const path = Path.app(`Http/Middlewares/${replacedName}`)
+    const path = Path.app(`Console/Commands/${replacedName}`)
     const content = TemplateHelper.replaceTemplateValues(
       name,
       template.getContentSync(),
@@ -54,7 +54,7 @@ export class Middleware extends Command {
 
     if (existsSync(path)) {
       this.error(
-        `The middleware ({yellow} "${
+        `The command ({yellow} "${
           parse(path).name
         }") already exists. Try using another name.`,
       )
@@ -62,22 +62,19 @@ export class Middleware extends Command {
       return
     }
 
-    const middleware = await new File(path, content).create()
+    const command = await new File(path, content).create()
 
-    this.success(
-      `Middleware ({yellow} "${middleware.name}") successfully created.`,
-    )
+    this.success(`Command ({yellow} "${command.name}") successfully created.`)
 
     if (options.lint) {
-      await Artisan.call(`eslint:fix ${middleware.path} --resource Middleware`)
+      await Artisan.call(`eslint:fix ${command.path} --resource Command`)
     }
 
     if (options.register) {
-      await TemplateHelper.replaceObjectProperty(
-        Path.app(`Http/Kernel.${options.extension}`),
-        'namedMiddlewares =',
-        'Middleware',
-        `App/Http/Middlewares/${middleware.name}`,
+      await TemplateHelper.replaceArrayProperty(
+        Path.app(`Console/Kernel.${options.extension}`),
+        'commands =',
+        `App/Console/Commands/${command.name}`,
       )
     }
   }

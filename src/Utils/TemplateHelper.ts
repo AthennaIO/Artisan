@@ -10,6 +10,7 @@
 import ejs from 'ejs'
 
 import { join } from 'path'
+import { Artisan } from 'src/Facades/Artisan'
 import { File, Folder, String } from '@secjs/utils'
 
 export class TemplateHelper {
@@ -86,5 +87,123 @@ export class TemplateHelper {
     })
 
     return Buffer.from(templateString)
+  }
+
+  /**
+   * Replace the content of the array property inside a file.
+   *
+   * @param path
+   * @param matcher
+   * @param importAlias
+   */
+  static async replaceArrayProperty(
+    path: string,
+    matcher: string,
+    importAlias: string,
+  ) {
+    const file = new File(path).loadSync()
+    let content = file.getContentSync().toString()
+
+    const regex = new RegExp(
+      `(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\[[^}]*\\])`,
+    )
+
+    const matches = content.match(regex)
+
+    if (!matches) {
+      return
+    }
+
+    const match = matches[0]
+
+    const arrayString = match
+      .replace(/ /g, '')
+      .replace(/\n/g, '')
+      .replace(matcher, '')
+      .replace(/(\[|\])/g, '')
+      .split(',')
+
+    /**
+     * In case "matcher" is an empty array.
+     * Example: "matcher" = []
+     */
+    if (arrayString.length) {
+      const last = () => arrayString.length - 1
+
+      if (arrayString[last()] === '') {
+        arrayString.pop()
+      }
+    }
+
+    arrayString.push(`import('${importAlias}')`)
+
+    content = content.replace(match, `${matcher}[${arrayString.join(',')}]`)
+
+    await file.remove()
+    await new File(file.path, Buffer.from(content)).create()
+
+    await Artisan.call(
+      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
+    )
+  }
+
+  /**
+   * Replace the content of the object property inside a file.
+   *
+   * @param path
+   * @param matcher
+   * @param resource
+   * @param importAlias
+   */
+  static async replaceObjectProperty(
+    path: string,
+    matcher: string,
+    resource: string,
+    importAlias: string,
+  ) {
+    const file = new File(path).loadSync()
+    let content = file.getContentSync().toString()
+
+    const matches = content.match(
+      new RegExp(`(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\{[^}]*\\})`),
+    )
+
+    if (!matches) {
+      return
+    }
+
+    const match = matches[0]
+
+    const arrayString = match
+      .replace(/ /g, '')
+      .replace(/\n/g, '')
+      .replace(matcher, '')
+      .replace(/(\{|\})/g, '')
+      .split(',')
+
+    /**
+     * In case "matcher" is an empty object.
+     * Example: "matcher" = {}
+     */
+    if (arrayString.length) {
+      const last = () => arrayString.length - 1
+
+      if (arrayString[last()] === '') {
+        arrayString.pop()
+      }
+    }
+
+    const name = file.name.split(resource)[0].toLowerCase()
+
+    arrayString.push(`${name}:import('${importAlias}')`)
+
+    content = content.replace(match, `${matcher}{${arrayString.join(',')}}`)
+
+    await file.remove()
+    await new File(file.path, Buffer.from(content)).create()
+
+    await Artisan.call(
+      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
+    )
   }
 }

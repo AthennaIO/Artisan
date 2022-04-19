@@ -1,0 +1,32 @@
+import { Command } from '@athenna/artisan'
+import { Container } from 'Providers/Container'
+import { ContextContract } from '@athenna/http'
+
+export class <%= namePascal %>Command extends Command {
+    /**
+    * Use the constructor to resolve any dependency of the Ioc container
+    *
+    * @param container
+    * @return <%= namePascal %>Command
+    */
+    public constructor(_container: Container) {}
+
+    /**
+    * The name and signature of the console command.
+    */
+    protected signature = 'your:command <your-argument>'
+
+    /**
+    * The console command description.
+    */
+    protected description = 'Your command description.'
+
+    /**
+    * Execute the console command.
+    *
+    * @return {Promise<void>}
+    */
+    async handle(name: string, options: any): Promise<void> {
+      //
+    }
+}

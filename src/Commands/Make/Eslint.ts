@@ -28,11 +28,13 @@ export class Eslint extends Command {
    * @return {Promise<void>}
    */
   async handle(filePath: string, options: any): Promise<void> {
-    this.simpleLog(
-      `[ LINTING ${options.resource.toUpperCase()} ]`,
-      'bold',
-      'green',
-    )
+    if (!options.quiet) {
+      this.simpleLog(
+        `[ LINTING ${options.resource.toUpperCase()} ]`,
+        'bold',
+        'green',
+      )
+    }
 
     const { name } = parse(filePath)
 
@@ -41,13 +43,17 @@ export class Eslint extends Command {
         `./node_modules/.bin/eslint ${filePath} --fix --quiet`,
       )
 
-      this.success(
-        `${options.resource} ({yellow} "${name}") successfully linted.`,
-      )
+      if (!options.quiet) {
+        this.success(
+          `${options.resource} ({yellow} "${name}") successfully linted.`,
+        )
+      }
     } catch (error) {
-      this.error(
-        `Failed to lint ${options.resource} ({yellow} "${name}"). Please check your eslint configurations.`,
-      )
+      if (!options.quiet) {
+        this.error(
+          `Failed to lint ${options.resource} ({yellow} "${name}"). Please check your eslint configurations.`,
+        )
+      }
     }
   }
 
@@ -58,9 +64,11 @@ export class Eslint extends Command {
    * @return {void}
    */
   protected setFlags(commander: Commander) {
-    return commander.option(
-      '-r --resource <resource>',
-      'Set the resource that will be linted.',
-    )
+    return commander
+      .option(
+        '-r --resource <resource>',
+        'Set the resource that will be linted.',
+      )
+      .option('--quiet', 'Set quiet mode to remove logs', false)
   }
 }

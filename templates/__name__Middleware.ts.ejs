@@ -1,11 +1,11 @@
 import {
+  MiddlewareContract,
   HandleContextContract,
   InterceptContextContract,
   TerminateContextContract,
-  MiddlewareContract,
 } from '@athenna/http'
 
-import { Container } from 'providers/Container'
+import { Container } from 'Providers/Container'
 
 export class <%= namePascal %>Middleware implements MiddlewareContract {
     /**

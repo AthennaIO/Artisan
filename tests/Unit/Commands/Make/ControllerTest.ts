@@ -18,7 +18,7 @@ import { ArtisanProvider } from 'src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 
 describe('\n MakeControllerTest', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
 
     await Config.load()
