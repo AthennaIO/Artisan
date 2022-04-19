@@ -12,5 +12,3 @@ export * from './src/Commands/Command'
 export * from './src/Facades/Artisan'
 
 export * from './src/Kernels/ConsoleKernel'
-
-export * from './src/Providers/ArtisanProvider'
