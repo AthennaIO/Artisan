@@ -18,6 +18,7 @@ export class Kernel extends ConsoleKernel {
   protected commands = [
     import('src/Commands/Make/Eslint'),
     import('src/Commands/Make/Command'),
+    import('src/Commands/Make/Provider'),
     import('src/Commands/Make/Middleware'),
     import('src/Commands/Make/Controller'),
   ]

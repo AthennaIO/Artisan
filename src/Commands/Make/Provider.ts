@@ -15,16 +15,16 @@ import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
 
-export class Controller extends Command {
+export class Provider extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'make:controller <name>'
+  protected signature = 'make:provider <name>'
 
   /**
    * The console command description.
    */
-  protected description = 'Make a new controller file.'
+  protected description = 'Make a new provider file.'
 
   /**
    * Set additional flags in the commander instance.
@@ -39,7 +39,12 @@ export class Controller extends Command {
         'Current extension available: ts',
         'ts',
       )
-      .option('--no-lint', 'Do not run eslint in the controller', true)
+      .option(
+        '--no-register',
+        'Do not register the command inside Kernel',
+        true,
+      )
+      .option('--no-lint', 'Do not run eslint in the middleware', true)
   }
 
   /**
@@ -48,10 +53,10 @@ export class Controller extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING CONTROLLER ]', 'bold', 'green')
+    this.simpleLog('[ MAKING PROVIDER ]', 'bold', 'green')
 
-    name = TemplateHelper.normalizeName(name, 'Controller')
-    const template = TemplateHelper.getTemplate('__name__Controller', options)
+    name = TemplateHelper.normalizeName(name, 'Provider')
+    const template = TemplateHelper.getTemplate('__name__Provider', options)
 
     if (!template) {
       this.error(
@@ -62,7 +67,7 @@ export class Controller extends Command {
     }
 
     const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
-    const path = Path.app(`Http/Controllers/${replacedName}`)
+    const path = Path.providers(replacedName)
     const content = TemplateHelper.replaceTemplateValues(
       name,
       template.getContentSync(),
@@ -70,7 +75,7 @@ export class Controller extends Command {
 
     if (existsSync(path)) {
       this.error(
-        `The controller ({yellow} "${
+        `The provider ({yellow} "${
           parse(path).name
         }") already exists. Try using another name.`,
       )
@@ -78,14 +83,20 @@ export class Controller extends Command {
       return
     }
 
-    const controller = await new File(path, content).create()
+    const provider = await new File(path, content).create()
 
-    this.success(
-      `Controller ({yellow} "${controller.name}") successfully created.`,
-    )
+    this.success(`Provider ({yellow} "${provider.name}") successfully created.`)
 
     if (options.lint) {
-      await Artisan.call(`eslint:fix ${controller.path} --resource Controller`)
+      await Artisan.call(`eslint:fix ${provider.path} --resource Provider`)
+    }
+
+    if (options.register) {
+      await TemplateHelper.replaceArrayProperty(
+        Path.config(`app.${options.extension}`),
+        'providers:',
+        `Providers/${provider.name}`,
+      )
     }
   }
 }

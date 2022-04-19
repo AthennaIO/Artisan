@@ -9,10 +9,10 @@
 
 import { parse } from 'path'
 import { existsSync } from 'fs'
+import { File, Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
-import { File, Path } from '@secjs/utils'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
 
 export class Middleware extends Command {
