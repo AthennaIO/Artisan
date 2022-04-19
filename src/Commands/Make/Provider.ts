@@ -41,7 +41,7 @@ export class Provider extends Command {
       )
       .option(
         '--no-register',
-        'Do not register the command inside Kernel',
+        'Do not register the provider inside config/app file',
         true,
       )
       .option('--no-lint', 'Do not run eslint in the middleware', true)
