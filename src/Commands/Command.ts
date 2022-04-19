@@ -28,6 +28,16 @@ export abstract class Command {
   protected abstract description: string
 
   /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  public addFlags(commander: Commander): Commander {
+    return commander
+  }
+
+  /**
    * Execute the console command.
    *
    * @return {Promise<void>}
@@ -133,15 +143,5 @@ export abstract class Command {
 
       throw new NodeExecException(command, stdout, stderr)
     }
-  }
-
-  /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @return {void}
-   */
-  protected setFlags(commander: Commander): Commander {
-    return commander
   }
 }

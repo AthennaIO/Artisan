@@ -27,6 +27,27 @@ export class Command extends AbstractCommand {
   protected description = 'Make a new command file.'
 
   /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  public addFlags(commander: Commander): Commander {
+    return commander
+      .option(
+        '-e, --extension <extension>',
+        'Current extension available: ts',
+        'ts',
+      )
+      .option(
+        '--no-register',
+        'Do not register the command inside Kernel',
+        true,
+      )
+      .option('--no-lint', 'Do not run eslint in the middleware', true)
+  }
+
+  /**
    * Execute the console command.
    *
    * @return {Promise<void>}
@@ -77,26 +98,5 @@ export class Command extends AbstractCommand {
         `App/Console/Commands/${command.name}`,
       )
     }
-  }
-
-  /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @return {void}
-   */
-  protected setFlags(commander: Commander): Commander {
-    return commander
-      .option(
-        '-e, --extension <extension>',
-        'Current extension available: ts',
-        'ts',
-      )
-      .option(
-        '--no-register',
-        'Do not register the command inside Kernel',
-        true,
-      )
-      .option('--no-lint', 'Do not run eslint in the middleware', true)
   }
 }

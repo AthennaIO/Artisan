@@ -23,6 +23,21 @@ export class Eslint extends Command {
   protected description = 'Lint one specific file using eslint.'
 
   /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  public addFlags(commander: Commander) {
+    return commander
+      .option(
+        '-r --resource <resource>',
+        'Set the resource that will be linted.',
+      )
+      .option('--quiet', 'Set quiet mode to remove logs', false)
+  }
+
+  /**
    * Execute the console command.
    *
    * @return {Promise<void>}
@@ -55,20 +70,5 @@ export class Eslint extends Command {
         )
       }
     }
-  }
-
-  /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @return {void}
-   */
-  protected setFlags(commander: Commander) {
-    return commander
-      .option(
-        '-r --resource <resource>',
-        'Set the resource that will be linted.',
-      )
-      .option('--quiet', 'Set quiet mode to remove logs', false)
   }
 }

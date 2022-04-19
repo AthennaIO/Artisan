@@ -39,7 +39,7 @@ export abstract class ConsoleKernel {
           .command(Command.signature)
           .description(Command.description)
 
-        Command.setFlags(commander)
+        Command.addFlags(commander)
           .action(Command.handle.bind(Command))
           .showHelpAfterError()
           .createHelp()

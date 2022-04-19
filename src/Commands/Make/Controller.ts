@@ -27,6 +27,22 @@ export class Controller extends Command {
   protected description = 'Make a new controller file.'
 
   /**
+   * Set additional flags in the commander instance.
+   * This method is executed when registering your command.
+   *
+   * @return {void}
+   */
+  public addFlags(commander: Commander): Commander {
+    return commander
+      .option(
+        '-e, --extension <extension>',
+        'Current extension available: ts',
+        'ts',
+      )
+      .option('--no-lint', 'Do not run eslint in the controller', true)
+  }
+
+  /**
    * Execute the console command.
    *
    * @return {Promise<void>}
@@ -71,21 +87,5 @@ export class Controller extends Command {
     if (options.lint) {
       await Artisan.call(`eslint:fix ${controller.path} --resource Controller`)
     }
-  }
-
-  /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @return {void}
-   */
-  protected setFlags(commander: Commander): Commander {
-    return commander
-      .option(
-        '-e, --extension <extension>',
-        'Current extension available: ts',
-        'ts',
-      )
-      .option('--no-lint', 'Do not run eslint in the controller', true)
   }
 }
