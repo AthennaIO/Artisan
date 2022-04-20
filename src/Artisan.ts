@@ -10,7 +10,7 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
-import { Config } from '@athenna/config'
+import { Config, Env } from '@athenna/config'
 import { version } from '../package.json'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
@@ -105,7 +105,9 @@ export class Artisan {
    * @return Promise<void>
    */
   async main(): Promise<void> {
-    await Exec.command('npm run --silent build', true)
+    if (Env('DISABLE_BUILD') === 'true') {
+      await Exec.command('npm run --silent build', true)
+    }
 
     if (process.argv.length === 2) {
       const appNameFiglet = figlet.textSync(Config.get('app.name'))
