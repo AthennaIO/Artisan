@@ -105,7 +105,7 @@ export class Artisan {
    * @return Promise<void>
    */
   async main(): Promise<void> {
-    if (Env('DISABLE_BUILD') === 'true') {
+    if (Env('DISABLE_BUILD') !== 'true') {
       await Exec.command('npm run --silent build', true)
     }
 
