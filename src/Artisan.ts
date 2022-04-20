@@ -14,6 +14,7 @@ import { Config } from '@athenna/config'
 import { version } from '../package.json'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
+import { Exec } from 'src/Utils/Exec'
 
 export class Artisan {
   /**
@@ -104,6 +105,8 @@ export class Artisan {
    * @return Promise<void>
    */
   async main(): Promise<void> {
+    await Exec.command('npm run --silent build', true)
+
     if (process.argv.length === 2) {
       const appNameFiglet = figlet.textSync(Config.get('app.name'))
       const appNameFigletColorized = chalkRainbow(appNameFiglet)
