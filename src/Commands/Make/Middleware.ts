@@ -97,7 +97,7 @@ export class Middleware extends Command {
       await TemplateHelper.replaceObjectProperty(
         Path.app(`Http/Kernel.${options.extension}`),
         'namedMiddlewares =',
-        'Middleware',
+        middleware.name,
         `App/Http/Middlewares/${middleware.name}`,
       )
     }
