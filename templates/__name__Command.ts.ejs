@@ -1,6 +1,5 @@
 import { Command } from '@athenna/artisan'
 import { Container } from 'Providers/Container'
-import { ContextContract } from '@athenna/http'
 
 export class <%= namePascal %>Command extends Command {
     /**
@@ -9,7 +8,9 @@ export class <%= namePascal %>Command extends Command {
     * @param container
     * @return <%= namePascal %>Command
     */
-    public constructor(_container: Container) {}
+    public constructor(_container: Container) {
+      super()
+    }
 
     /**
     * The name and signature of the console command.
@@ -26,7 +27,7 @@ export class <%= namePascal %>Command extends Command {
     *
     * @return {Promise<void>}
     */
-    async handle(name: string, options: any): Promise<void> {
+    async handle(_name: string, _options: any): Promise<void> {
       //
     }
 }
