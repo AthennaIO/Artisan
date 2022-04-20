@@ -104,11 +104,9 @@ export class TemplateHelper {
     const file = new File(path).loadSync()
     let content = file.getContentSync().toString()
 
-    const regex = new RegExp(
-      `(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\[[^}]*\\])`,
+    const matches = content.match(
+      new RegExp(`(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\[[^\\]]*\\])`),
     )
-
-    const matches = content.match(regex)
 
     if (!matches) {
       return
@@ -193,7 +191,7 @@ export class TemplateHelper {
       }
     }
 
-    const name = file.name.split(resource)[0].toLowerCase()
+    const name = String.toCamelCase(resource)
 
     arrayString.push(`${name}:import('${importAlias}')`)
 
