@@ -1,5 +1,6 @@
 import { Command } from '@athenna/artisan'
 import { Container } from 'Providers/Container'
+import { Command as Commander } from 'commander'
 
 export class <%= namePascal %>Command extends Command {
     /**
@@ -15,7 +16,7 @@ export class <%= namePascal %>Command extends Command {
     /**
     * The name and signature of the console command.
     */
-    protected signature = 'your:command <your-argument>'
+    protected signature = 'your:command <yourArgument>'
 
     /**
     * The console command description.
@@ -23,11 +24,21 @@ export class <%= namePascal %>Command extends Command {
     protected description = 'Your command description.'
 
     /**
+    * Set additional flags in the commander instance.
+    * This method is executed when registering your command.
+    *
+    * @return {void}
+    */
+    public addFlags(commander: Commander): Commander {
+      return commander
+    }
+
+    /**
     * Execute the console command.
     *
     * @return {Promise<void>}
     */
-    async handle(_name: string, _options: any): Promise<void> {
+    async handle(_yourArgument: string, _options: any): Promise<void> {
       //
     }
 }

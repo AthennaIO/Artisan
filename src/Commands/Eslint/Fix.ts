@@ -11,7 +11,7 @@ import { parse } from 'path'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
-export class Eslint extends Command {
+export class Fix extends Command {
   /**
    * The name and signature of the console command.
    */
