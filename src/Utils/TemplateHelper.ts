@@ -117,9 +117,9 @@ export class TemplateHelper {
     const match = matches[0]
 
     const arrayString = match
+      .replace(matcher, '')
       .replace(/ /g, '')
       .replace(/\n/g, '')
-      .replace(matcher, '')
       .replace(/(\[|\])/g, '')
       .split(',')
 
@@ -175,9 +175,9 @@ export class TemplateHelper {
     const match = matches[0]
 
     const arrayString = match
+      .replace(matcher, '')
       .replace(/ /g, '')
       .replace(/\n/g, '')
-      .replace(matcher, '')
       .replace(/(\{|\})/g, '')
       .split(',')
 
@@ -236,8 +236,8 @@ export class TemplateHelper {
     const match = matches[0]
 
     const arrayString = match
-      .replace(/ /g, '')
       .replace(matcher, '')
+      .replace(/ /g, '')
       .replace(/(\{|\})/g, '')
       .split('\n')
 
