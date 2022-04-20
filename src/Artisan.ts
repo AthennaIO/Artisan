@@ -10,10 +10,11 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
-import { Config } from '@athenna/config'
+import { Config, Env } from '@athenna/config'
 import { version } from '../package.json'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
+import { Exec } from 'src/Utils/Exec'
 
 export class Artisan {
   /**
@@ -30,16 +31,6 @@ export class Artisan {
    */
   public constructor() {
     this.commander = new Commander()
-
-    /**
-     * Verify if console channel is using null driver
-     */
-    if (Config.get('logging.channels.console.driver') !== 'null') {
-      const appNameFiglet = figlet.textSync(Config.get('app.name'))
-      const appNameFigletColorized = chalkRainbow(appNameFiglet)
-
-      process.stdout.write(appNameFigletColorized + '\n')
-    }
 
     this.commander.version(`v${version}`, '-v, --version')
   }
@@ -114,6 +105,17 @@ export class Artisan {
    * @return Promise<void>
    */
   async main(): Promise<void> {
+    if (Env('DISABLE_BUILD') !== 'true') {
+      await Exec.command('npm run --silent build', true)
+    }
+
+    if (process.argv.length === 2) {
+      const appNameFiglet = figlet.textSync(Config.get('app.name'))
+      const appNameFigletColorized = chalkRainbow(appNameFiglet)
+
+      process.stdout.write(appNameFigletColorized + '\n' + '\n')
+    }
+
     await this.commander.parseAsync(process.argv)
   }
 }

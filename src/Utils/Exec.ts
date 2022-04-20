@@ -19,7 +19,13 @@ export class Exec {
    * @param command
    * @return void
    */
-  static async command(command: string): Promise<void> {
+  static async command(command: string, ignoreErrors = false): Promise<void> {
+    if (ignoreErrors) {
+      try {
+        await exec(command)
+      } catch (error) {}
+    }
+
     await exec(command)
   }
 }
