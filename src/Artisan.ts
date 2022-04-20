@@ -31,16 +31,6 @@ export class Artisan {
   public constructor() {
     this.commander = new Commander()
 
-    /**
-     * Verify if console channel is using null driver
-     */
-    if (Config.get('logging.channels.console.driver') !== 'null') {
-      const appNameFiglet = figlet.textSync(Config.get('app.name'))
-      const appNameFigletColorized = chalkRainbow(appNameFiglet)
-
-      process.stdout.write(appNameFigletColorized + '\n')
-    }
-
     this.commander.version(`v${version}`, '-v, --version')
   }
 
@@ -114,6 +104,13 @@ export class Artisan {
    * @return Promise<void>
    */
   async main(): Promise<void> {
+    if (process.argv.length === 2) {
+      const appNameFiglet = figlet.textSync(Config.get('app.name'))
+      const appNameFigletColorized = chalkRainbow(appNameFiglet)
+
+      process.stdout.write(appNameFigletColorized + '\n' + '\n')
+    }
+
     await this.commander.parseAsync(process.argv)
   }
 }
