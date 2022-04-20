@@ -31,8 +31,6 @@ export class Artisan {
    */
   public constructor() {
     this.commander = new Commander()
-
-    this.commander.version(`v${version}`, '-v, --version')
   }
 
   /**
@@ -46,6 +44,21 @@ export class Artisan {
       'artisan', // This will be ignored by commander
       ...command.split(' '),
     ])
+  }
+
+  /**
+   * Set the version of the CLI.
+   *
+   * @return Promise<void>
+   */
+  setVersion(clientVersion?: any): void {
+    if (clientVersion) {
+      this.commander.version(`v${clientVersion}`, '-v, --version')
+
+      return
+    }
+
+    this.commander.version(`v${version}`, '-v, --version')
   }
 
   /**
@@ -114,6 +127,7 @@ export class Artisan {
 
     Path.switchEnvVerify()
 
+    this.setVersion(Config.get('app.version'))
     await this.commander.parseAsync(process.argv)
 
     Path.switchEnvVerify()
