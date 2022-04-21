@@ -9,11 +9,14 @@
 
 import ora from 'ora'
 import chalk from 'chalk'
+import Table from 'cli-table'
+import columnify from 'columnify'
 
 import { Log } from '@athenna/logger'
 import { Exec } from 'src/Utils/Exec'
 import { Config } from '@athenna/config'
 import { Command as Commander } from 'commander'
+import { TableOptions } from 'src/Contracts/TableOptions'
 import { NodeExecException } from 'src/Exceptions/NodeExecException'
 
 export abstract class Command {
@@ -52,13 +55,25 @@ export abstract class Command {
   public simpleLog(message: string, ...chalkArgs: string[]): void {
     let colors = chalk
 
+    const rmNewLineStart = chalkArgs[0] === 'rmNewLineStart'
+
+    if (rmNewLineStart) chalkArgs.shift()
+
     chalkArgs.forEach(arg => (colors = colors[arg]))
 
     if (Config.get('logging.channels.console.driver') === 'null') {
       return
     }
 
-    process.stdout.write('\n' + colors(message) + '\n')
+    const log = colors(message).concat('\n')
+
+    if (rmNewLineStart) {
+      process.stdout.write(log)
+
+      return
+    }
+
+    process.stdout.write('\n'.concat(log))
   }
 
   /**
@@ -113,6 +128,31 @@ export abstract class Command {
    */
   public createSpinner(options: string | ora.Options | undefined): ora.Ora {
     return ora(options)
+  }
+
+  /**
+   * Log a table using cli-table API.
+   *
+   * @return {ora.Ora}
+   */
+  public logTable(tableOptions: Partial<TableOptions>, ...rows: any[]): void {
+    const table = new Table(tableOptions)
+
+    if (rows && rows.length) table.push(...rows)
+
+    process.stdout.write(table.toString() + '\n')
+  }
+
+  /**
+   * Log a table using cli-table API.
+   *
+   * @return {ora.Ora}
+   */
+  public columnify(
+    data: Record<string, any> | any[],
+    options: columnify.GlobalOptions,
+  ): string {
+    return columnify(data, options)
   }
 
   /**

@@ -10,6 +10,8 @@
 import { parse } from 'path'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
+import { Path } from '@secjs/utils'
+import { existsSync } from 'fs'
 
 export class Fix extends Command {
   /**
@@ -46,6 +48,7 @@ export class Fix extends Command {
     if (!options.quiet) {
       this.simpleLog(
         `[ LINTING ${options.resource.toUpperCase()} ]`,
+        'rmNewLineStart',
         'bold',
         'green',
       )
@@ -54,9 +57,13 @@ export class Fix extends Command {
     const { name } = parse(filePath)
 
     try {
-      await this.execCommand(
-        `./node_modules/.bin/eslint ${filePath} --fix --quiet`,
-      )
+      let eslintPath = Path.noBuild().pwd('node_modules/.bin/eslint')
+
+      if (!existsSync(eslintPath)) {
+        eslintPath = './node_modules/.bin/eslint'
+      }
+
+      await this.execCommand(`${eslintPath} ${filePath} --fix --quiet`)
 
       if (!options.quiet) {
         this.success(

@@ -48,7 +48,7 @@ export class Controller extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING CONTROLLER ]', 'bold', 'green')
+    this.simpleLog('[ MAKING CONTROLLER ]', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Controller')
     const template = TemplateHelper.getTemplate('__name__Controller', options)

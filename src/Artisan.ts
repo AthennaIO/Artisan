@@ -8,6 +8,7 @@
  */
 
 import figlet from 'figlet'
+import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
 import { Path } from '@secjs/utils'
@@ -44,6 +45,48 @@ export class Artisan {
       'artisan', // This will be ignored by commander
       ...command.split(' '),
     ])
+  }
+
+  /**
+   * List all commands with description.
+   *
+   * @param asColumn
+   * @param alias
+   */
+  listCommands(asColumn: boolean, alias?: string): string
+  listCommands(
+    asColumn = false,
+    alias?: string,
+  ): Record<string, string> | string {
+    const commands = {}
+
+    this.commander.commands.forEach((command: any) => {
+      if (alias && !command._name.startsWith(`${alias}:`)) {
+        return
+      }
+
+      let name = command._name
+
+      if (command.options.length) name = `${name} [options]`
+
+      command._args.forEach(arg => {
+        if (arg.required) {
+          name = name.concat(` <${arg._name}>`)
+
+          return
+        }
+
+        name = name.concat(` [${arg._name}]`)
+      })
+
+      commands[name] = command._description
+    })
+
+    if (asColumn) {
+      return columnify(commands).replace('KEY', '').replace('VALUE', '')
+    }
+
+    return commands
   }
 
   /**
@@ -117,9 +160,20 @@ export class Artisan {
    *
    * @return Promise<void>
    */
-  async main(): Promise<void> {
-    if (process.argv.length === 2) {
-      const appNameFiglet = figlet.textSync(Config.get('app.name'))
+  async main(appName?: string): Promise<void> {
+    /**
+     * If argv is less or equal two, means that
+     * the command that are being run is just
+     * the CLI entrypoint. Example:
+     *
+     * - artisan
+     * - node artisan
+     *
+     * In CLI entrypoint we are going to log the
+     * chalkRainbow with his application name.
+     */
+    if (process.argv.length <= 2) {
+      const appNameFiglet = figlet.textSync(appName || Config.get('app.name'))
       const appNameFigletColorized = chalkRainbow(appNameFiglet)
 
       process.stdout.write(appNameFigletColorized + '\n' + '\n')
