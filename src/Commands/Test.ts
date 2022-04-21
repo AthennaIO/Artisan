@@ -11,16 +11,16 @@ import { Path } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
-export class StartDev extends Command {
+export class Test extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'start:dev'
+  protected signature = 'test'
 
   /**
    * The console command description.
    */
-  protected description = 'Starts your project using ts-node and nodemon.'
+  protected description = 'Run your project tests using jest.'
 
   /**
    * Set additional flags in the commander instance.
@@ -37,24 +37,20 @@ export class StartDev extends Command {
    *
    * @return {Promise<void>}
    */
-  async handle(options: any): Promise<void> {
+  async handle(_: any, commander: any): Promise<void> {
     try {
-      const nodemonPath = Path.noBuild().pwd('node_modules/.bin/nodemon')
-      const tsNodePath = Path.noBuild().pwd('node_modules/.bin/ts-node')
-      const mainPath = Path.noBuild().pwd('bootstrap/main.ts')
-      const tsconfigPathsPath = Path.noBuild().pwd(
-        'node_modules/tsconfig-paths',
-      )
+      const jestPath = Path.noBuild().pwd('node_modules/.bin/jest')
+      const jestArgs = commander.args.join(' ')
 
-      let command = `${tsNodePath} -r tsconfig-paths/register ${mainPath}`
+      let command = `${jestPath}`
 
-      if (options.nodemon) {
-        command = `${nodemonPath} --quiet --ignore tests storage node_modules --watch '.' --exec '${tsNodePath} -r ${tsconfigPathsPath}/register ${mainPath}' -e ts`
+      if (jestArgs) {
+        command = command.concat(` ${jestArgs}`)
       }
 
       await this.execCommand(command)
     } catch (error) {
-      this.error('Failed to start development project.')
+      this.error('Failed to test project.')
     }
   }
 }
