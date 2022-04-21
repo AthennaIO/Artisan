@@ -16,7 +16,11 @@ export class Kernel extends ConsoleKernel {
    * @return void
    */
   protected commands = [
+    import('src/Commands/Route/List'),
     import('src/Commands/Eslint/Fix'),
+    import('src/Commands/List/Make'),
+    import('src/Commands/List/Route'),
+    import('src/Commands/List/Eslint'),
     import('src/Commands/Make/Facade'),
     import('src/Commands/Make/Command'),
     import('src/Commands/Make/Service'),

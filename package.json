@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -19,6 +19,8 @@
     "typescript"
   ],
   "devDependencies": {
+    "@types/cli-table": "0.3.0",
+    "@types/columnify": "1.5.1",
     "@types/jest": "27.0.1",
     "@types/node": "14.17.0",
     "@typescript-eslint/eslint-plugin": "4.31.0",
@@ -160,6 +162,8 @@
     "@athenna/logger": "1.1.8",
     "@secjs/utils": "1.8.3",
     "chalk-rainbow": "1.0.0",
+    "cli-table": "^0.3.11",
+    "columnify": "^1.6.0",
     "commander": "9.2.0",
     "ejs": "3.1.6",
     "figlet": "1.5.2",
