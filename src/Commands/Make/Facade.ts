@@ -48,7 +48,7 @@ export class Facade extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING FACADE ]', 'bold', 'green')
+    this.simpleLog('[ MAKING FACADE ]', 'rmNewLineStart', 'bold', 'green')
 
     const template = TemplateHelper.getTemplate('__name__Facade', options)
 

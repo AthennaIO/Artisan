@@ -43,7 +43,7 @@ export class List extends Command {
    * @return {Promise<void>}
    */
   async handle(options: any): Promise<void> {
-    this.simpleLog('[ ROUTE LISTING ]', 'bold', 'green')
+    this.simpleLog('[ ROUTE LISTING ]', 'rmNewLineStart', 'bold', 'green')
 
     const Route = ioc.use<any>('Athenna/Core/HttpRoute')
 

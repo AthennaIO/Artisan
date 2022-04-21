@@ -55,13 +55,25 @@ export abstract class Command {
   public simpleLog(message: string, ...chalkArgs: string[]): void {
     let colors = chalk
 
+    const rmNewLineStart = chalkArgs[0] === 'rmNewLineStart'
+
+    if (rmNewLineStart) chalkArgs.shift()
+
     chalkArgs.forEach(arg => (colors = colors[arg]))
 
     if (Config.get('logging.channels.console.driver') === 'null') {
       return
     }
 
-    process.stdout.write('\n' + colors(message) + '\n')
+    const log = colors(message).concat('\n')
+
+    if (rmNewLineStart) {
+      process.stdout.write(log)
+
+      return
+    }
+
+    process.stdout.write('\n'.concat(log))
   }
 
   /**

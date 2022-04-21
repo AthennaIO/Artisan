@@ -38,7 +38,7 @@ export class Make extends Command {
    * @return {Promise<void>}
    */
   async handle(): Promise<void> {
-    this.simpleLog('[ LISTING MAKE ]', 'bold', 'green')
+    this.simpleLog('[ LISTING MAKE ]', 'rmNewLineStart', 'bold', 'green')
 
     const commands =
       'Commands:' +

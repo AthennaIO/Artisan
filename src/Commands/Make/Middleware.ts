@@ -53,7 +53,7 @@ export class Middleware extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING MIDDLEWARE ]', 'bold', 'green')
+    this.simpleLog('[ MAKING MIDDLEWARE ]', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Middleware')
     const template = TemplateHelper.getTemplate('__name__Middleware', options)

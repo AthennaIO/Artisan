@@ -7,20 +7,21 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
 
-export class Eslint extends Command {
+export class Start extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'list:eslint'
+  protected signature = 'start'
 
   /**
    * The console command description.
    */
-  protected description = 'List all eslint commands.'
+  protected description = 'Starts your project using node.'
 
   /**
    * Set additional flags in the commander instance.
@@ -38,15 +39,19 @@ export class Eslint extends Command {
    * @return {Promise<void>}
    */
   async handle(): Promise<void> {
-    this.simpleLog('[ LISTING ESLINT ]', 'rmNewLineStart', 'bold', 'green')
+    await Artisan.call('build')
 
-    const commands =
-      'Commands:' +
-      Artisan.listCommands(true, 'eslint')
-        .split('\n')
-        .map(line => `  ${line}`)
-        .join('\n')
+    try {
+      const mainPath = Path.noBuild().pwd('dist/bootstrap/main.js')
+      const tsconfigPathsPath = Path.noBuild().pwd(
+        'node_modules/tsconfig-paths',
+      )
 
-    this.simpleLog(commands)
+      await this.execCommand(
+        `TS_NODE_BASEURL=./dist node -r ${tsconfigPathsPath}/register ${mainPath}`,
+      )
+    } catch (error) {
+      this.error('Failed to start project.')
+    }
   }
 }

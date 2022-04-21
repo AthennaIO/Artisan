@@ -38,7 +38,7 @@ export class Route extends Command {
    * @return {Promise<void>}
    */
   async handle(): Promise<void> {
-    this.simpleLog('[ LISTING ROUTE ]', 'bold', 'green')
+    this.simpleLog('[ LISTING ROUTE ]', 'rmNewLineStart', 'bold', 'green')
 
     const commands =
       'Commands:' +
