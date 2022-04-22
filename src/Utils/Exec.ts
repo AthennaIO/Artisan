@@ -17,6 +17,7 @@ export class Exec {
    * Execute a command of child process exec as promise.
    *
    * @param command
+   * @param ignoreErrors
    * @return void
    */
   static async command(command: string, ignoreErrors = false): Promise<void> {
@@ -24,6 +25,8 @@ export class Exec {
       try {
         await exec(command)
       } catch (error) {}
+
+      return
     }
 
     await exec(command)

@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { existsSync } from 'fs'
 import { Path, String } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Command as Commander } from 'commander'
-import { existsSync } from 'fs'
 
 export class List extends Command {
   /**
@@ -53,18 +53,12 @@ export class List extends Command {
       return
     }
 
-    let routePath = Path.pwd('routes/http.ts')
+    const routePath = Path.pwd('dist/routes/http.js')
 
     if (!existsSync(routePath)) {
-      if (!existsSync(routePath.replace('ts', 'js'))) {
-        this.error(
-          `The file ({yellow} "routes/http") has not been found in any extension (js, ts).`,
-        )
-
-        return
-      } else {
-        routePath = routePath.replace('ts', 'js')
-      }
+      this.error(
+        `The file ({yellow} "dist/routes/http.js") has not been found.`,
+      )
     }
 
     await import(routePath)
