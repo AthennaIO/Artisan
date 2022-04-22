@@ -8,9 +8,9 @@
  */
 
 import { parse } from 'path'
-import { Command } from 'src/Commands/Command'
-import { Command as Commander } from 'commander'
 import { Path } from '@secjs/utils'
+import { Command } from 'src/Commands/Command'
+import { Commander } from 'src/Contracts/Commander'
 
 export class Fix extends Command {
   /**

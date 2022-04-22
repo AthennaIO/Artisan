@@ -9,7 +9,7 @@
 
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
-import { Command as Commander } from 'commander'
+import { Commander } from 'src/Contracts/Commander'
 
 export class Eslint extends Command {
   /**

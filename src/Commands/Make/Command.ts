@@ -11,7 +11,7 @@ import { parse } from 'path'
 import { existsSync } from 'fs'
 import { File, Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
-import { Command as Commander } from 'commander'
+import { Commander } from 'src/Contracts/Commander'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
 import { Command as AbstractCommand } from 'src/Commands/Command'
 

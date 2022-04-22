@@ -8,6 +8,7 @@
  */
 
 export * from './src/Commands/Command'
+export * from './src/Contracts/Commander'
 
 export * from './src/Facades/Artisan'
 

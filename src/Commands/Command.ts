@@ -15,7 +15,7 @@ import columnify from 'columnify'
 import { Log } from '@athenna/logger'
 import { Exec } from 'src/Utils/Exec'
 import { Config } from '@athenna/config'
-import { Command as Commander } from 'commander'
+import { Commander } from 'src/Contracts/Commander'
 import { TableOptions } from 'src/Contracts/TableOptions'
 import { NodeExecException } from 'src/Exceptions/NodeExecException'
 

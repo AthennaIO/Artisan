@@ -10,7 +10,7 @@
 import { existsSync } from 'fs'
 import { Path, String } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
-import { Command as Commander } from 'commander'
+import { Commander } from 'src/Contracts/Commander'
 
 export class List extends Command {
   /**
