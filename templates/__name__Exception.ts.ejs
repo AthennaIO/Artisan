@@ -1,0 +1,29 @@
+import { Exception } from '@athenna/core'
+
+/*
+|--------------------------------------------------------------------------
+| Exception
+|--------------------------------------------------------------------------
+|
+| The Exception class imported from `@athenna/core` allows defining
+| a status code, error code and help for every exception.
+|
+| @example
+| new <%= namePascal %>Exception('message', 500, 'E_RUNTIME_EXCEPTION', 'Restart computer.')
+|
+*/
+
+export class <%= namePascal %>Exception extends Exception {
+  /**
+   * Return a new instance of <%= namePascal %>Exception.
+   *
+   * @param message
+   * @param statusCode
+   * @param code
+   * @param help
+   * @return <%= namePascal %>Exception
+   */
+  public constructor(message?: string, statusCode?: number, code?: string, help?: string) {
+    super(message, statusCode, code, help)
+  }
+}
