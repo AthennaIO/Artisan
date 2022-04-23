@@ -13,4 +13,17 @@ import { Exception } from '@athenna/core'
 |
 */
 
-export class <%= namePascal %>Exception extends Exception {}
+export class <%= namePascal %>Exception extends Exception {
+  /**
+   * Return a new instance of <%= namePascal %>Exception.
+   *
+   * @param message
+   * @param statusCode
+   * @param code
+   * @param help
+   * @return <%= namePascal %>Exception
+   */
+  public constructor(message?: string, statusCode?: number, code?: string, help?: string) {
+    super(message, statusCode, code, help)
+  }
+}
