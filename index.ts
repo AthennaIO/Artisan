@@ -13,3 +13,4 @@ export * from './src/Contracts/Commander'
 export * from './src/Facades/Artisan'
 
 export * from './src/Kernels/ConsoleKernel'
+export * from './src/Handlers/ConsoleExceptionHandler'
