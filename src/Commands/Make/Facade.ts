@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'path'
 import { existsSync } from 'fs'
 import { File, Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
+import { AlreadyExistFileException } from 'src/Exceptions/AlreadyExistFileException'
+import { TemplateNotFoundException } from 'src/Exceptions/TemplateNotFoundException'
 
 export class Facade extends Command {
   /**
@@ -53,11 +54,7 @@ export class Facade extends Command {
     const template = TemplateHelper.getTemplate('__name__Facade', options)
 
     if (!template) {
-      this.error(
-        `Template for extension ({yellow} "${options.extension}") has not been found.`,
-      )
-
-      return
+      throw new TemplateNotFoundException(options.extension)
     }
 
     const replacedName = TemplateHelper.replaceTemplateName(
@@ -71,13 +68,7 @@ export class Facade extends Command {
     )
 
     if (existsSync(path)) {
-      this.error(
-        `The facade ({yellow} "${
-          parse(path).name
-        }") already exists. Try using another name.`,
-      )
-
-      return
+      throw new AlreadyExistFileException('facade', path)
     }
 
     const facade = await new File(path, content).create()

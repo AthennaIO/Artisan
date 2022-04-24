@@ -11,16 +11,16 @@ import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
 
-export class Route extends Command {
+export class List extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'list:route'
+  protected signature = 'list <alias>'
 
   /**
    * The console command description.
    */
-  protected description = 'List all route commands.'
+  protected description = 'List all commands available of the alias.'
 
   /**
    * Set additional flags in the commander instance.
@@ -37,12 +37,17 @@ export class Route extends Command {
    *
    * @return {Promise<void>}
    */
-  async handle(): Promise<void> {
-    this.simpleLog('[ LISTING ROUTE ]', 'rmNewLineStart', 'bold', 'green')
+  async handle(alias: string): Promise<void> {
+    this.simpleLog(
+      `[ LISTING ${alias.toUpperCase()} ]`,
+      'rmNewLineStart',
+      'bold',
+      'green',
+    )
 
     const commands =
       'Commands:' +
-      Artisan.listCommands(true, 'route')
+      Artisan.listCommands(true, alias)
         .split('\n')
         .map(line => `  ${line}`)
         .join('\n')

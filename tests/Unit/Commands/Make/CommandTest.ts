@@ -11,7 +11,7 @@ import '@athenna/ioc'
 
 import { existsSync } from 'fs'
 import { Config } from '@athenna/config'
-import { Kernel } from 'tests/Stubs/Kernel'
+import { Kernel } from '../../../Stubs/app/Console/Kernel'
 import { Artisan } from 'src/Facades/Artisan'
 import { File, Folder, Path } from '@secjs/utils'
 import { ArtisanProvider } from 'src/Providers/ArtisanProvider'
@@ -21,13 +21,18 @@ import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 describe('\n MakeCommandTest', () => {
   beforeEach(async () => {
     new Folder(Path.tests('Stubs/app/Console')).loadSync().copySync(Path.app('Console'))
+    new Folder(Path.tests('Stubs/app/Console/Exceptions')).loadSync().copySync(Path.app('Console/Exceptions'))
     new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
 
     await Config.load()
     new LoggerProvider().register()
     new ArtisanProvider().register()
     await new CommandProvider().boot()
-    await new Kernel().registerCommands()
+
+    const kernel = new Kernel()
+
+    await kernel.registerErrorHandler()
+    await kernel.registerCommands()
   })
 
   it('should be able to create a command file', async () => {

@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'path'
 import { existsSync } from 'fs'
 import { File, Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
+import { AlreadyExistFileException } from 'src/Exceptions/AlreadyExistFileException'
+import { TemplateNotFoundException } from 'src/Exceptions/TemplateNotFoundException'
 
 export class Service extends Command {
   /**
@@ -59,11 +60,7 @@ export class Service extends Command {
     const template = TemplateHelper.getTemplate('__name__Service', options)
 
     if (!template) {
-      this.error(
-        `Template for extension ({yellow} "${options.extension}") has not been found.`,
-      )
-
-      return
+      throw new TemplateNotFoundException(options.extension)
     }
 
     const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
@@ -74,13 +71,7 @@ export class Service extends Command {
     )
 
     if (existsSync(path)) {
-      this.error(
-        `The service ({yellow} "${
-          parse(path).name
-        }") already exists. Try using another name.`,
-      )
-
-      return
+      throw new AlreadyExistFileException('service', path)
     }
 
     const service = await new File(path, content).create()

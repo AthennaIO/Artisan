@@ -12,6 +12,7 @@ import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
 import { Path } from '@secjs/utils'
+import { Log } from '@athenna/logger'
 import { Config } from '@athenna/config'
 import { version } from '../package.json'
 import { Command } from 'src/Commands/Command'
@@ -26,12 +27,36 @@ export class Artisan {
   private readonly commander: Commander
 
   /**
+   * Artisan error handler.
+   *
+   * @private
+   */
+  private errorHandler: (...args: any[]) => any | Promise<any>
+
+  /**
    * Creates a new instance of Artisan
    *
    * @return {Artisan}
    */
   public constructor() {
     this.commander = new Commander()
+    this.setErrorHandler(error =>
+      Log.channel('console').error(JSON.stringify(error, null, 2)),
+    )
+  }
+
+  /**
+   * Set Artisan error handler.
+   */
+  setErrorHandler(handler: (...args: any[]) => any | Promise<any>) {
+    this.errorHandler = handler
+  }
+
+  /**
+   * Get Artisan error handler.
+   */
+  getErrorHandler() {
+    return this.errorHandler
   }
 
   /**
@@ -182,6 +207,7 @@ export class Artisan {
     Path.switchEnvVerify()
 
     this.setVersion(Config.get('app.version'))
+
     await this.commander.parseAsync(process.argv)
 
     Path.switchEnvVerify()
