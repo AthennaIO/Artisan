@@ -54,7 +54,7 @@ export class Provider extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING PROVIDER ]', 'rmNewLineStart', 'bold', 'green')
+    this.simpleLog('[ MAKING PROVIDER ]\n', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Provider')
     const template = TemplateHelper.getTemplate('__name__Provider', options)

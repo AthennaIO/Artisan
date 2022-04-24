@@ -11,10 +11,10 @@ import { existsSync } from 'fs'
 import { Path, String } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
-import { FacadeNotFoundException } from 'src/Exceptions/FacadeNotFoundException'
 import { FileNotFoundException } from 'src/Exceptions/FileNotFoundException'
+import { FacadeNotFoundException } from 'src/Exceptions/FacadeNotFoundException'
 
-export class List extends Command {
+export class RouteList extends Command {
   /**
    * The name and signature of the console command.
    */
