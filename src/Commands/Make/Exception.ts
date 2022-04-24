@@ -49,7 +49,7 @@ export class Exception extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING EXCEPTION ]', 'rmNewLineStart', 'bold', 'green')
+    this.simpleLog('[ MAKING EXCEPTION ]\n', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Exception')
     const template = TemplateHelper.getTemplate('__name__Exception', options)

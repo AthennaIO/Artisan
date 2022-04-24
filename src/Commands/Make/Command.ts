@@ -54,7 +54,7 @@ export class Command extends AbstractCommand {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING COMMAND ]', 'rmNewLineStart', 'bold', 'green')
+    this.simpleLog('[ MAKING COMMAND ]\n', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Command')
     const template = TemplateHelper.getTemplate('__name__Command', options)

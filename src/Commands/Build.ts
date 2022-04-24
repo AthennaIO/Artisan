@@ -38,7 +38,7 @@ export class Build extends Command {
    * @return {Promise<void>}
    */
   async handle(_: any, commander: any): Promise<void> {
-    this.simpleLog('[ BUILDING PROJECT ]', 'rmNewLineStart', 'bold', 'green')
+    this.simpleLog('[ BUILDING PROJECT ]\n', 'rmNewLineStart', 'bold', 'green')
 
     const rimrafPath = Path.noBuild().pwd('node_modules/.bin/rimraf')
     let tscPath = Path.noBuild().pwd('node_modules/.bin/tsc')

@@ -54,7 +54,7 @@ export class Service extends Command {
    * @return {Promise<void>}
    */
   async handle(name: string, options: any): Promise<void> {
-    this.simpleLog('[ MAKING SERVICE ]', 'rmNewLineStart', 'bold', 'green')
+    this.simpleLog('[ MAKING SERVICE ]\n', 'rmNewLineStart', 'bold', 'green')
 
     name = TemplateHelper.normalizeName(name, 'Service')
     const template = TemplateHelper.getTemplate('__name__Service', options)

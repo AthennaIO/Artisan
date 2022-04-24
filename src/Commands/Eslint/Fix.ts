@@ -47,7 +47,7 @@ export class Fix extends Command {
   async handle(filePath: string, options: any): Promise<void> {
     if (!options.quiet) {
       this.simpleLog(
-        `[ LINTING ${options.resource.toUpperCase()} ]`,
+        `[ LINTING ${options.resource.toUpperCase()} ]\n`,
         'rmNewLineStart',
         'bold',
         'green',
