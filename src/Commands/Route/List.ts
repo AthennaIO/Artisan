@@ -11,6 +11,8 @@ import { existsSync } from 'fs'
 import { Path, String } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
+import { FacadeNotFoundException } from 'src/Exceptions/FacadeNotFoundException'
+import { FileNotFoundException } from 'src/Exceptions/FileNotFoundException'
 
 export class List extends Command {
   /**
@@ -48,17 +50,13 @@ export class List extends Command {
     const Route = ioc.use<any>('Athenna/Core/HttpRoute')
 
     if (!Route) {
-      this.error('The facade ({yellow} "Route") has not been found.')
-
-      return
+      throw new FacadeNotFoundException('Route')
     }
 
     const routePath = Path.pwd('dist/routes/http.js')
 
     if (!existsSync(routePath)) {
-      this.error(
-        `The file ({yellow} "dist/routes/http.js") has not been found.`,
-      )
+      throw new FileNotFoundException('dist/routes/http.js')
     }
 
     await import(routePath)

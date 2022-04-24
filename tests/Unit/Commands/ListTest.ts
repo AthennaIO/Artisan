@@ -8,20 +8,19 @@
  */
 
 import '@athenna/ioc'
-
-import { existsSync } from 'fs'
 import { Config } from '@athenna/config'
+import { Kernel } from '../../Stubs/app/Console/Kernel'
 import { Folder, Path } from '@secjs/utils'
-import { Kernel } from '../../../Stubs/app/Console/Kernel'
 import { Artisan } from 'src/Facades/Artisan'
 import { ArtisanProvider } from 'src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/src/Providers/LoggerProvider'
 
-describe('\n MakeFacadeTest', () => {
+describe('\n ListTest', () => {
   beforeEach(async () => {
+    new Folder(Path.tests('Stubs/providers')).loadSync().copySync(Path.providers())
+    new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
     new Folder(Path.tests('Stubs/app/Console')).loadSync().copySync(Path.app('Console'))
     new Folder(Path.tests('Stubs/app/Console/Exceptions')).loadSync().copySync(Path.app('Console/Exceptions'))
-    new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
 
     await Config.load()
     new LoggerProvider().register()
@@ -33,17 +32,24 @@ describe('\n MakeFacadeTest', () => {
     await kernel.registerCommands()
   })
 
-  it('should be able to create a facade file', async () => {
-    await Artisan.call('make:facade TestFacade')
-
-    const path = Path.providers('Facades/TestFacade.ts')
-
-    expect(existsSync(path)).toBe(true)
+  it('should be able to list all commands from eslint alias', async () => {
+    await Artisan.call('list eslint')
   }, 60000)
 
-  it('should throw an error when the file already exists', async () => {
-    await Artisan.call('make:facade Test -e ts')
-    await Artisan.call('make:facade Test -e ts')
+  it('should be able to list all commands from make alias', async () => {
+    await Artisan.call('list make')
+  }, 60000)
+
+  it('should be able to list all commands from route alias', async () => {
+    await Artisan.call('list route')
+  }, 60000)
+
+  it('should be able to list all commands from list alias', async () => {
+    await Artisan.call('list list')
+  }, 60000)
+
+  it('should be able to list all commands from not-existent alias', async () => {
+    await Artisan.call('list not-existent')
   }, 60000)
 
   afterEach(async () => {

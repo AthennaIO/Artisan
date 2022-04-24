@@ -11,16 +11,16 @@ import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
 
-export class Eslint extends Command {
+export class List extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'list:eslint'
+  protected signature = 'list <alias>'
 
   /**
    * The console command description.
    */
-  protected description = 'List all eslint commands.'
+  protected description = 'List all commands available of the alias.'
 
   /**
    * Set additional flags in the commander instance.
@@ -37,12 +37,17 @@ export class Eslint extends Command {
    *
    * @return {Promise<void>}
    */
-  async handle(): Promise<void> {
-    this.simpleLog('[ LISTING ESLINT ]', 'rmNewLineStart', 'bold', 'green')
+  async handle(alias: string): Promise<void> {
+    this.simpleLog(
+      `[ LISTING ${alias.toUpperCase()} ]`,
+      'rmNewLineStart',
+      'bold',
+      'green',
+    )
 
     const commands =
       'Commands:' +
-      Artisan.listCommands(true, 'eslint')
+      Artisan.listCommands(true, alias)
         .split('\n')
         .map(line => `  ${line}`)
         .join('\n')

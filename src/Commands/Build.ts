@@ -7,20 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import { Artisan } from 'src/Facades/Artisan'
+import { Path } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
 
-export class Route extends Command {
+export class Build extends Command {
   /**
    * The name and signature of the console command.
    */
-  protected signature = 'list:route'
+  protected signature = 'build'
 
   /**
    * The console command description.
    */
-  protected description = 'List all route commands.'
+  protected description = 'Compile project from Typescript to Javascript.'
 
   /**
    * Set additional flags in the commander instance.
@@ -37,16 +37,21 @@ export class Route extends Command {
    *
    * @return {Promise<void>}
    */
-  async handle(): Promise<void> {
-    this.simpleLog('[ LISTING ROUTE ]', 'rmNewLineStart', 'bold', 'green')
+  async handle(_: any, commander: any): Promise<void> {
+    this.simpleLog('[ BUILDING PROJECT ]', 'rmNewLineStart', 'bold', 'green')
 
-    const commands =
-      'Commands:' +
-      Artisan.listCommands(true, 'route')
-        .split('\n')
-        .map(line => `  ${line}`)
-        .join('\n')
+    const rimrafPath = Path.noBuild().pwd('node_modules/.bin/rimraf')
+    let tscPath = Path.noBuild().pwd('node_modules/.bin/tsc')
 
-    this.simpleLog(commands)
+    const tscArgs = commander.args.join(' ')
+
+    if (tscArgs) {
+      tscPath = tscPath.concat(` ${tscArgs}`)
+    }
+
+    await this.execCommand(`${rimrafPath} dist`)
+    await this.execCommand(tscPath)
+
+    this.success('Built successfully.')
   }
 }

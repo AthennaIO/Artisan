@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { resolveModule } from '@secjs/utils'
+import { Env } from '@athenna/config'
 import { Artisan } from 'src/Facades/Artisan'
 import { Command } from 'src/Commands/Command'
+import { Path, resolveModule } from '@secjs/utils'
 
 export abstract class ConsoleKernel {
   /**
@@ -34,16 +35,46 @@ export abstract class ConsoleKernel {
 
       Command = ioc.safeUse(`App/Console/Commands/${Command.name}`)
 
+      /**
+       * Action runner catches all exceptions thrown by commands
+       * exceptions and sends to the Artisan exception handler.
+       *
+       * @param fn
+       */
+      function actionRunner(fn: (...args) => Promise<any>) {
+        return (...args) => fn(...args).catch(Artisan.getErrorHandler())
+      }
+
       Artisan.register(commander => {
         commander = commander
           .command(Command.signature)
           .description(Command.description)
 
         Command.addFlags(commander)
-          .action(Command.handle.bind(Command))
+          .action(actionRunner(Command.handle.bind(Command)))
           .showHelpAfterError()
           .createHelp()
       })
     }
+  }
+
+  /**
+   * Register the default error handler
+   *
+   * @return void
+   */
+  async registerErrorHandler(): Promise<void> {
+    let extension = 'js'
+
+    if (Env('NODE_TS') === 'true') {
+      extension = 'ts'
+    }
+
+    const path = Path.app(`Console/Exceptions/Handler.${extension}`)
+
+    const Handler = resolveModule(await import(path))
+    const handler = new Handler()
+
+    Artisan.setErrorHandler(handler.handle.bind(handler))
   }
 }

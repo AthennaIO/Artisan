@@ -11,6 +11,7 @@ import { parse } from 'path'
 import { Path } from '@secjs/utils'
 import { Command } from 'src/Commands/Command'
 import { Commander } from 'src/Contracts/Commander'
+import { EslintException } from 'src/Exceptions/EslintException'
 
 export class Fix extends Command {
   /**
@@ -67,9 +68,7 @@ export class Fix extends Command {
       }
     } catch (error) {
       if (!options.quiet) {
-        this.error(
-          `Failed to lint ${options.resource} ({yellow} "${name}"). Please check your eslint configurations.`,
-        )
+        throw new EslintException(options.resource, name)
       }
     }
   }

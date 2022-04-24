@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'path'
 import { existsSync } from 'fs'
 import { File, Path } from '@secjs/utils'
 import { Artisan } from 'src/Facades/Artisan'
 import { Commander } from 'src/Contracts/Commander'
 import { TemplateHelper } from 'src/Utils/TemplateHelper'
 import { Command as AbstractCommand } from 'src/Commands/Command'
+import { AlreadyExistFileException } from 'src/Exceptions/AlreadyExistFileException'
+import { TemplateNotFoundException } from 'src/Exceptions/TemplateNotFoundException'
 
 export class Command extends AbstractCommand {
   /**
@@ -59,11 +60,7 @@ export class Command extends AbstractCommand {
     const template = TemplateHelper.getTemplate('__name__Command', options)
 
     if (!template) {
-      this.error(
-        `Template for extension ({yellow} "${options.extension}") has not been found.`,
-      )
-
-      return
+      throw new TemplateNotFoundException(options.extension)
     }
 
     const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
@@ -74,13 +71,7 @@ export class Command extends AbstractCommand {
     )
 
     if (existsSync(path)) {
-      this.error(
-        `The command ({yellow} "${
-          parse(path).name
-        }") already exists. Try using another name.`,
-      )
-
-      return
+      throw new AlreadyExistFileException('command', path)
     }
 
     const command = await new File(path, content).create()
