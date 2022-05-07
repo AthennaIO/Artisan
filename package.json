@@ -33,7 +33,9 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./facades/Artisan": "./src/Facades/Log.js",
+    "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js"
   },
   "imports": {
     "#src/*": "./src/*.js",
