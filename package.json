@@ -40,9 +40,8 @@
     "#tests/*": "./tests/*.js"
   },
   "dependencies": {
-    "@athenna/config": "1.1.0",
-    "@athenna/ioc": "1.1.7",
-    "@athenna/logger": "1.2.2",
+    "@athenna/ioc": "1.1.8",
+    "@athenna/logger": "1.2.3",
     "@secjs/utils": "1.9.3",
     "chalk-rainbow": "1.0.0",
     "cli-table": "0.3.11",
@@ -85,7 +84,11 @@
       "html"
     ],
     "report-dir": "./tests/Coverage",
-    "check-coverage": true
+    "check-coverage": true,
+    "statements": "80",
+    "branches": "80",
+    "functions": "80",
+    "lines": "80"
   },
   "husky": {
     "hooks": {
@@ -127,6 +130,9 @@
     "env": {
       "es2021": true,
       "node": true
+    },
+    "globals": {
+      "ioc": true
     },
     "plugins": [
       "prettier"
