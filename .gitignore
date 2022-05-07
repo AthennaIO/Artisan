@@ -24,6 +24,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+Coverage
 *.lcov
 
 # nyc test coverage
@@ -122,17 +123,5 @@ out
 .env.testing
 .env.production
 
-# Build files
-*.js
-*.d.ts
-dist
-build
-
 # MacOS folder mapper file
 .DS_Store
-
-# Testing stubs that could fail
-./app
-./config
-./routes
-./providers
