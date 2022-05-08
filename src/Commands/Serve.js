@@ -8,10 +8,11 @@
  */
 
 import nodemon from 'nodemon'
-import { pathToFileURL } from 'node:url'
 
 import { Path } from '@secjs/utils'
-import { Artisan, Command } from '#src/index'
+import { pathToFileURL } from 'node:url'
+
+import { Command } from '#src/index'
 
 export class Serve extends Command {
   /**
