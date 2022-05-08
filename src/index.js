@@ -199,7 +199,6 @@ export class ArtisanImpl {
       .command(signature)
       .action(actionRunner(fakeCmd.handle.bind(fakeCmd)))
       .showHelpAfterError()
-      .createHelp()
   }
 
   /**
