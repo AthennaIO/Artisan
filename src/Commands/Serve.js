@@ -8,10 +8,11 @@
  */
 
 import nodemon from 'nodemon'
-import { pathToFileURL } from 'node:url'
 
 import { Path } from '@secjs/utils'
-import { Artisan, Command } from '#src/index'
+import { pathToFileURL } from 'node:url'
+
+import { Command } from '#src/index'
 
 export class Serve extends Command {
   /**
@@ -47,8 +48,6 @@ export class Serve extends Command {
    */
   async handle(options) {
     process.env.BOOT_LOGS = 'true'
-
-    await Artisan.call('build')
 
     if (options.watch) {
       const ignorePaths = `--ignore ${Path.tests()} ${Path.storage()} ${Path.nodeModules()}`

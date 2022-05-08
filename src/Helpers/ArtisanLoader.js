@@ -7,6 +7,7 @@ export class ArtisanLoader {
   static loadHttp() {
     return [
       ...ArtisanLoader.loadConsole(),
+      import('#src/Commands/Route/List'),
       import('#src/Commands/Make/Controller'),
       import('#src/Commands/Make/Middleware'),
     ]
