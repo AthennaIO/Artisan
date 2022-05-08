@@ -49,7 +49,6 @@ export class MakeFix extends Command {
     if (!options.quiet) {
       this.simpleLog(
         `[ LINTING ${options.resource.toUpperCase()} ]\n`,
-        'rmNewLineStart',
         'bold',
         'green',
       )
