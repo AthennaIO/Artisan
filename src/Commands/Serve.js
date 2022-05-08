@@ -48,8 +48,6 @@ export class Serve extends Command {
   async handle(options) {
     process.env.BOOT_LOGS = 'true'
 
-    await Artisan.call('build')
-
     if (options.watch) {
       const ignorePaths = `--ignore ${Path.tests()} ${Path.storage()} ${Path.nodeModules()}`
 
