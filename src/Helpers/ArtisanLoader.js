@@ -23,6 +23,7 @@ export class ArtisanLoader {
       import('#src/Commands/List'),
       import('#src/Commands/Serve'),
       import('#src/Commands/Eslint/Fix'),
+      import('#src/Commands/Make/Test'),
       import('#src/Commands/Make/Facade'),
       import('#src/Commands/Make/Service'),
       import('#src/Commands/Make/Command'),
