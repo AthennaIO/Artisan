@@ -10,9 +10,6 @@
 import { Path } from '@secjs/utils'
 
 import { Command } from '#src/index'
-import { parse } from 'node:path'
-import nodemon from 'nodemon'
-import { pathToFileURL } from 'node:url'
 
 export class Test extends Command {
   /**
