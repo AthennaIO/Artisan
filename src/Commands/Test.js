@@ -31,8 +31,8 @@ export class Test extends Command {
    */
   addFlags(commander) {
     return commander
-      .option('--c8-args', 'Arguments for c8 cli if needed.', '')
-      .option('--japa-args', 'Arguments for japa cli if needed.', '')
+      .option('--c8-args', 'Arguments for c8 cli if needed.', null)
+      .option('--japa-args', 'Arguments for japa cli if needed.', null)
       .option('--coverage', 'Coverage the code lines using c8 library.', false)
       .option('--debug', 'Enable debug mode to see more logs.', false)
       .option('--unit', 'Run unit tests.', false)
@@ -50,7 +50,11 @@ export class Test extends Command {
     let command = ''
 
     if (options.coverage) {
-      command = command.concat(`${Path.bin('c8')} ${options.c8Args} `)
+      command = command.concat(`${Path.bin('c8')} `)
+
+      if (options.c8Args) {
+        command = command.concat(options.c8Args, ' ')
+      }
     }
 
     if (options.debug) {
@@ -65,6 +69,10 @@ export class Test extends Command {
 
     if (options.e2e) {
       command = command.concat('E2E ')
+    }
+
+    if (options.japaArgs) {
+      command = command.concat(options.japaArgs, ' ')
     }
 
     await this.execCommand(command)
