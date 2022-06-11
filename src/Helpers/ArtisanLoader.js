@@ -20,6 +20,7 @@ export class ArtisanLoader {
    */
   static loadConsole() {
     return [
+      import('#src/Commands/Test'),
       import('#src/Commands/List'),
       import('#src/Commands/Serve'),
       import('#src/Commands/Eslint/Fix'),
