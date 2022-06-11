@@ -45,7 +45,7 @@ test.group('MakeTestTest', group => {
 
     assert.isTrue(await File.exists(path))
 
-    await File.safeRemove(path)
+    await Folder.safeRemove(Path.tests('E2E'))
   }).timeout(60000)
 
   test('should be able to create a unit test file', async ({ assert }) => {
@@ -61,5 +61,7 @@ test.group('MakeTestTest', group => {
   test('should throw an error when the file already exists', async ({ assert }) => {
     await Artisan.call('make:test TestTest')
     await Artisan.call('make:test TestTest')
+
+    await Folder.safeRemove(Path.tests('E2E'))
   }).timeout(60000)
 })
