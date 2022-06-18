@@ -72,10 +72,10 @@ export class ArtisanImpl {
    * Call any command from Artisan.
    *
    * @param {string} command
-   * @return Promise<void>
+   * @return Promise<Command>
    */
   async call(command) {
-    await this.#commander.parseAsync([
+    return this.#commander.parseAsync([
       'node', // This will be ignored by commander
       'artisan', // This will be ignored by commander
       ...command.split(' '),
@@ -144,6 +144,16 @@ export class ArtisanImpl {
    */
   getCommander() {
     return this.#commander
+  }
+
+  /**
+   * Set the commander instance of Artisan.
+   *
+   * @param {import('commander').Command} commander
+   * @return {void}
+   */
+  setCommander(commander) {
+    this.#commander = commander
   }
 
   /**

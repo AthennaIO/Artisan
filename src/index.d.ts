@@ -274,9 +274,9 @@ export class ArtisanImpl {
    * Call any command from Artisan.
    *
    * @param {string} command
-   * @return Promise<void>
+   * @return Promise<Commander>
    */
-  call(command: string): Promise<void>
+  call(command: string): Promise<Commander>
 
   /**
    * List all commands with description.
@@ -304,6 +304,13 @@ export class ArtisanImpl {
    * @return {import('commander').Command}
    */
   getCommander(): Commander
+
+  /**
+   * Set the commander instance of Artisan.
+   *
+   * @return {import('commander').Command}
+   */
+  setCommander(commander: Commander): void
 
   /**
    * Register the command inside commander instance.
