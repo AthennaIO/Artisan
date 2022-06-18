@@ -147,6 +147,16 @@ export class ArtisanImpl {
   }
 
   /**
+   * Set the commander instance of Artisan.
+   *
+   * @param {import('commander').Command} commander
+   * @return {void}
+   */
+  setCommander(commander) {
+    this.#commander = commander
+  }
+
+  /**
    * Register the command inside commander instance.
    *
    * @param {(commander: Commander) => void} callback
