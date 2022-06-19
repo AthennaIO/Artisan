@@ -31,12 +31,14 @@ export class Test extends Command {
    */
   addFlags(commander) {
     return commander
-      .option('--c8-args', 'Arguments for c8 cli if needed.', null)
-      .option('--japa-args', 'Arguments for japa cli if needed.', null)
-      .option('--coverage', 'Coverage the code lines using c8 library.', false)
       .option('--debug', 'Enable debug mode to see more logs.', false)
       .option('--unit', 'Run unit tests.', false)
       .option('--e2e', 'Run e2e tests.', false)
+      .option(
+        '--env',
+        'Change the environment where the test will run. Default is "test"',
+        'test',
+      )
   }
 
   /**
@@ -46,35 +48,25 @@ export class Test extends Command {
    * @return {Promise<void>}
    */
   async handle(options) {
+    process.env.NODE_ENV = options.env
     process.env.BOOT_LOGS = 'false'
-    let command = ''
 
-    if (options.coverage) {
-      command = command.concat(`${Path.bin('c8')} `)
+    const protectedArgs = ['--e2e', '--unit', '--debug']
 
-      if (options.c8Args) {
-        command = command.concat(options.c8Args, ' ')
-      }
+    process.argv = process.argv.filter(arg => !protectedArgs.includes(arg))
+
+    if (options.e2e) {
+      process.argv.push('E2E')
+    }
+
+    if (options.unit) {
+      process.argv.push('Unit')
     }
 
     if (options.debug) {
-      command = command.concat(`${Path.bin('cross-env')} DEBUG=api:* && `)
+      process.env.DEBUG = 'api:*'
     }
 
-    command = command.concat(`node ${Path.tests('main.js')} `)
-
-    if (options.unit) {
-      command = command.concat('Unit ')
-    }
-
-    if (options.e2e) {
-      command = command.concat('E2E ')
-    }
-
-    if (options.japaArgs) {
-      command = command.concat(options.japaArgs, ' ')
-    }
-
-    await this.execCommand(command)
+    await import(Path.tests('main.js'))
   }
 }
