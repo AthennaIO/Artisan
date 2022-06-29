@@ -35,7 +35,7 @@ export class Test extends Command {
       .option('--unit', 'Run unit tests.', false)
       .option('--e2e', 'Run e2e tests.', false)
       .option(
-        '--env',
+        '-e, --env <env>',
         'Change the environment where the test will run. Default is "test"',
         'test',
       )
