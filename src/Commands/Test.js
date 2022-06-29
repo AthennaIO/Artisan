@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Path } from '@secjs/utils'
+import { Path, Config } from '@secjs/utils'
 
 import { Command } from '#src/index'
 
@@ -48,6 +48,8 @@ export class Test extends Command {
    * @return {Promise<void>}
    */
   async handle(options) {
+    Config.configs.clear()
+
     process.env.NODE_ENV = options.env
     process.env.BOOT_LOGS = 'false'
 
