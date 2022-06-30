@@ -45,12 +45,16 @@ export class ConsoleExceptionHandler {
       throw error
     }
 
-    const prettyError = await new Exception(
+    const exception = new Exception(
       body.message,
       body.statusCode,
       body.code,
       body.help,
-    ).prettify()
+    )
+
+    exception.stack = body.stack
+
+    const prettyError = await exception.prettify()
 
     Log.channel('exception').error(prettyError.concat('\n'))
 
