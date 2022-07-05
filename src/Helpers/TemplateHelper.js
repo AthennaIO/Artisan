@@ -45,10 +45,8 @@ export class TemplateHelper {
 
   /**
    * Set the templates' folder same as the original.
-   *
-   * @param {Folder} folder
    */
-  static setOriginalTemplatesFolder(folder) {
+  static setOriginalTemplatesFolder() {
     this.#templatesFolder = this.#originalTemplatesFolder
   }
 

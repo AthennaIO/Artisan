@@ -168,10 +168,8 @@ export class TemplateHelper {
 
   /**
    * Set the templates' folder same as the original.
-   *
-   * @param {Folder} folder
    */
-  static setOriginalTemplatesFolder(folder: Folder)
+  static setOriginalTemplatesFolder(): void
 
   /**
    * Normalize the resource name removing duplicated.
