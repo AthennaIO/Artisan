@@ -45,10 +45,6 @@ test.group('ListTest', group => {
     await Artisan.call('list make')
   }).timeout(60000)
 
-  test('should be able to list all commands from route alias', async () => {
-    await Artisan.call('list route')
-  }).timeout(60000)
-
   test('should be able to list all commands from list alias', async () => {
     await Artisan.call('list list')
   }).timeout(60000)
