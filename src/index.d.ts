@@ -1,4 +1,4 @@
-import { File } from '@secjs/utils'
+import { File, Folder } from '@secjs/utils'
 import { Facade } from '@athenna/ioc'
 
 import { Command as Commander } from 'commander'
@@ -151,21 +151,28 @@ export class ConsoleKernel {
 
 export class ArtisanLoader {
   /**
-   * Return all commands from artisan http application.
-   *
-   * @return {any[]}
-   */
-  static loadHttp(): any[]
-
-  /**
    * Return all commands from artisan console application.
    *
    * @return {any[]}
    */
-  static loadConsole(): any[]
+  static loadCommands(): any[]
 }
 
 export class TemplateHelper {
+  /**
+   * Set the templates' folder.
+   *
+   * @param {Folder} folder
+   */
+  static setTemplatesFolder(folder: Folder): void
+
+  /**
+   * Set the templates' folder same as the original.
+   *
+   * @param {Folder} folder
+   */
+  static setOriginalTemplatesFolder(folder: Folder)
+
   /**
    * Normalize the resource name removing duplicated.
    *
