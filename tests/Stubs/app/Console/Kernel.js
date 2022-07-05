@@ -14,5 +14,5 @@ export class Kernel extends ConsoleKernel {
   /**
    * Register the commands for the application.
    */
-  commands = [...ArtisanLoader.loadHttp()]
+  commands = [...ArtisanLoader.loadCommands()]
 }

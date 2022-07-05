@@ -20,11 +20,37 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export class TemplateHelper {
   /**
-   * The templates' folder instance of artisan.
+   * The original templates' folder instance of artisan.
+   */
+  static #originalTemplatesFolder = new Folder(
+    join(__dirname, '..', '..', 'templates'),
+  ).loadSync()
+
+  /**
+   * The templates' folder. Could be changed with setTemplatesFolder
+   * method.
    */
   static #templatesFolder = new Folder(
     join(__dirname, '..', '..', 'templates'),
   ).loadSync()
+
+  /**
+   * Set the templates' folder.
+   *
+   * @param {Folder} folder
+   */
+  static setTemplatesFolder(folder) {
+    this.#templatesFolder = folder
+  }
+
+  /**
+   * Set the templates' folder same as the original.
+   *
+   * @param {Folder} folder
+   */
+  static setOriginalTemplatesFolder(folder) {
+    this.#templatesFolder = this.#originalTemplatesFolder
+  }
 
   /**
    * Normalize the resource name removing duplicated.
@@ -56,7 +82,10 @@ export class TemplateHelper {
   static getTemplate(templateName) {
     templateName = `${templateName}.js.ejs`
 
-    return this.#templatesFolder.files.find(f => f.base === templateName)
+    return (
+      this.#templatesFolder.files.find(f => f.base === templateName) ||
+      this.#originalTemplatesFolder.files.find(f => f.base === templateName)
+    )
   }
 
   /**
