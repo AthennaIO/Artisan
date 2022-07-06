@@ -19,16 +19,20 @@ export class Command {
   /**
    * The name and signature of the console command.
    *
-   * @type {string}
+   * @return {string}
    */
-  signature
+  get signature() {
+    throw new Error('Signature getter not implemented.')
+  }
 
   /**
    * The console command description.
    *
-   * @type {string}
+   * @return {string}
    */
-  description
+  get description() {
+    return ''
+  }
 
   /**
    * Set additional flags in the commander instance.

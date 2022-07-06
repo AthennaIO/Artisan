@@ -14,13 +14,21 @@ import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 export class MakeTest extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:test <name>'
+  get signature() {
+    return 'make:test <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new test file.'
+  get description() {
+    return 'Make a new test file.'
+  }
 
   /**
    * Set additional flags in the commander instance.

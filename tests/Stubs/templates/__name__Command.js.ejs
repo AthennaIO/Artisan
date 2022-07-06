@@ -1,0 +1,15 @@
+import { Command } from '@athenna/artisan'
+
+// Custom template command!
+export class <%= namePascal %>Command extends Command {
+    signature = 'your:command <yourArgument>'
+    description = 'Your command description.'
+
+    addFlags(commander) {
+      return commander
+    }
+
+    async handle(_argument, _options) {
+      //
+    }
+}

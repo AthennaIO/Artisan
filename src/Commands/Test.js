@@ -14,13 +14,21 @@ import { Command } from '#src/index'
 export class Test extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'test'
+  get signature() {
+    return 'test'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Run the tests of Athenna application.'
+  get description() {
+    return 'Run the tests of Athenna application.'
+  }
 
   /**
    * Set additional flags in the commander instance.

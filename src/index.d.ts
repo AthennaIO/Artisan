@@ -160,16 +160,36 @@ export class ArtisanLoader {
 
 export class TemplateHelper {
   /**
-   * Set the templates' folder.
+   * Set a custom template file.
    *
-   * @param {Folder} folder
+   * @param {File} file
+   * @return {void}
    */
-  static setTemplatesFolder(folder: Folder): void
+  static setTemplate(file: File): void
 
   /**
-   * Set the templates' folder same as the original.
+   * Set all .ejs files inside folder as templates.
+   *
+   * @param {Folder} folder
+   * @return {void}
    */
-  static setOriginalTemplatesFolder(): void
+  static setAllTemplates(folder: Folder): void
+
+  /**
+   * Remove the custom template file.
+   *
+   * @param {File} file
+   * @return {void}
+   */
+  static removeTemplate(file: Folder): void
+
+  /**
+   * Remove all .ejs files inside folders from custom templates.
+   *
+   * @param {Folder} folder
+   * @return {void}
+   */
+  static removeAllTemplates(folder: Folder): void
 
   /**
    * Normalize the resource name removing duplicated.

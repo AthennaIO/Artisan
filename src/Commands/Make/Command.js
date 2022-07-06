@@ -14,13 +14,21 @@ import { Artisan, Command as AbstractCommand } from '#src/index'
 export class MakeCommand extends AbstractCommand {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:command <name>'
+  get signature() {
+    return 'make:command <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new command file.'
+  get description() {
+    return 'Make a new command file.'
+  }
 
   /**
    * Set additional flags in the commander instance.
@@ -66,9 +74,9 @@ export class MakeCommand extends AbstractCommand {
     }
 
     if (options.register) {
-      await TemplateHelper.replaceArrayProperty(
+      await TemplateHelper.replaceArrayGetter(
         Path.console('Kernel.js'),
-        'commands =',
+        'commands',
         `#app/Console/Commands/${file.name}`,
       )
     }

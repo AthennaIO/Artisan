@@ -14,13 +14,21 @@ import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 export class MakeService extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:service <name>'
+  get signature() {
+    return 'make:service <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new service file.'
+  get description() {
+    return 'Make a new service file.'
+  }
 
   /**
    * Set additional flags in the commander instance.

@@ -13,11 +13,6 @@ import { ConsoleExceptionHandler } from '#src/Handlers/ConsoleExceptionHandler'
 
 export class Handler extends ConsoleExceptionHandler {
   /**
-   * Set if error logs will come with stack.
-   */
-  addStack = false
-
-  /**
    * The global exception handler of all Artisan commands.
    *
    * @param {import('@secjs/utils').Exception} error

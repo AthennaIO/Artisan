@@ -4,14 +4,18 @@ export class Kernel {
    *
    * This middlewares are run during every request to your http server.
    */
-  globalMiddlewares = []
+  get globalMiddlewares() {
+    return []
+  }
 
   /**
    * The application's named HTTP middlewares.
    *
    * Here you define all your named middlewares to use inside routes/http file.
    */
-  namedMiddlewares = {
-    test: 'example',
+  get namedMiddlewares() {
+    return {
+      test: 'example',
+    }
   }
 }

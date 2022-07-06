@@ -9,45 +9,80 @@
 
 import ejs from 'ejs'
 
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
+import { File, Folder, Module, String } from '@secjs/utils'
 
 import { Artisan } from '#src/index'
-import { File, Folder, String } from '@secjs/utils'
 import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export class TemplateHelper {
   /**
    * The original templates' folder instance of artisan.
    */
   static #originalTemplatesFolder = new Folder(
-    join(__dirname, '..', '..', 'templates'),
+    join(Module.createDirname(import.meta.url), '..', '..', 'templates'),
   ).loadSync()
 
   /**
-   * The templates' folder. Could be changed with setTemplatesFolder
-   * method.
-   */
-  static #templatesFolder = new Folder(
-    join(__dirname, '..', '..', 'templates'),
-  ).loadSync()
-
-  /**
-   * Set the templates' folder.
+   * The custom templates' files. Use this property to set custom
+   * templates' files to use inside Artisan.
    *
-   * @param {Folder} folder
+   * @type {File[]}
    */
-  static setTemplatesFolder(folder) {
-    this.#templatesFolder = folder
+  static #customTemplates = []
+
+  /**
+   * Set a custom template file.
+   *
+   * @param {File} file
+   * @return {void}
+   */
+  static setTemplate(file) {
+    this.#customTemplates.push(file)
   }
 
   /**
-   * Set the templates' folder same as the original.
+   * Set all .ejs files inside folder as templates.
+   *
+   * @param {Folder} folder
+   * @return {void}
    */
-  static setOriginalTemplatesFolder() {
-    this.#templatesFolder = this.#originalTemplatesFolder
+  static setAllTemplates(folder) {
+    folder.getFilesByPattern('*/**/*.ejs').forEach(file => {
+      if (file.extension !== '.js.ejs') {
+        return
+      }
+
+      this.setTemplate(file)
+    })
+  }
+
+  /**
+   * Remove the custom template file.
+   *
+   * @param {File} file
+   * @return {void}
+   */
+  static removeTemplate(file) {
+    delete this.#customTemplates[
+      this.#customTemplates.findIndex(f => f === file)
+    ]
+  }
+
+  /**
+   * Remove all .ejs files inside folders from custom templates.
+   *
+   * @param {Folder} folder
+   * @return {void}
+   */
+  static removeAllTemplates(folder) {
+    folder.getFilesByPattern('*/**/*.ejs').forEach(file => {
+      if (file.extension !== '.ejs') {
+        return
+      }
+
+      this.removeTemplate(file)
+    })
   }
 
   /**
@@ -80,9 +115,11 @@ export class TemplateHelper {
   static getTemplate(templateName) {
     templateName = `${templateName}.js.ejs`
 
+    const predicate = file => file.base === templateName
+
     return (
-      this.#templatesFolder.files.find(f => f.base === templateName) ||
-      this.#originalTemplatesFolder.files.find(f => f.base === templateName)
+      this.#customTemplates.find(file => predicate(file)) ||
+      this.#originalTemplatesFolder.files.find(file => predicate(file))
     )
   }
 
@@ -175,6 +212,63 @@ export class TemplateHelper {
   }
 
   /**
+   * Replace the content of the array getter inside a file.
+   *
+   * @param {string} path
+   * @param {string} getter
+   * @param {string} importAlias
+   */
+  static async replaceArrayGetter(path, getter, importAlias) {
+    const file = new File(path).loadSync()
+    let content = file.getContentSync().toString()
+
+    const getMethod = `get\\s*${getter}\\(\\)\\s*\\{\\n\\s*return\\s*`
+
+    const matches = content.match(
+      new RegExp(`(?:${getMethod})(?:\\[[^\\]]*\\])`),
+    )
+
+    if (!matches) {
+      return
+    }
+
+    const match = matches[0]
+
+    const arrayString = match
+      .replace(new RegExp(getMethod), '')
+      .replace(/ /g, '')
+      .replace(/\n/g, '')
+      .replace(/(\[|\])/g, '')
+      .split(',')
+
+    /**
+     * In case "matcher" is an empty array.
+     * Example: "matcher" = []
+     */
+    if (arrayString.length) {
+      const last = () => arrayString.length - 1
+
+      if (arrayString[last()] === '') {
+        arrayString.pop()
+      }
+    }
+
+    arrayString.push(`import('${importAlias}')`)
+
+    content = content.replace(
+      match,
+      `get ${getter}() {\n return [${arrayString.join(',')}]`,
+    )
+
+    await file.remove()
+    await new File(file.path, Buffer.from(content)).load()
+
+    await Artisan.call(
+      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
+    )
+  }
+
+  /**
    * Replace the content of the object property inside a file.
    *
    * @param {string} path
@@ -220,6 +314,64 @@ export class TemplateHelper {
     arrayString.push(`${name}:import('${importAlias}')`)
 
     content = content.replace(match, `${matcher}{${arrayString.join(',')}}`)
+
+    await file.remove()
+    await new File(file.path, Buffer.from(content)).load()
+
+    await Artisan.call(
+      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
+    )
+  }
+
+  /**
+   * Replace the content of the object getter inside a file.
+   *
+   * @param {string} path
+   * @param {string} getter
+   * @param {string} resource
+   * @param {string} importAlias
+   */
+  static async replaceObjectGetter(path, getter, resource, importAlias) {
+    const file = new File(path).loadSync()
+    let content = file.getContentSync().toString()
+
+    const getMethod = `get\\s*${getter}\\(\\)\\s*\\{\\n\\s*return\\s*`
+
+    const matches = content.match(new RegExp(`(?:${getMethod})(?:\\{[^}]*\\})`))
+
+    if (!matches) {
+      return
+    }
+
+    const match = matches[0]
+
+    const arrayString = match
+      .replace(new RegExp(getMethod), '')
+      .replace(/ /g, '')
+      .replace(/\n/g, '')
+      .replace(/(\{|\})/g, '')
+      .split(',')
+
+    /**
+     * In case "matcher" is an empty object.
+     * Example: "matcher" = {}
+     */
+    if (arrayString.length) {
+      const last = () => arrayString.length - 1
+
+      if (arrayString[last()] === '') {
+        arrayString.pop()
+      }
+    }
+
+    const name = String.toCamelCase(resource)
+
+    arrayString.push(`${name}:import('${importAlias}')`)
+
+    content = content.replace(
+      match,
+      `get ${getter}() {\n return {${arrayString.join(',')}}`,
+    )
 
     await file.remove()
     await new File(file.path, Buffer.from(content)).load()

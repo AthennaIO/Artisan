@@ -14,13 +14,21 @@ import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 export class MakeException extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:exception <name>'
+  get signature() {
+    return 'make:exception <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new exception file.'
+  get description() {
+    return 'Make a new exception file.'
+  }
 
   /**
    * Set additional flags in the commander instance.

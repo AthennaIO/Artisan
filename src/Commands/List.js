@@ -12,13 +12,21 @@ import { Artisan, Command } from '#src/index'
 export class List extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'list <alias>'
+  get signature() {
+    return 'list <alias>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'List all commands available of the alias.'
+  get description() {
+    return 'List all commands available of the alias.'
+  }
 
   /**
    * Set additional flags in the commander instance.
