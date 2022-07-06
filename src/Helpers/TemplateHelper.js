@@ -38,6 +38,10 @@ export class TemplateHelper {
    * @return {void}
    */
   static setTemplate(file) {
+    if (this.hasTemplate(file)) {
+      this.removeTemplate(file)
+    }
+
     this.#customTemplates.push(file)
   }
 
@@ -58,15 +62,29 @@ export class TemplateHelper {
   }
 
   /**
+   * Verify if template already exists on custom templates'.
+   *
+   * @param {File} file
+   * @return {boolean}
+   */
+  static hasTemplate(file) {
+    return !!this.#customTemplates.find(f => f.base === file.base)
+  }
+
+  /**
    * Remove the custom template file.
    *
    * @param {File} file
    * @return {void}
    */
   static removeTemplate(file) {
-    delete this.#customTemplates[
-      this.#customTemplates.findIndex(f => f === file)
-    ]
+    if (!this.hasTemplate(file)) {
+      return
+    }
+
+    const index = this.#customTemplates.findIndex(f => f === file)
+
+    delete this.#customTemplates[index]
   }
 
   /**
@@ -165,6 +183,7 @@ export class TemplateHelper {
    * @param {string} path
    * @param {string} matcher
    * @param {string} importAlias
+   * @return {Promise<void>}
    */
   static async replaceArrayProperty(path, matcher, importAlias) {
     const file = new File(path).loadSync()
@@ -217,6 +236,7 @@ export class TemplateHelper {
    * @param {string} path
    * @param {string} getter
    * @param {string} importAlias
+   * @return {Promise<void>}
    */
   static async replaceArrayGetter(path, getter, importAlias) {
     const file = new File(path).loadSync()
@@ -275,6 +295,7 @@ export class TemplateHelper {
    * @param {string} matcher
    * @param {string} resource
    * @param {string} importAlias
+   * @return {Promise<void>}
    */
   static async replaceObjectProperty(path, matcher, resource, importAlias) {
     const file = new File(path).loadSync()
@@ -330,6 +351,7 @@ export class TemplateHelper {
    * @param {string} getter
    * @param {string} resource
    * @param {string} importAlias
+   * @return {Promise<void>}
    */
   static async replaceObjectGetter(path, getter, resource, importAlias) {
     const file = new File(path).loadSync()

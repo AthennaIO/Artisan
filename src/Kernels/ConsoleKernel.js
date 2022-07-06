@@ -81,7 +81,7 @@ export class ConsoleKernel {
   }
 
   /**
-   * Register the custom templates on template helper
+   * Register the custom templates on template helper.
    *
    * @return {Promise<void>}
    */
