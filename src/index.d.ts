@@ -1,8 +1,8 @@
-import { File, Folder } from '@secjs/utils'
-import { Facade } from '@athenna/ioc'
-
-import { Command as Commander } from 'commander'
 import * as ora from 'ora'
+import { Command as Commander } from 'commander'
+
+import { Facade } from '@athenna/ioc'
+import { File, Folder } from '@secjs/utils'
 
 export const Artisan: Facade & ArtisanImpl
 
@@ -12,13 +12,13 @@ export class Command {
    *
    * @type {string}
    */
-  signature: string
+  get signature(): string
   /**
    * The console command description.
    *
    * @type {string}
    */
-  description: string
+  get description(): string
 
   /**
    * Set additional flags in the commander instance.
@@ -132,7 +132,14 @@ export class ConsoleKernel {
    *
    * @type {import('#src/index').Command[] | Promise<any>}
    */
-  commands: any[] | Promise<any>
+  get commands(): any[] | Promise<any[]>
+
+  /**
+   * Register custom templates files.
+   *
+   * @return {import('@secjs/utils').File[] | Promise<any[]>}
+   */
+  get templates(): any[] | Promise<any[]>
 
   /**
    * Register all the commands to the artisan.
@@ -142,11 +149,18 @@ export class ConsoleKernel {
   registerCommands(): Promise<void>
 
   /**
-   * Register the default error handler
+   * Register the default error handler.
    *
    * @return {Promise<void>}
    */
   registerErrorHandler(): Promise<void>
+
+  /**
+   * Register the custom templates on template helper.
+   *
+   * @return {Promise<void>}
+   */
+  registerCustomTemplates(): Promise<void>
 }
 
 export class ArtisanLoader {
@@ -174,6 +188,14 @@ export class TemplateHelper {
    * @return {void}
    */
   static setAllTemplates(folder: Folder): void
+
+  /**
+   * Verify if template already exists on custom templates'.
+   *
+   * @param {File} file
+   * @return {boolean}
+   */
+  static hasTemplate(file: File): boolean
 
   /**
    * Remove the custom template file.
@@ -240,6 +262,16 @@ export class TemplateHelper {
   ): Promise<void>
 
   /**
+   * Replace the content of the array getter inside a file.
+   *
+   * @param {string} path
+   * @param {string} getter
+   * @param {string} importAlias
+   * @return {Promise<void>}
+   */
+  static replaceArrayGetter(path: string, getter: string, importAlias: string): Promise<void>
+
+  /**
    * Replace the content of the object property inside a file.
    *
    * @param {string} path
@@ -253,6 +285,17 @@ export class TemplateHelper {
     resource: string,
     importAlias: string,
   ): Promise<void>
+
+  /**
+   * Replace the content of the object getter inside a file.
+   *
+   * @param {string} path
+   * @param {string} getter
+   * @param {string} resource
+   * @param {string} importAlias
+   * @return {Promise<void>}
+   */
+  static replaceObjectGetter(path: string, getter: string, resource: string, importAlias: string): Promise<void>
 
   /**
    * Create a new file from resource.
