@@ -8,8 +8,9 @@
  */
 
 import { test } from '@japa/runner'
-import { Artisan } from '#src/index'
-import { Config, Exception, Folder, Path } from '@secjs/utils'
+import { Config, Exception, File, Folder, Path } from '@secjs/utils'
+
+import { Artisan, TemplateHelper } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
@@ -29,11 +30,13 @@ test.group('ArtisanTest', group => {
 
     await kernel.registerErrorHandler()
     await kernel.registerCommands()
+    await kernel.registerCustomTemplates()
   })
 
   group.each.teardown(async () => {
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.config())
+    TemplateHelper.removeAllTemplates(await new Folder(Path.stubs('templates')).load())
   })
 
   test('should be able to execute test:error command from routes/console', async ({ assert }) => {
@@ -46,5 +49,13 @@ test.group('ArtisanTest', group => {
     const useCaseTwo = async () => await Artisan.call('test:error treated')
 
     await assert.rejects(useCaseTwo, Exception)
+  }).timeout(60000)
+
+  test('should be able to set custom templates on artisan template helper', async ({ assert }) => {
+    await Artisan.call('make:command CustomCommand')
+
+    const file = await new File(Path.console('Commands/CustomCommand.js')).load({ withContent: true })
+
+    assert.isTrue(file.content.toString().includes('Custom template command!'))
   }).timeout(60000)
 })

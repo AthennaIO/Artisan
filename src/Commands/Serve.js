@@ -17,13 +17,21 @@ import { Command } from '#src/index'
 export class Serve extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'serve'
+  get signature() {
+    return 'serve'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Serve the Athenna application.'
+  get description() {
+    return 'Serve the Athenna application.'
+  }
 
   /**
    * Set additional flags in the commander instance.

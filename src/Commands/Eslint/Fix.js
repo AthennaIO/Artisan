@@ -14,13 +14,21 @@ import { Command } from '#src/index'
 export class MakeFix extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'eslint:fix <filePath>'
+  get signature() {
+    return 'eslint:fix <filePath>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Lint one specific file using eslint.'
+  get description() {
+    return 'Lint one specific file using eslint.'
+  }
 
   /**
    * Set additional flags in the commander instance.

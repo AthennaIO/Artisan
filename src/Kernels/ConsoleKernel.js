@@ -7,18 +7,28 @@
  * file that was distributed with this source code.
  */
 
-import { pathToFileURL } from 'node:url'
-import { Exec, Path } from '@secjs/utils'
+import { Module, Path } from '@secjs/utils'
 
-import { Artisan } from '#src/index'
+import { Artisan, ArtisanLoader, TemplateHelper } from '#src/index'
 
 export class ConsoleKernel {
   /**
    * Register the commands for the application.
    *
-   * @type {import('#src/index').Command[] | Promise<any>}
+   * @return {import('#src/index').Command[] | Promise<any[]>}
    */
-  commands
+  get commands() {
+    return [...ArtisanLoader.loadCommands()]
+  }
+
+  /**
+   * Register custom templates files.
+   *
+   * @return {import('@secjs/utils').File[] | Promise<any[]>}
+   */
+  get templates() {
+    return []
+  }
 
   /**
    * Register all the commands to the artisan.
@@ -26,22 +36,23 @@ export class ConsoleKernel {
    * @return {Promise<void>}
    */
   async registerCommands() {
-    for (const module of this.commands) {
-      let Command = await Exec.getModule(module)
+    const commands = await Module.getAllWithAlias(
+      this.commands,
+      'App/Console/Commands',
+    )
 
-      const alias = `App/Console/Commands/${Command.name}`
+    /**
+     * Action runner catches all exceptions thrown by commands
+     * exceptions and sends to the Artisan exception handler.
+     *
+     * @param {any} fn
+     */
+    const actionRunner = fn => {
+      return (...args) => fn(...args).catch(Artisan.getErrorHandler())
+    }
 
-      Command = ioc.bind(alias, Command).safeUse(alias)
-
-      /**
-       * Action runner catches all exceptions thrown by commands
-       * exceptions and sends to the Artisan exception handler.
-       *
-       * @param {any} fn
-       */
-      const actionRunner = fn => {
-        return (...args) => fn(...args).catch(Artisan.getErrorHandler())
-      }
+    commands.forEach(({ alias, module }) => {
+      const Command = ioc.bind(alias, module).safeUse(alias)
 
       Artisan.register(commander => {
         commander = commander
@@ -53,20 +64,28 @@ export class ConsoleKernel {
           .showHelpAfterError()
           .createHelp()
       })
-    }
+    })
   }
 
   /**
-   * Register the default error handler
+   * Register the default error handler.
    *
    * @return {Promise<void>}
    */
   async registerErrorHandler() {
-    const path = Path.console('Exceptions/Handler.js')
+    const Handler = await Module.getFrom(Path.console('Exceptions/Handler.js'))
 
-    const Handler = await Exec.getModule(import(pathToFileURL(path).href))
     const handler = new Handler()
 
     Artisan.setErrorHandler(handler.handle.bind(handler))
+  }
+
+  /**
+   * Register the custom templates on template helper
+   *
+   * @return {Promise<void>}
+   */
+  async registerCustomTemplates() {
+    this.templates.forEach(file => TemplateHelper.setTemplate(file))
   }
 }

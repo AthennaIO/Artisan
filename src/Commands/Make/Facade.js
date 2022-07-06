@@ -14,13 +14,21 @@ import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 export class MakeFacade extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:facade <name>'
+  get signature() {
+    return 'make:facade <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new facade file.'
+  get description() {
+    return 'Make a new facade file.'
+  }
 
   /**
    * Set additional flags in the commander instance.

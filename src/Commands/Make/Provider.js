@@ -14,13 +14,21 @@ import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 export class MakeProvider extends Command {
   /**
    * The name and signature of the console command.
+   *
+   * @return {string}
    */
-  signature = 'make:provider <name>'
+  get signature() {
+    return 'make:provider <name>'
+  }
 
   /**
    * The console command description.
+   *
+   * @return {string}
    */
-  description = 'Make a new provider file.'
+  get description() {
+    return 'Make a new provider file.'
+  }
 
   /**
    * Set additional flags in the commander instance.
