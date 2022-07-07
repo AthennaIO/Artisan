@@ -423,7 +423,7 @@ export class TemplateHelper {
     )
 
     if (await File.exists(path)) {
-      throw new AlreadyExistFileException('controller', path)
+      throw new AlreadyExistFileException(resource, path)
     }
 
     return new File(path, content).load()
