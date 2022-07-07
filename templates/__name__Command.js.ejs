@@ -12,12 +12,16 @@ export class <%= namePascal %>Command extends Command {
     /**
     * The name and signature of the console command.
     */
-    signature = 'your:command <yourArgument>'
+    get signature() {
+        return 'your:command <yourArgument>'
+    }
 
     /**
     * The console command description.
     */
-    description = 'Your command description.'
+    get description() {
+        return 'Your command description.'
+    }
 
     /**
     * Set additional flags in the commander instance.
