@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Command } from '#src/index'
-import { Path, Module, Folder } from '@secjs/utils'
 import { join } from 'node:path'
+import { Path, Module, Folder } from '@secjs/utils'
+
+import { Command } from '#src/index'
 
 export class TemplateCustomize extends Command {
   /**
@@ -49,10 +50,6 @@ export class TemplateCustomize extends Command {
   async handle() {
     this.simpleLog(`[ MOVING TEMPLATES ]`, 'rmNewLineStart', 'bold', 'green')
 
-    const path = Path.pwd('templates')
-
-    await new Folder(path).load()
-
     const Kernel = await Module.getFrom(Path.console('Kernel.js'))
 
     const kernel = new Kernel()
@@ -67,12 +64,10 @@ export class TemplateCustomize extends Command {
           'templates',
         ),
       ).loadSync().files,
-      kernel.templates,
+      ...kernel.templates,
     ]
 
-    const promises = templates.map(template =>
-      template.copy(Path.pwd('templates')),
-    )
+    const promises = templates.map(t => t.copy(Path.pwd(`templates/${t.base}`)))
 
     await Promise.all(promises)
 
