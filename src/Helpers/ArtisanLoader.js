@@ -14,6 +14,7 @@ export class ArtisanLoader {
       import('#src/Commands/Make/Command'),
       import('#src/Commands/Make/Provider'),
       import('#src/Commands/Make/Exception'),
+      import('#src/Commands/Template/Customize'),
     ]
   }
 }
