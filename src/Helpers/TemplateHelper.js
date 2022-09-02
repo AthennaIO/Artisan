@@ -205,15 +205,13 @@ export class TemplateHelper {
   }
 
   /**
-   * Get the template file by name or undefined.
+   * Get the template file by resource.
    *
-   * @param {string} templateName
+   * @param {string} resource
    * @return {File}
    */
-  static getTemplate(templateName) {
-    templateName = `${templateName}.js.ejs`
-
-    const predicate = file => file.base === templateName
+  static getTemplateByResource(resource) {
+    const predicate = file => file.base.includes(resource)
 
     return (
       this.#customTemplates.find(file => predicate(file)) ||
@@ -503,7 +501,7 @@ export class TemplateHelper {
    */
   static async getResourceFile(name, resource, subPath) {
     name = TemplateHelper.normalizeName(name, resource)
-    const template = TemplateHelper.getTemplate(`__name__${resource}`)
+    const template = TemplateHelper.getTemplateByResource(resource)
 
     const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
     const path = subPath.concat('/', replacedName)

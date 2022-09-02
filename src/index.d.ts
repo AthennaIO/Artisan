@@ -254,12 +254,12 @@ export class TemplateHelper {
   static normalizeName(name: string, resource: string): string
 
   /**
-   * Get the template file by name or undefined.
+   * Get the template file by resource.
    *
-   * @param {string} templateName
+   * @param {string} resource
    * @return {File}
    */
-  static getTemplate(templateName: string): File
+  static getTemplateByResource(resource: string): File
 
   /**
    * Replace the name of the template file with values.
