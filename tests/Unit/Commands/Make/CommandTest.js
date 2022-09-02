@@ -10,7 +10,7 @@
 import { test } from '@japa/runner'
 import { Config, File, Folder, Path } from '@secjs/utils'
 
-import { Artisan } from '#src/index'
+import { Artisan, TemplateHelper } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
@@ -58,5 +58,19 @@ test.group('MakeCommandTest', group => {
   test('should throw an error when the file already exists', async ({ assert }) => {
     await Artisan.call('make:command TestCommand --no-register')
     await Artisan.call('make:command TestCommand --no-register')
+  }).timeout(60000)
+
+  test('should be able to replace template names and template values', async ({ assert }) => {
+    TemplateHelper.setTemplateName({ __name__: 'Zap' })
+    TemplateHelper.setTemplateValue({ namePascal: 'Zap' })
+
+    await Artisan.call('make:command testCommands --no-register')
+
+    const path = Path.console('Commands/ZapCommand.js')
+
+    assert.isTrue(await File.exists(path))
+
+    TemplateHelper.removeTemplateName({ __name__: 'Zap' })
+    TemplateHelper.removeTemplateValue({ namePascal: 'Zap' })
   }).timeout(60000)
 })
