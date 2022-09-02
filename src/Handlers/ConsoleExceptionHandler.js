@@ -42,7 +42,7 @@ export class ConsoleExceptionHandler {
 
       Log.channel('exception').error(prettyError.concat('\n'))
 
-      throw error
+      return
     }
 
     const exception = new Exception(
@@ -57,7 +57,5 @@ export class ConsoleExceptionHandler {
     const prettyError = await exception.prettify()
 
     Log.channel('exception').error(prettyError.concat('\n'))
-
-    throw error
   }
 }

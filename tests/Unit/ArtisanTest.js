@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { Config, Exception, File, Folder, Path } from '@secjs/utils'
+import { Config, File, Folder, Path } from '@secjs/utils'
 
 import { Artisan, TemplateHelper } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
@@ -42,13 +42,8 @@ test.group('ArtisanTest', group => {
   test('should be able to execute test:error command from routes/console', async ({ assert }) => {
     await import('#tests/Stubs/routes/console')
 
-    const useCaseOne = async () => await Artisan.call('test:error')
-
-    await assert.rejects(useCaseOne, Error)
-
-    const useCaseTwo = async () => await Artisan.call('test:error treated')
-
-    await assert.rejects(useCaseTwo, Exception)
+    await Artisan.call('test:error')
+    await Artisan.call('test:error treated')
   }).timeout(60000)
 
   test('should be able to set custom templates on artisan template helper', async ({ assert }) => {

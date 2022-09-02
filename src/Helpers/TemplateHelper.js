@@ -32,6 +32,80 @@ export class TemplateHelper {
   static #customTemplates = []
 
   /**
+   * The custom templates' names. Use this property to set custom
+   * templates' names to use any template.
+   *
+   * @type {any}
+   */
+  static #customTemplateNames = {}
+
+  /**
+   * The custom templates' values. Use this property to set custom
+   * templates' values to use any template.
+   *
+   * @type {any}
+   */
+  static #customTemplateValues = {}
+
+  /**
+   * Set custom template names.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static setTemplateName(object) {
+    this.#customTemplateNames = {
+      ...this.#customTemplateNames,
+      ...object,
+    }
+  }
+
+  /**
+   * Remove the custom template name.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static removeTemplateName(object) {
+    Object.keys(object).forEach(key => {
+      if (!this.#customTemplateNames[key]) {
+        return
+      }
+
+      delete this.#customTemplateNames[key]
+    })
+  }
+
+  /**
+   * Set custom template values.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static setTemplateValue(object) {
+    this.#customTemplateValues = {
+      ...this.#customTemplateValues,
+      ...object,
+    }
+  }
+
+  /**
+   * Remove the custom template value.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static removeTemplateValue(object) {
+    Object.keys(object).forEach(key => {
+      if (!this.#customTemplateValues[key]) {
+        return
+      }
+
+      delete this.#customTemplateValues[key]
+    })
+  }
+
+  /**
    * Set a custom template file.
    *
    * @param {File} file
@@ -111,7 +185,13 @@ export class TemplateHelper {
    * @return {string}
    */
   static normalizeName(name, resource) {
+    name = name.charAt(0).toUpperCase() + name.slice(1)
+
     const resourcePlural = String.pluralize(resource)
+
+    if (resource === '') {
+      return name
+    }
 
     if (name.includes(resource)) {
       return name.split(resource)[0]
@@ -149,12 +229,21 @@ export class TemplateHelper {
    * @return {string}
    */
   static replaceTemplateName(name, baseTemplateName) {
-    return baseTemplateName
+    Object.keys(this.#customTemplateNames).forEach(key => {
+      baseTemplateName = baseTemplateName.replace(
+        key,
+        this.#customTemplateNames[key],
+      )
+    })
+
+    baseTemplateName = baseTemplateName
       .replace('.ejs', '')
       .replace('__name__', name)
       .replace('__name_low__', name.toLowerCase())
       .replace('__name_plural__', String.pluralize(name))
       .replace('__name_plural_low__', String.pluralize(name).toLowerCase())
+
+    return baseTemplateName
   }
 
   /**
@@ -172,6 +261,7 @@ export class TemplateHelper {
       namePascal: String.toPascalCase(name),
       namePluralCamel: String.toCamelCase(String.pluralize(name)),
       namePluralPascal: String.toPascalCase(String.pluralize(name)),
+      ...this.#customTemplateValues,
     })
 
     return Buffer.from(templateString)

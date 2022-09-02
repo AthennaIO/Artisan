@@ -174,6 +174,37 @@ export class ArtisanLoader {
 
 export class TemplateHelper {
   /**
+   * Set custom template names.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static setTemplateName(object: any): void
+  /**
+   * Remove the custom template name.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static removeTemplateName(object: any): void
+
+  /**
+   * Set custom template values.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static setTemplateValue(object: any): void
+
+  /**
+   * Remove the custom template value.
+   *
+   * @param object {any}
+   * @return {void}
+   */
+  static removeTemplateValue(object: any): void
+
+  /**
    * Set a custom template file.
    *
    * @param {File} file
