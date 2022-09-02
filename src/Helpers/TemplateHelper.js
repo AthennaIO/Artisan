@@ -211,7 +211,7 @@ export class TemplateHelper {
    * @return {File}
    */
   static getTemplateByResource(resource) {
-    const predicate = file => file.base.includes(resource)
+    const predicate = file => file.base.includes(`${resource}.js.ejs`)
 
     return (
       this.#customTemplates.find(file => predicate(file)) ||
