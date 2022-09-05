@@ -31,7 +31,7 @@ test.group('FilePropertiesHelperTest', group => {
 
     assert.isTrue(
       content.includes(
-        "internalCommands.push(...ArtisanLoader.loadCommands,'oi','zap','truc','dale','vtnc','zsadsadasdasdas','dsaldksaldksaldkasld','hello')",
+        "internalCommands.push(...ArtisanLoader.loadCommands,'dasdada','dsadsad','dsadsaa','dswesas','ewqasdw','aqwerfs','dswpoik','lklopls','ieumjhg','hello')",
       ),
     )
   })
@@ -45,7 +45,11 @@ test.group('FilePropertiesHelperTest', group => {
 
     const content = file.getContentSync().toString()
 
-    assert.isTrue(content.includes("const internalCommands = ['hello'"))
+    assert.isTrue(
+      content.includes(
+        "const internalCommands = ['dasdada','dsadsad','dsadsaa','dswesas','ewqasdw','aqwerfs','dswpoik','lklopls','ieumjhg','hello']",
+      ),
+    )
   })
 
   test('should be able to add content to object properties in files', async ({ assert }) => {
@@ -57,7 +61,11 @@ test.group('FilePropertiesHelperTest', group => {
 
     const content = file.getContentSync().toString()
 
-    assert.isTrue(content.includes("const object = {nice: 'hello'}"))
+    assert.isTrue(
+      content.includes(
+        "const object = {dasdada:'dasdada',dsadsad:'dsadsad',dsadsaa:'dsadsaa',dswesas:'dswesas',ewqasdw:'ewqasdw',aqwerfs:'aqwerfs',dswpoik:'dswpoik',lklopls:'lklopls',ieumjhg:'ieumjhg',nice: 'hello'}",
+      ),
+    )
   })
 
   test('should be able to add content to array getter in files', async ({ assert }) => {

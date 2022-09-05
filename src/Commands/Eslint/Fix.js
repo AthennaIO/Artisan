@@ -58,11 +58,11 @@ export class MakeFix extends Command {
       this.title(`LINTING ${options.resource}\n`, 'bold', 'green')
     }
 
-    const { name } = parse(filePath)
-
     await this.execCommand(`${Path.bin('eslint')} ${filePath} --fix --quiet`)
 
     if (!options.quiet) {
+      const { name } = parse(filePath)
+
       this.success(
         `${options.resource} ({yellow} "${name}") successfully linted.`,
       )

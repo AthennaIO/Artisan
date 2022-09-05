@@ -7,18 +7,30 @@ export class ReplaceFile {
    * @return {any[]}
    */
   get commands() {
-    const internalCommands = []
+    const internalCommands = [
+      'dasdada',
+      'dsadsad',
+      'dsadsaa',
+      'dswesas',
+      'ewqasdw',
+      'aqwerfs',
+      'dswpoik',
+      'lklopls',
+      'ieumjhg',
+    ]
 
     if (process.env.NODE_ENV !== 'production') {
       internalCommands.push(
         ...ArtisanLoader.loadCommands(),
-        'oi',
-        'zap',
-        'truc',
-        'dale',
-        'vtnc',
-        'zsadsadasdasdas',
-        'dsaldksaldksaldkasld',
+        'dasdada',
+        'dsadsad',
+        'dsadsaa',
+        'dswesas',
+        'ewqasdw',
+        'aqwerfs',
+        'dswpoik',
+        'lklopls',
+        'ieumjhg',
       )
     }
 
@@ -44,7 +56,17 @@ export class ReplaceFile {
    * @return {any[]}
    */
   get object() {
-    const object = {}
+    const object = {
+      dasdada: 'dasdada',
+      dsadsad: 'dsadsad',
+      dsadsaa: 'dsadsaa',
+      dswesas: 'dswesas',
+      ewqasdw: 'ewqasdw',
+      aqwerfs: 'aqwerfs',
+      dswpoik: 'dswpoik',
+      lklopls: 'lklopls',
+      ieumjhg: 'ieumjhg',
+    }
 
     return object
   }

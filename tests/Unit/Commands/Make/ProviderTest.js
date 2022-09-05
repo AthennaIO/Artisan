@@ -48,13 +48,13 @@ test.group('MakeProviderTest', group => {
   }).timeout(60000)
 
   test('should be able to create a provider file and register it inside config/app', async ({ assert }) => {
-    const oldKernelLength = new File(Path.config('app.js')).getContentSync().toString().length
+    const oldAppConfigLength = new File(Path.config('app.js')).getContentSync().toString().length
 
     await Artisan.call('make:provider RegisterProvider')
 
-    const newKernelLength = new File(Path.config('app.js')).getContentSync().toString().length
+    const newAppConfigLength = new File(Path.config('app.js')).getContentSync().toString().length
 
-    assert.notEqual(newKernelLength, oldKernelLength)
+    assert.notEqual(newAppConfigLength, oldAppConfigLength)
   }).timeout(60000)
 
   test('should throw an error when the file already exists', async ({ assert }) => {
