@@ -70,7 +70,7 @@ export class MakeProvider extends Command {
       await FilePropertiesHelper.addContentToArrayProperty(
         path,
         'providers:',
-        `import('#providers/${name}.js')`,
+        `import('#providers/${name}')`,
       )
 
       await Artisan.call(`eslint:fix ${path} --quiet`)
