@@ -77,7 +77,7 @@ export class Command {
 
     chalkArgs.forEach(arg => (chalk = chalk[arg]))
 
-    process.stdout.write(chalk(message))
+    process.stdout.write(chalk(message).concat('\n'))
   }
 
   /**
@@ -163,7 +163,17 @@ export class Command {
    * @return {void}
    */
   title(message, ...chalkArgs) {
-    return this.log(this.createTitle(message), ...chalkArgs)
+    let title = this.createTitle(message.replace(/\n/g, ''))
+
+    if (message.startsWith('\n')) {
+      title = '\n' + title
+    }
+
+    if (message.endsWith('\n')) {
+      title = title + '\n'
+    }
+
+    return this.log(title, ...chalkArgs)
   }
 
   /**

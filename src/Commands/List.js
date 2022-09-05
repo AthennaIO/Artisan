@@ -46,7 +46,7 @@ export class List extends Command {
    * @return {Promise<void>}
    */
   async handle(alias) {
-    this.title(`listing ${alias}`, 'bold', 'green')
+    this.title(`LISTING ${alias}\n`, 'bold', 'green')
 
     const commands =
       'Commands:' +
