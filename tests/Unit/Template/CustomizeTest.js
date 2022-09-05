@@ -15,7 +15,7 @@ import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 
-test.group('MakeFacadeTest', group => {
+test.group('TemplateCustomizeTest', group => {
   group.each.setup(async () => {
     await new Folder(Path.stubs('app')).copy(Path.app())
     await new Folder(Path.stubs('config')).copy(Path.config())
@@ -36,19 +36,30 @@ test.group('MakeFacadeTest', group => {
   group.each.teardown(async () => {
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.config())
-    await Folder.safeRemove(Path.providers())
+    await Folder.safeRemove(Path.resources())
   })
 
-  test('should be able to create a facade file', async ({ assert }) => {
-    await Artisan.call('make:facade TestFacade')
+  test('should be able to customize all internal templates set in kernel', async ({ assert }) => {
+    await Artisan.call('template:customize')
 
-    const path = Path.facades('TestFacade.js')
+    const kernel = new Kernel()
 
-    assert.isTrue(await File.exists(path))
+    await kernel.registerTemplates()
+
+    assert.isTrue(await File.exists(Path.resources('templates/command.ejs')))
   }).timeout(60000)
 
-  test('should throw an error when the file already exists', async ({ assert }) => {
-    await Artisan.call('make:facade TestFacade')
-    await Artisan.call('make:facade TestFacade')
+  test('should not re-move templates that are already inside resources/templates folder', async ({ assert }) => {
+    const kernel = new Kernel()
+
+    await Artisan.call('template:customize')
+
+    await kernel.registerTemplates()
+
+    await Artisan.call('template:customize')
+
+    await kernel.registerTemplates()
+
+    assert.isTrue(await File.exists(Path.resources('templates/command.ejs')))
   }).timeout(60000)
 })

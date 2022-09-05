@@ -8,12 +8,18 @@
  */
 
 import ora from 'ora'
-import chalk from 'chalk'
+import Chalk from 'chalk'
+import figlet from 'figlet'
 import Table from 'cli-table'
 import columnify from 'columnify'
+import chalkRainbow from 'chalk-rainbow'
 
 import { Log } from '@athenna/logger'
 import { Config, Exec } from '@secjs/utils'
+
+import { Artisan } from '#src/index'
+import { TemplateHelper } from '#src/Helpers/TemplateHelper'
+import { NotImplementedHandleException } from '#src/Exceptions/NotImplementedHandleException'
 
 export class Command {
   /**
@@ -51,37 +57,27 @@ export class Command {
    * @param {any[]} args
    * @return {Promise<void>}
    */
-  handle(...args) {}
+  handle(...args) {
+    throw new NotImplementedHandleException(this.constructor.name)
+  }
 
   /**
-   * Create a simple log with Chalk API.
+   * Log a simple message in terminal without any formatter.
    *
-   * @param {string} message
+   * @param message
    * @param {string[]} chalkArgs
    * @return {void}
    */
-  simpleLog(message, ...chalkArgs) {
-    let colors = chalk
-
-    const rmNewLineStart = chalkArgs[0] === 'rmNewLineStart'
-
-    if (rmNewLineStart) chalkArgs.shift()
-
-    chalkArgs.forEach(arg => (colors = colors[arg]))
-
+  log(message, ...chalkArgs) {
     if (Config.get('logging.channels.console.driver') === 'null') {
       return
     }
 
-    const log = colors(message).concat('\n')
+    let chalk = Chalk
 
-    if (rmNewLineStart) {
-      process.stdout.write(log)
+    chalkArgs.forEach(arg => (chalk = chalk[arg]))
 
-      return
-    }
-
-    process.stdout.write('\n'.concat(log))
+    process.stdout.write(chalk(message))
   }
 
   /**
@@ -140,6 +136,47 @@ export class Command {
   }
 
   /**
+   * Make a new file using templates and lint.
+   *
+   * @param path {string}
+   * @param templateName {string}
+   * @param [lint] {boolean}
+   * @return {Promise<File>}
+   */
+  async makeFile(path, templateName, lint) {
+    const file = await TemplateHelper.fabricate(templateName, path)
+
+    if (lint) {
+      await Artisan.call(`eslint:fix ${file.path} --quiet`)
+    }
+
+    return file
+  }
+
+  /**
+   * This method is an alias for:
+   *
+   * @example
+   *  this.log(this.createTitle(message), ...chalkArgs)
+   * @param message {string}
+   * @param [chalkArgs] {string[]}
+   * @return {void}
+   */
+  title(message, ...chalkArgs) {
+    return this.log(this.createTitle(message), ...chalkArgs)
+  }
+
+  /**
+   * Create a tittle for message.
+   *
+   * @param {string} message
+   * @return {string}
+   */
+  createTitle(message) {
+    return `[ ${message.toUpperCase()} ]`
+  }
+
+  /**
    * Create a spinner using Ora API.
    *
    * @param {string|ora.Options} [options]
@@ -150,29 +187,39 @@ export class Command {
   }
 
   /**
-   * Log a table using cli-table API.
+   * Create a table using cli-table API.
    *
    * @param {any} tableOptions
    * @param {any[]} rows
-   * @return {void}
+   * @return {string}
    */
-  logTable(tableOptions, ...rows) {
+  createTable(tableOptions, ...rows) {
     const table = new Table(tableOptions)
 
     if (rows && rows.length) table.push(...rows)
 
-    process.stdout.write(table.toString() + '\n')
+    return table.toString()
   }
 
   /**
-   * Columnify an object or array.
+   * Create a column for an object or array.
    *
    * @param {Record<string, any> | any[]} data
    * @param {any} [options]
    * @return {string}
    */
-  columnify(data, options) {
+  createColumn(data, options) {
     return columnify(data, options)
+  }
+
+  /**
+   * Create a big rainbow string.
+   *
+   * @param message {string}
+   * @return {string}
+   */
+  createRainbow(message) {
+    return chalkRainbow(figlet.textSync(message))
   }
 
   /**

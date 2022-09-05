@@ -27,7 +27,7 @@ export class ConsoleKernel {
    * @return {import('@secjs/utils').File[] | Promise<any[]>}
    */
   get templates() {
-    return []
+    return [...ArtisanLoader.loadTemplates()]
   }
 
   /**
@@ -85,7 +85,7 @@ export class ConsoleKernel {
    *
    * @return {Promise<void>}
    */
-  async registerCustomTemplates() {
-    this.templates.forEach(file => TemplateHelper.setTemplate(file))
+  async registerTemplates() {
+    TemplateHelper.addTemplatesFiles(this.templates)
   }
 }

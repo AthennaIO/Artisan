@@ -14,11 +14,10 @@ export class AlreadyExistFileException extends Exception {
   /**
    * Creates a new instance of AlreadyExistFileException.
    *
-   * @param {string} resource
    * @param {string} path
    */
-  constructor(resource, path) {
-    const content = `The ${resource} ({yellow} "${
+  constructor(path) {
+    const content = `The ({yellow} "${
       parse(path).name
     }") already exists. Try using another name.`
 

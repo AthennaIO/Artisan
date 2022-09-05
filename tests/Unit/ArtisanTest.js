@@ -30,13 +30,12 @@ test.group('ArtisanTest', group => {
 
     await kernel.registerErrorHandler()
     await kernel.registerCommands()
-    await kernel.registerCustomTemplates()
+    await kernel.registerTemplates()
   })
 
   group.each.teardown(async () => {
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.config())
-    TemplateHelper.removeAllTemplates(await new Folder(Path.stubs('templates')).load())
   })
 
   test('should be able to execute test:error command from routes/console', async ({ assert }) => {
@@ -47,6 +46,8 @@ test.group('ArtisanTest', group => {
   }).timeout(60000)
 
   test('should be able to set custom templates on artisan template helper', async ({ assert }) => {
+    TemplateHelper.addTemplate(Path.stubs('templates/command.ejs'))
+
     await Artisan.call('make:command CustomCommand')
 
     const file = await new File(Path.console('Commands/CustomCommand.js')).load({ withContent: true })

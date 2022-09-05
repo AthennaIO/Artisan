@@ -9,8 +9,7 @@
 
 import nodemon from 'nodemon'
 
-import { Path } from '@secjs/utils'
-import { pathToFileURL } from 'node:url'
+import { Module, Path } from '@secjs/utils'
 
 import { Command } from '#src/index'
 
@@ -69,6 +68,6 @@ export class Serve extends Command {
       return
     }
 
-    await import(pathToFileURL(Path.bootstrap('main.js')).href)
+    await Module.import(Path.bootstrap('main.js'))
   }
 }
