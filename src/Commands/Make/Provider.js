@@ -69,7 +69,7 @@ export class MakeProvider extends Command {
 
       await FilePropertiesHelper.addContentToArrayProperty(
         path,
-        'providers:',
+        'providers: ',
         `import('#providers/${name}')`,
       )
 
