@@ -59,4 +59,28 @@ test.group('FilePropertiesHelperTest', group => {
 
     assert.isTrue(content.includes("const object = {nice: 'hello'}"))
   })
+
+  test('should be able to add content to array getter in files', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToArrayGetter(
+      Path.stubs('replaceFileCopy.js'),
+      'templates',
+      "'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isTrue(content.includes('get templates() {\n' + " return ['hello']\n" + '  }'))
+  })
+
+  test('should be able to add content to object getter in files', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToObjectGetter(
+      Path.stubs('replaceFileCopy.js'),
+      'getterObj',
+      "nice: 'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isTrue(content.includes('get getterObj() {\n' + " return {nice: 'hello'}\n" + '  }'))
+  })
 })
