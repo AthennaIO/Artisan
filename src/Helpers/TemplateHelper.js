@@ -1,519 +1,205 @@
-/**
- * @athenna/artisan
- *
- * (c) João Lenon <lenon@athenna.io>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 import ejs from 'ejs'
 
-import { join } from 'node:path'
-import { File, Folder, Module, String } from '@secjs/utils'
-
-import { Artisan } from '#src/index'
+import { File, Folder, String } from '@secjs/utils'
 import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
+import { NotFoundTemplateException } from '#src/Exceptions/NotFoundTemplateException'
 
 export class TemplateHelper {
   /**
-   * The original templates' folder instance of artisan.
-   */
-  static #originalTemplatesFolder = new Folder(
-    join(Module.createDirname(import.meta.url), '..', '..', 'templates'),
-  ).loadSync()
-
-  /**
-   * The custom templates' files. Use this property to set custom
-   * templates' files to use inside Artisan.
+   * All templates set to Artisan work with.
    *
    * @type {File[]}
    */
-  static #customTemplates = []
+  static templates = []
 
   /**
-   * The custom templates' names. Use this property to set custom
-   * templates' names to use any template.
+   * Custom properties to set when fabricating templates.
    *
    * @type {any}
    */
-  static #customTemplateNames = {}
+  static customProperties = {}
 
   /**
-   * The custom templates' values. Use this property to set custom
-   * templates' values to use any template.
+   * Verify if template exists by name.
    *
-   * @type {any}
-   */
-  static #customTemplateValues = {}
-
-  /**
-   * Set custom template names.
-   *
-   * @param object {any}
-   * @return {void}
-   */
-  static setTemplateName(object) {
-    this.#customTemplateNames = {
-      ...this.#customTemplateNames,
-      ...object,
-    }
-  }
-
-  /**
-   * Remove the custom template name.
-   *
-   * @param object {any}
-   * @return {void}
-   */
-  static removeTemplateName(object) {
-    Object.keys(object).forEach(key => {
-      if (!this.#customTemplateNames[key]) {
-        return
-      }
-
-      delete this.#customTemplateNames[key]
-    })
-  }
-
-  /**
-   * Set custom template values.
-   *
-   * @param object {any}
-   * @return {void}
-   */
-  static setTemplateValue(object) {
-    this.#customTemplateValues = {
-      ...this.#customTemplateValues,
-      ...object,
-    }
-  }
-
-  /**
-   * Remove the custom template value.
-   *
-   * @param object {any}
-   * @return {void}
-   */
-  static removeTemplateValue(object) {
-    Object.keys(object).forEach(key => {
-      if (!this.#customTemplateValues[key]) {
-        return
-      }
-
-      delete this.#customTemplateValues[key]
-    })
-  }
-
-  /**
-   * Set a custom template file.
-   *
-   * @param {File} file
-   * @return {void}
-   */
-  static setTemplate(file) {
-    if (this.hasTemplate(file)) {
-      this.removeTemplate(file)
-    }
-
-    this.#customTemplates.push(file)
-  }
-
-  /**
-   * Set all .ejs files inside folder as templates.
-   *
-   * @param {Folder} folder
-   * @return {void}
-   */
-  static setAllTemplates(folder) {
-    folder.getFilesByPattern('*/**/*.ejs').forEach(file => {
-      if (file.extension !== '.js.ejs') {
-        return
-      }
-
-      this.setTemplate(file)
-    })
-  }
-
-  /**
-   * Verify if template already exists on custom templates'.
-   *
-   * @param {File} file
+   * @param name {string}
    * @return {boolean}
    */
-  static hasTemplate(file) {
-    return !!this.#customTemplates.find(f => f.base === file.base)
+  static hasTemplate(name) {
+    return !!this.templates.find(f => f.name === name)
   }
 
   /**
-   * Remove the custom template file.
+   * Add new template or subscribe an existent one.
    *
-   * @param {File} file
+   * @param path {string}
    * @return {void}
    */
-  static removeTemplate(file) {
-    if (!this.hasTemplate(file)) {
-      return
+  static addTemplate(path) {
+    const file = new File(path).loadSync({ withContent: false })
+
+    if (this.hasTemplate(file.name)) {
+      this.removeTemplate(file.name)
     }
 
-    const index = this.#customTemplates.findIndex(f => f === file)
-
-    delete this.#customTemplates[index]
+    this.templates.push(file)
   }
 
   /**
-   * Remove all .ejs files inside folders from custom templates.
+   * Add templates in folder or subscribe the existent.
    *
-   * @param {Folder} folder
+   * @param path {string}
    * @return {void}
    */
-  static removeAllTemplates(folder) {
-    folder.getFilesByPattern('*/**/*.ejs').forEach(file => {
-      if (file.extension !== '.ejs') {
-        return
-      }
+  static addTemplates(path) {
+    const folder = new Folder(path).loadSync({ withFileContent: false })
 
-      this.removeTemplate(file)
-    })
+    folder.files.forEach(file => this.addTemplate(file.path))
   }
 
   /**
-   * Normalize the resource name removing duplicated.
+   * Add template file or subscribe the existent.
+   *
+   * @param file {File}
+   * @return {void}
+   */
+  static addTemplateFile(file) {
+    if (this.hasTemplate(file.name)) {
+      this.removeTemplate(file.name)
+    }
+
+    this.templates.push(file)
+  }
+
+  /**
+   * Add templates in folder or subscribe the existent.
+   *
+   * @param files {File[]}
+   * @return {void}
+   */
+  static addTemplatesFiles(files) {
+    files.forEach(file => this.addTemplateFile(file))
+  }
+
+  /**
+   * Get the template file by name.
    *
    * @param {string} name
-   * @param {string} resource
-   * @return {string}
-   */
-  static normalizeName(name, resource) {
-    name = name.charAt(0).toUpperCase() + name.slice(1)
-
-    const resourcePlural = String.pluralize(resource)
-
-    if (resource === '') {
-      return name
-    }
-
-    if (name.includes(resource)) {
-      return name.split(resource)[0]
-    }
-
-    if (name.includes(resourcePlural)) {
-      return name.split(resourcePlural)[0]
-    }
-
-    return name
-  }
-
-  /**
-   * Get the template file by resource.
-   *
-   * @param {string} resource
    * @return {File}
    */
-  static getTemplateByResource(resource) {
-    const predicate = file => file.base.includes(`${resource}.js.ejs`)
+  static getTemplate(name) {
+    const template = this.templates.find(file => file.name === name)
 
-    return (
-      this.#customTemplates.find(file => predicate(file)) ||
-      this.#originalTemplatesFolder.files.find(file => predicate(file))
-    )
+    if (!template) {
+      throw new NotFoundTemplateException(name)
+    }
+
+    return template
   }
 
   /**
-   * Replace the name of the template file with values.
+   * Remove the template by name.
    *
-   * @param {string} name
-   * @param {string} baseTemplateName
-   * @return {string}
+   * @param name {string}
+   * @return {void}
    */
-  static replaceTemplateName(name, baseTemplateName) {
-    Object.keys(this.#customTemplateNames).forEach(key => {
-      baseTemplateName = baseTemplateName.replace(
-        key,
-        this.#customTemplateNames[key],
-      )
-    })
-
-    baseTemplateName = baseTemplateName
-      .replace('.ejs', '')
-      .replace('__name__', name)
-      .replace('__name_low__', name.toLowerCase())
-      .replace('__name_plural__', String.pluralize(name))
-      .replace('__name_plural_low__', String.pluralize(name).toLowerCase())
-
-    return baseTemplateName
-  }
-
-  /**
-   * Replace the values inside the template file using ejs.
-   *
-   * @param {string} name
-   * @param {Buffer} templateContent
-   * @return {Buffer}
-   */
-  static replaceTemplateValues(name, templateContent) {
-    const templateString = ejs.render(templateContent.toString(), {
-      nameUp: name.toUpperCase(),
-      nameCamel: String.toCamelCase(name),
-      namePlural: String.pluralize(name),
-      namePascal: String.toPascalCase(name),
-      namePluralCamel: String.toCamelCase(String.pluralize(name)),
-      namePluralPascal: String.toPascalCase(String.pluralize(name)),
-      ...this.#customTemplateValues,
-    })
-
-    return Buffer.from(templateString)
-  }
-
-  /**
-   * Replace the content of the array property inside a file.
-   *
-   * @param {string} path
-   * @param {string} matcher
-   * @param {string} importAlias
-   * @return {Promise<void>}
-   */
-  static async replaceArrayProperty(path, matcher, importAlias) {
-    const file = new File(path).loadSync()
-    let content = file.getContentSync().toString()
-
-    const matches = content.match(
-      new RegExp(`(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\[[^\\]]*\\])`),
-    )
-
-    if (!matches) {
+  static removeTemplate(name) {
+    if (!this.hasTemplate(name)) {
       return
     }
 
-    const match = matches[0]
+    const index = this.templates.findIndex(f => f.name === name)
 
-    const arrayString = match
-      .replace(matcher, '')
-      .replace(/ /g, '')
-      .replace(/\n/g, '')
-      .replace(/(\[|\])/g, '')
-      .split(',')
-
-    /**
-     * In case "matcher" is an empty array.
-     * Example: "matcher" = []
-     */
-    if (arrayString.length) {
-      const last = () => arrayString.length - 1
-
-      if (arrayString[last()] === '') {
-        arrayString.pop()
-      }
-    }
-
-    arrayString.push(`import('${importAlias}')`)
-
-    content = content.replace(match, `${matcher}[${arrayString.join(',')}]`)
-
-    await file.remove()
-    await new File(file.path, Buffer.from(content)).load()
-
-    await Artisan.call(
-      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
-    )
+    this.templates.splice(index, 1)
   }
 
   /**
-   * Replace the content of the array getter inside a file.
+   * Remove the templates by names.
    *
-   * @param {string} path
-   * @param {string} getter
-   * @param {string} importAlias
-   * @return {Promise<void>}
+   * @param names {string}
+   * @return {void}
    */
-  static async replaceArrayGetter(path, getter, importAlias) {
-    const file = new File(path).loadSync()
-    let content = file.getContentSync().toString()
+  static removeTemplates(...names) {
+    names.forEach(name => this.removeTemplate(name))
+  }
 
-    const getMethod = `get\\s*${getter}\\(\\)\\s*\\{\\n\\s*return\\s*`
+  /**
+   * Set custom template properties.
+   *
+   * @param key {string}
+   * @param value {any}
+   * @return {void}
+   */
+  static addProperty(key, value) {
+    this.customProperties[key] = value
+  }
 
-    const matches = content.match(
-      new RegExp(`(?:${getMethod})(?:\\[[^\\]]*\\])`),
-    )
-
-    if (!matches) {
+  /**
+   * Remove the custom template property.
+   *
+   * @param key {string}
+   * @return {void}
+   */
+  static removeProperty(key) {
+    if (!this.customProperties[key]) {
       return
     }
 
-    const match = matches[0]
-
-    const arrayString = match
-      .replace(new RegExp(getMethod), '')
-      .replace(/ /g, '')
-      .replace(/\n/g, '')
-      .replace(/(\[|\])/g, '')
-      .split(',')
-
-    /**
-     * In case "matcher" is an empty array.
-     * Example: "matcher" = []
-     */
-    if (arrayString.length) {
-      const last = () => arrayString.length - 1
-
-      if (arrayString[last()] === '') {
-        arrayString.pop()
-      }
-    }
-
-    arrayString.push(`import('${importAlias}')`)
-
-    content = content.replace(
-      match,
-      `get ${getter}() {\n return [${arrayString.join(',')}]`,
-    )
-
-    await file.remove()
-    await new File(file.path, Buffer.from(content)).load()
-
-    await Artisan.call(
-      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
-    )
+    delete this.customProperties[key]
   }
 
   /**
-   * Replace the content of the object property inside a file.
+   * Get template params to render in templates.
    *
-   * @param {string} path
-   * @param {string} matcher
-   * @param {string} resource
-   * @param {string} importAlias
-   * @return {Promise<void>}
+   * @param name {string}
+   * @return {any}
    */
-  static async replaceObjectProperty(path, matcher, resource, importAlias) {
-    const file = new File(path).loadSync()
-    let content = file.getContentSync().toString()
+  static getTemplateParams(name) {
+    const timestamp = Date.now()
 
-    const matches = content.match(
-      new RegExp(`(?:${matcher.replace(' ', '\\s*')}\\s*)(?:\\{[^}]*\\})`),
-    )
+    const nameUp = name.toUpperCase()
+    const nameCamel = String.toCamelCase(name)
+    const namePlural = String.pluralize(name)
+    const namePascal = String.toPascalCase(name)
+    const namePluralCamel = String.toCamelCase(String.pluralize(name))
+    const namePluralPascal = String.toPascalCase(String.pluralize(name))
 
-    if (!matches) {
-      return
+    return {
+      nameUp,
+      nameCamel,
+      namePlural,
+      namePascal,
+      namePluralCamel,
+      namePluralPascal,
+      nameUpTimestamp: `${nameUp}${timestamp}`,
+      nameCamelTimestamp: `${nameCamel}${timestamp}`,
+      namePluralTimestamp: `${namePlural}${timestamp}`,
+      namePascalTimestamp: `${namePascal}${timestamp}`,
+      namePluralCamelTimestamp: `${namePluralCamel}${timestamp}`,
+      namePluralPascalTimestamp: `${namePluralPascal}${timestamp}`,
+      ...this.customProperties,
     }
-
-    const match = matches[0]
-
-    const arrayString = match
-      .replace(matcher, '')
-      .replace(/ /g, '')
-      .replace(/\n/g, '')
-      .replace(/(\{|\})/g, '')
-      .split(',')
-
-    /**
-     * In case "matcher" is an empty object.
-     * Example: "matcher" = {}
-     */
-    if (arrayString.length) {
-      const last = () => arrayString.length - 1
-
-      if (arrayString[last()] === '') {
-        arrayString.pop()
-      }
-    }
-
-    const name = String.toCamelCase(resource)
-
-    arrayString.push(`${name}:import('${importAlias}')`)
-
-    content = content.replace(match, `${matcher}{${arrayString.join(',')}}`)
-
-    await file.remove()
-    await new File(file.path, Buffer.from(content)).load()
-
-    await Artisan.call(
-      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
-    )
   }
 
   /**
-   * Replace the content of the object getter inside a file.
+   * Fabricate the file by templateName.
    *
-   * @param {string} path
-   * @param {string} getter
-   * @param {string} resource
-   * @param {string} importAlias
-   * @return {Promise<void>}
-   */
-  static async replaceObjectGetter(path, getter, resource, importAlias) {
-    const file = new File(path).loadSync()
-    let content = file.getContentSync().toString()
-
-    const getMethod = `get\\s*${getter}\\(\\)\\s*\\{\\n\\s*return\\s*`
-
-    const matches = content.match(new RegExp(`(?:${getMethod})(?:\\{[^}]*\\})`))
-
-    if (!matches) {
-      return
-    }
-
-    const match = matches[0]
-
-    const arrayString = match
-      .replace(new RegExp(getMethod), '')
-      .replace(/ /g, '')
-      .replace(/\n/g, '')
-      .replace(/(\{|\})/g, '')
-      .split(',')
-
-    /**
-     * In case "matcher" is an empty object.
-     * Example: "matcher" = {}
-     */
-    if (arrayString.length) {
-      const last = () => arrayString.length - 1
-
-      if (arrayString[last()] === '') {
-        arrayString.pop()
-      }
-    }
-
-    const name = String.toCamelCase(resource)
-
-    arrayString.push(`${name}:import('${importAlias}')`)
-
-    content = content.replace(
-      match,
-      `get ${getter}() {\n return {${arrayString.join(',')}}`,
-    )
-
-    await file.remove()
-    await new File(file.path, Buffer.from(content)).load()
-
-    await Artisan.call(
-      `eslint:fix ${file.path} --resource TemplateHelper --quiet`,
-    )
-  }
-
-  /**
-   * Create a new file from resource.
-   *
-   * @param {string} name
-   * @param {string} resource
-   * @param {string} subPath
+   * @param templateName {string}
+   * @param filePath {string}
    * @return {Promise<File>}
    */
-  static async getResourceFile(name, resource, subPath) {
-    name = TemplateHelper.normalizeName(name, resource)
-    const template = TemplateHelper.getTemplateByResource(resource)
-
-    const replacedName = TemplateHelper.replaceTemplateName(name, template.base)
-    const path = subPath.concat('/', replacedName)
-    const content = TemplateHelper.replaceTemplateValues(
-      name,
-      template.getContentSync(),
-    )
-
-    if (await File.exists(path)) {
-      throw new AlreadyExistFileException(resource, path)
+  static async fabricate(templateName, filePath) {
+    if (await File.exists(filePath)) {
+      throw new AlreadyExistFileException(filePath)
     }
 
-    return new File(path, content).load()
+    const file = new File(filePath, Buffer.from(''))
+    const template = await this.getTemplate(templateName).getContent()
+
+    const content = Buffer.from(
+      ejs.render(template.toString(), this.getTemplateParams(file.name)),
+    )
+
+    return new File(filePath, content).load()
   }
 }

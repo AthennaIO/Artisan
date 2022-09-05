@@ -46,12 +46,7 @@ export class List extends Command {
    * @return {Promise<void>}
    */
   async handle(alias) {
-    this.simpleLog(
-      `[ LISTING ${alias.toUpperCase()} ]`,
-      'rmNewLineStart',
-      'bold',
-      'green',
-    )
+    this.title(`listing ${alias}`, 'bold', 'green')
 
     const commands =
       'Commands:' +
@@ -60,6 +55,6 @@ export class List extends Command {
         .map(line => `  ${line}`)
         .join('\n')
 
-    this.simpleLog(commands)
+    this.log(commands)
   }
 }

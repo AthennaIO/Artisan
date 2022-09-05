@@ -22,6 +22,7 @@ export * from './Commands/Command.js'
 export * from './Kernels/ConsoleKernel.js'
 export * from './Helpers/ArtisanLoader.js'
 export * from './Helpers/TemplateHelper.js'
+export * from './Helpers/FilePropertiesHelper.js'
 export * from './Handlers/ConsoleExceptionHandler.js'
 
 export class ArtisanImpl {

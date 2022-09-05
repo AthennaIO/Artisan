@@ -9,7 +9,7 @@
 
 import { Path } from '@secjs/utils'
 import { Artisan, Command } from '#src/index'
-import { TemplateHelper } from '#src/Helpers/TemplateHelper'
+import { FilePropertiesHelper } from '#src/Helpers/FilePropertiesHelper'
 
 export class MakeProvider extends Command {
   /**
@@ -56,29 +56,24 @@ export class MakeProvider extends Command {
    */
   async handle(name, options) {
     const resource = 'Provider'
-    const subPath = Path.providers()
+    const path = Path.providers(`${name}.js`)
 
-    this.simpleLog(
-      `[ MAKING ${resource.toUpperCase()} ]\n`,
-      'rmNewLineStart',
-      'bold',
-      'green',
-    )
+    this.title(`MAKING ${resource}\n`, 'bold', 'green')
 
-    const file = await TemplateHelper.getResourceFile(name, resource, subPath)
+    const file = await this.makeFile(path, 'provider', options.lint)
 
     this.success(`${resource} ({yellow} "${file.name}") successfully created.`)
 
-    if (options.lint) {
-      await Artisan.call(`eslint:fix ${file.path} --resource ${resource}`)
-    }
-
     if (options.register) {
-      await TemplateHelper.replaceArrayProperty(
-        Path.config('app.js'),
+      const path = Path.config('app.js')
+
+      await FilePropertiesHelper.addContentToArrayProperty(
+        path,
         'providers:',
-        `#providers/${file.name}`,
+        `import('#providers/${file.name}')`,
       )
+
+      await Artisan.call(`eslint:fix ${path} --quiet`)
     }
   }
 }

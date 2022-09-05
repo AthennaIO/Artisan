@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Path, String } from '@secjs/utils'
-import { TemplateHelper } from '#src/Helpers/TemplateHelper'
-import { Artisan, Command as AbstractCommand } from '#src/index'
+import { Path } from '@secjs/utils'
+import { Command } from '#src/index'
 
-export class MakeCommand extends AbstractCommand {
+export class MakeCommand extends Command {
   /**
    * The name and signature of the console command.
    *
@@ -38,13 +37,11 @@ export class MakeCommand extends AbstractCommand {
    * @return {import('commander').Command}
    */
   addFlags(commander) {
-    return commander
-      .option(
-        '--no-register',
-        'Do not register the command inside Kernel.',
-        true,
-      )
-      .option('--no-lint', 'Do not run eslint in the command.', true)
+    return commander.option(
+      '--no-lint',
+      'Do not run eslint in the command.',
+      true,
+    )
   }
 
   /**
@@ -56,29 +53,12 @@ export class MakeCommand extends AbstractCommand {
    */
   async handle(name, options) {
     const resource = 'Command'
-    const subPath = Path.app(`Console/${String.pluralize(resource)}`)
+    const path = Path.app(`Console/Commands/${name}.js`)
 
-    this.simpleLog(
-      `[ MAKING ${resource.toUpperCase()} ]\n`,
-      'rmNewLineStart',
-      'bold',
-      'green',
-    )
+    this.title(`MAKING ${resource}\n`, 'bold', 'green')
 
-    const file = await TemplateHelper.getResourceFile(name, resource, subPath)
+    const file = await this.makeFile(path, 'command', options.lint)
 
     this.success(`${resource} ({yellow} "${file.name}") successfully created.`)
-
-    if (options.lint) {
-      await Artisan.call(`eslint:fix ${file.path} --resource ${resource}`)
-    }
-
-    if (options.register) {
-      await TemplateHelper.replaceArrayGetter(
-        Path.console('Kernel.js'),
-        'commands',
-        `#app/Console/Commands/${file.name}`,
-      )
-    }
   }
 }

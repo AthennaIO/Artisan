@@ -55,11 +55,7 @@ export class MakeFix extends Command {
    */
   async handle(filePath, options) {
     if (!options.quiet) {
-      this.simpleLog(
-        `[ LINTING ${options.resource.toUpperCase()} ]\n`,
-        'bold',
-        'green',
-      )
+      this.title(`LINTING ${options.resource}\n`, 'bold', 'green')
     }
 
     const { name } = parse(filePath)

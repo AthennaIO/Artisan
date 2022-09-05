@@ -30,6 +30,7 @@ test.group('MakeServiceTest', group => {
 
     await kernel.registerErrorHandler()
     await kernel.registerCommands()
+    await kernel.registerTemplates()
   })
 
   group.each.teardown(async () => {

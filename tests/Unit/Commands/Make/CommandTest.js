@@ -30,6 +30,7 @@ test.group('MakeCommandTest', group => {
 
     await kernel.registerErrorHandler()
     await kernel.registerCommands()
+    await kernel.registerTemplates()
   })
 
   group.each.teardown(async () => {
@@ -38,39 +39,28 @@ test.group('MakeCommandTest', group => {
   })
 
   test('should be able to create a command file', async ({ assert }) => {
-    await Artisan.call('make:command TestCommands --no-register')
+    await Artisan.call('make:command TestCommands')
 
-    const path = Path.console('Commands/TestCommand.js')
+    const path = Path.console('Commands/TestCommands.js')
 
     assert.isTrue(await File.exists(path))
-  }).timeout(60000)
-
-  test('should be able to create a command file and register it inside Kernel', async ({ assert }) => {
-    const oldKernelLength = new File(Path.console('Kernel.js')).getContentSync().toString().length
-
-    await Artisan.call('make:command KernelCommand')
-
-    const newKernelLength = new File(Path.console('Kernel.js')).getContentSync().toString().length
-
-    assert.notEqual(newKernelLength, oldKernelLength)
   }).timeout(60000)
 
   test('should throw an error when the file already exists', async ({ assert }) => {
-    await Artisan.call('make:command TestCommand --no-register')
-    await Artisan.call('make:command TestCommand --no-register')
+    await Artisan.call('make:command TestCommand')
+    await Artisan.call('make:command TestCommand')
   }).timeout(60000)
 
   test('should be able to replace template names and template values', async ({ assert }) => {
-    TemplateHelper.setTemplateName({ __name__: 'Zap' })
-    TemplateHelper.setTemplateValue({ namePascal: 'Zap' })
+    TemplateHelper.addProperty('namePascal', 'Zap')
 
-    await Artisan.call('make:command testCommands --no-register')
+    await Artisan.call('make:command testCommands')
 
-    const path = Path.console('Commands/ZapCommand.js')
+    const file = await new File(Path.console('Commands/testCommands.js')).load()
 
-    assert.isTrue(await File.exists(path))
+    assert.isTrue(file.fileExists)
+    assert.isTrue(file.getContentSync().toString().includes('class Zap'))
 
-    TemplateHelper.removeTemplateName({ __name__: 'Zap' })
-    TemplateHelper.removeTemplateValue({ namePascal: 'Zap' })
+    TemplateHelper.removeProperty('namePascal')
   }).timeout(60000)
 })

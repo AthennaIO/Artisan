@@ -34,7 +34,7 @@ test.group('FilePropertiesHelperTest', group => {
         "internalCommands.push(...ArtisanLoader.loadCommands,'oi','zap','truc','dale','vtnc','zsadsadasdasdas','dsaldksaldksaldkasld','hello')",
       ),
     )
-  }).pin()
+  })
 
   test('should be able to add content to array properties in files', async ({ assert }) => {
     const file = await FilePropertiesHelper.addContentToArrayProperty(
@@ -46,7 +46,7 @@ test.group('FilePropertiesHelperTest', group => {
     const content = file.getContentSync().toString()
 
     assert.isTrue(content.includes("const internalCommands = ['hello'"))
-  }).pin()
+  })
 
   test('should be able to add content to object properties in files', async ({ assert }) => {
     const file = await FilePropertiesHelper.addContentToObjectProperty(
@@ -58,5 +58,5 @@ test.group('FilePropertiesHelperTest', group => {
     const content = file.getContentSync().toString()
 
     assert.isTrue(content.includes("const object = {nice: 'hello'}"))
-  }).pin()
+  })
 })

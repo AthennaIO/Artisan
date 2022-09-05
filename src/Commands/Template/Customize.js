@@ -7,8 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'node:path'
-import { Path, Module, Folder } from '@secjs/utils'
+import { Path, Module } from '@secjs/utils'
 
 import { Command } from '#src/index'
 
@@ -48,29 +47,24 @@ export class TemplateCustomize extends Command {
    * @return {Promise<void>}
    */
   async handle() {
-    this.simpleLog(`[ MOVING TEMPLATES ]`, 'rmNewLineStart', 'bold', 'green')
+    this.title('MOVING TEMPLATES\n', 'bold', 'green')
 
     const Kernel = await Module.getFrom(Path.console('Kernel.js'))
 
     const kernel = new Kernel()
 
-    const templates = [
-      ...new Folder(
-        join(
-          Module.createDirname(import.meta.url),
-          '..',
-          '..',
-          '..',
-          'templates',
-        ),
-      ).loadSync().files,
-      ...kernel.templates,
-    ]
+    const promises = kernel.templates.map(template => {
+      if (template.path.includes('resources/templates')) {
+        return null
+      }
 
-    const promises = templates.map(t => t.copy(Path.pwd(`templates/${t.base}`)))
+      return template.copy(Path.resources(`templates/${template.base}`))
+    })
 
     await Promise.all(promises)
 
-    this.success('Template files successfully moved.')
+    this.success(
+      'Template files successfully moved to ({yellow} resources/templates) folder.',
+    )
   }
 }

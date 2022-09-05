@@ -2,7 +2,7 @@ import * as ora from 'ora'
 import { Command as Commander } from 'commander'
 
 import { Facade } from '@athenna/ioc'
-import { File, Folder } from '@secjs/utils'
+import { File } from '@secjs/utils'
 
 export const Artisan: Facade & ArtisanImpl
 
@@ -44,7 +44,7 @@ export class Command {
    * @param {string[]} chalkArgs
    * @return {void}
    */
-  simpleLog(message: string, ...chalkArgs: string[]): void
+  log(message: string, ...chalkArgs: string[]): void
 
   /**
    * Create an info log in the console channel.
@@ -92,6 +92,35 @@ export class Command {
   success(message: string, options?: any): void
 
   /**
+   * Make a new file using templates and lint.
+   *
+   * @param path {string}
+   * @param templateName {string}
+   * @param [lint] {boolean}
+   * @return {Promise<File>}
+   */
+  makeFile(path: string, templateName: string, lint?: boolean): Promise<File>
+
+  /**
+   * This method is an alias for:
+   *
+   * @example
+   *  this.log(this.createTitle(message), ...chalkArgs)
+   * @param message {string}
+   * @param [chalkArgs] {string[]}
+   * @return {void}
+   */
+  title(message, ...chalkArgs): void
+
+  /**
+   * Create a tittle for message.
+   *
+   * @param {string} message
+   * @return {string}
+   */
+  createTitle(message: string): string
+
+  /**
    * Create a spinner using Ora API.
    *
    * @param {string|ora.Options} [options]
@@ -100,22 +129,30 @@ export class Command {
   createSpinner(options?: string | ora.Options): ora.Ora
 
   /**
-   * Log a table using cli-table API.
+   * Create a table using cli-table API.
    *
    * @param {any} tableOptions
    * @param {any[]} rows
-   * @return {void}
+   * @return {string}
    */
-  logTable(tableOptions: any, ...rows: any[]): void
+  createTable(tableOptions: any, ...rows: any[]): string
 
   /**
-   * Columnify an object or array.
+   * Create a column for an object or array.
    *
    * @param {Record<string, any> | any[]} data
    * @param {any} [options]
    * @return {string}
    */
-  columnify(data: Record<string, any> | any[], options?: any): string
+  createColumn(data: Record<string, any> | any[], options?: any): string
+
+  /**
+   * Create a big rainbow string.
+   *
+   * @param message {string}
+   * @return {string}
+   */
+  createRainbow(message: string): string
 
   /**
    * Execute a command using the exec of child process.
@@ -156,11 +193,11 @@ export class ConsoleKernel {
   registerErrorHandler(): Promise<void>
 
   /**
-   * Register the custom templates on template helper.
+   * Register all the templates to the artisan.
    *
    * @return {Promise<void>}
    */
-  registerCustomTemplates(): Promise<void>
+  registerTemplates(): Promise<void>
 }
 
 export class ArtisanLoader {
@@ -170,177 +207,179 @@ export class ArtisanLoader {
    * @return {any[]}
    */
   static loadCommands(): any[]
+
+  /**
+   * Return all templates from artisan console application.
+   *
+   * @return {any[]}
+   */
+  static loadTemplates(): any[]
 }
 
 export class TemplateHelper {
   /**
-   * Set custom template names.
+   * All templates set to Artisan work with.
    *
-   * @param object {any}
-   * @return {void}
+   * @type {File[]}
    */
-  static setTemplateName(object: any): void
-  /**
-   * Remove the custom template name.
-   *
-   * @param object {any}
-   * @return {void}
-   */
-  static removeTemplateName(object: any): void
+  static templates: File[]
 
   /**
-   * Set custom template values.
+   * Custom properties to set when fabricating templates.
    *
-   * @param object {any}
-   * @return {void}
+   * @type {any}
    */
-  static setTemplateValue(object: any): void
+  static customProperties: any
 
   /**
-   * Remove the custom template value.
+   * Verify if template exists by name.
    *
-   * @param object {any}
-   * @return {void}
-   */
-  static removeTemplateValue(object: any): void
-
-  /**
-   * Set a custom template file.
-   *
-   * @param {File} file
-   * @return {void}
-   */
-  static setTemplate(file: File): void
-
-  /**
-   * Set all .ejs files inside folder as templates.
-   *
-   * @param {Folder} folder
-   * @return {void}
-   */
-  static setAllTemplates(folder: Folder): void
-
-  /**
-   * Verify if template already exists on custom templates'.
-   *
-   * @param {File} file
+   * @param name {string}
    * @return {boolean}
    */
-  static hasTemplate(file: File): boolean
+  static hasTemplate(name: string): boolean
 
   /**
-   * Remove the custom template file.
+   * Add new template or subscribe an existent one.
    *
-   * @param {File} file
+   * @param path {string}
    * @return {void}
    */
-  static removeTemplate(file: Folder): void
+  static addTemplate(path: string): void
 
   /**
-   * Remove all .ejs files inside folders from custom templates.
+   * Add templates in folder or subscribe the existent.
    *
-   * @param {Folder} folder
+   * @param path {string}
    * @return {void}
    */
-  static removeAllTemplates(folder: Folder): void
+  static addTemplates(path: string): void
 
   /**
-   * Normalize the resource name removing duplicated.
+   * Add template file or subscribe the existent.
+   *
+   * @param file {File}
+   * @return {void}
+   */
+  static addTemplateFile(file: File): void
+
+  /**
+   * Add templates in folder or subscribe the existent.
+   *
+   * @param files {File[]}
+   * @return {void}
+   */
+  static addTemplatesFiles(files: File[]): void
+
+  /**
+   * Get the template file by name.
    *
    * @param {string} name
-   * @param {string} resource
-   * @return {string}
-   */
-  static normalizeName(name: string, resource: string): string
-
-  /**
-   * Get the template file by resource.
-   *
-   * @param {string} resource
    * @return {File}
    */
-  static getTemplateByResource(resource: string): File
+  static getTemplate(name: string): File
 
   /**
-   * Replace the name of the template file with values.
+   * Remove the template by name.
    *
-   * @param {string} name
-   * @param {string} baseTemplateName
-   * @return {string}
+   * @param name {string}
+   * @return {void}
    */
-  static replaceTemplateName(name: string, baseTemplateName: string): string
+  static removeTemplate(name: string): void
 
   /**
-   * Replace the values inside the template file using ejs.
+   * Remove the templates by names.
    *
-   * @param {string} name
-   * @param {Buffer} templateContent
-   * @return {Buffer}
+   * @param names {string}
+   * @return {void}
    */
-  static replaceTemplateValues(name: string, templateContent: Buffer): Buffer
+  static removeTemplates(...names: string[]): void
 
   /**
-   * Replace the content of the array property inside a file.
+   * Set custom template properties.
+   *
+   * @param key {string}
+   * @param value {any}
+   * @return {void}
+   */
+  static addProperty(key: string, value: any): void
+
+  /**
+   * Remove the custom template property.
+   *
+   * @param key {string}
+   * @return {void}
+   */
+  static removeProperty(key: string): void
+
+  /**
+   * Get template params to render in templates.
+   *
+   * @param name {string}
+   * @return {any}
+   */
+  static getTemplateParams(name: string): any
+
+  /**
+   * Fabricate the file by templateName.
+   *
+   * @param templateName {string}
+   * @param filePath {string}
+   * @return {Promise<File>}
+   */
+  static fabricate(templateName, filePath): Promise<File>
+}
+
+export class FilePropertiesHelper {
+  /**
+   * Add content to array property in file.
    *
    * @param {string} path
    * @param {string} matcher
-   * @param {string} importAlias
+   * @param {string} content
+   * @return {Promise<File>}
    */
-  static replaceArrayProperty(
-    path: string,
-    matcher: string,
-    importAlias: string,
-  ): Promise<void>
+  static addContentToArrayProperty(path: string, matcher: string, content: string): Promise<File>
+
+  /**
+   * Add content to object property in file.
+   *
+   * @param {string} path
+   * @param {string} matcher
+   * @param {string} content
+   * @return {Promise<File>}
+   */
+  static addContentToObjectProperty(path: string, matcher: string, content: string): Promise<File>
+
+  /**
+   * Add content to function property in file.
+   *
+   * @param {string} path
+   * @param {string} matcher
+   * @param {string} content
+   * @return {Promise<File>}
+   */
+  static addContentToFunctionProperty(path: string, matcher: string, content: string): Promise<File>
 
   /**
    * Replace the content of the array getter inside a file.
    *
    * @param {string} path
    * @param {string} getter
-   * @param {string} importAlias
-   * @return {Promise<void>}
+   * @param {string} content
+   * @return {Promise<File>}
    */
-  static replaceArrayGetter(path: string, getter: string, importAlias: string): Promise<void>
-
-  /**
-   * Replace the content of the object property inside a file.
-   *
-   * @param {string} path
-   * @param {string} matcher
-   * @param {string} resource
-   * @param {string} importAlias
-   */
-  static replaceObjectProperty(
-    path: string,
-    matcher: string,
-    resource: string,
-    importAlias: string,
-  ): Promise<void>
+  static addContentToArrayGetter(path: string, getter: string, content: string): Promise<File>
 
   /**
    * Replace the content of the object getter inside a file.
    *
    * @param {string} path
    * @param {string} getter
-   * @param {string} resource
-   * @param {string} importAlias
-   * @return {Promise<void>}
-   */
-  static replaceObjectGetter(path: string, getter: string, resource: string, importAlias: string): Promise<void>
-
-  /**
-   * Create a new file from resource.
-   *
-   * @param {string} name
-   * @param {string} resource
-   * @param {string} subPath
+   * @param {string} content
    * @return {Promise<File>}
    */
-  static getResourceFile(
-    name: string,
-    resource: string,
-    subPath: string,
-  ): Promise<File>
+  static addContentToObjectGetter(path: string, getter: string, content: string): Promise<File>
 }
 
 export class ConsoleExceptionHandler {

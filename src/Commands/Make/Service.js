@@ -8,8 +8,7 @@
  */
 
 import { Path } from '@secjs/utils'
-import { Artisan, Command } from '#src/index'
-import { TemplateHelper } from '#src/Helpers/TemplateHelper'
+import { Command } from '#src/index'
 
 export class MakeService extends Command {
   /**
@@ -54,21 +53,12 @@ export class MakeService extends Command {
    */
   async handle(name, options) {
     const resource = 'Service'
-    const subPath = Path.services()
+    const path = Path.services(`${name}.js`)
 
-    this.simpleLog(
-      `[ MAKING ${resource.toUpperCase()} ]\n`,
-      'rmNewLineStart',
-      'bold',
-      'green',
-    )
+    this.title(`MAKING ${resource}\n`, 'bold', 'green')
 
-    const file = await TemplateHelper.getResourceFile(name, resource, subPath)
+    const file = await this.makeFile(path, 'service', options.lint)
 
     this.success(`${resource} ({yellow} "${file.name}") successfully created.`)
-
-    if (options.lint) {
-      await Artisan.call(`eslint:fix ${file.path} --resource ${resource}`)
-    }
   }
 }
