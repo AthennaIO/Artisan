@@ -38,6 +38,23 @@ export class Command {
   handle(...args: any[]): Promise<void>
 
   /**
+   * Execute the console command.
+   *
+   * @param {string} argument
+   * @return {Promise<void>}
+   */
+  handle(argument: string): Promise<void>
+
+  /**
+   * Execute the console command.
+   *
+   * @param {string} argument
+   * @param {any} options
+   * @return {Promise<void>}
+   */
+  handle(argument: string, options?: any): Promise<void>
+
+  /**
    * Create a simple log with Chalk API.
    *
    * @param {string} message

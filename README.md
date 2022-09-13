@@ -31,4 +31,12 @@
 
 ---
 
-Made with 🖤 by [Athenna Team](https://github.com/AthennaIO) :wave:
+<p align='center'>
+  With 💜 by <a href='https://github.com/AthennaIO'>Athenna community</a>
+</p>
+
+<p align='center'>
+  <a href='https://github.com/AthennaIO/Artisan/graphs/contributors'>
+    <img src='https://contrib.rocks/image?repo=AthennaIO/Artisan'/>
+  </a>
+</p>
