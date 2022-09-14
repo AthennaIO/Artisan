@@ -429,9 +429,18 @@ export class ArtisanImpl {
    * Call any command from Artisan.
    *
    * @param {string} command
-   * @return Promise<Commander>
+   * @return Promise<Command>
    */
   call(command: string): Promise<Commander>
+
+  /**
+   * Call any command from Artisan and return as child process.
+   *
+   * @param {string} command
+   * @param {string} [artisanPath]
+   * @return {Promise<{ stdout: string, stderr: string }>}
+   */
+  callInChild(command: string, artisanPath?: string): Promise<{ stdout: string, stderr: string }>
 
   /**
    * List all commands with description.

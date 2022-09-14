@@ -12,7 +12,7 @@ import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
 import { Log } from '@athenna/logger'
-import { Config } from '@secjs/utils'
+import { Config, Exec, Path } from '@secjs/utils'
 import { Command as Commander } from 'commander'
 
 import { Command } from '#src/Commands/Command'
@@ -67,6 +67,23 @@ export class ArtisanImpl {
    */
   getErrorHandler() {
     return this.#errorHandler
+  }
+
+  /**
+   * Call any command from Artisan and return as child process.
+   *
+   * @param {string} command
+   * @param {string} [artisanPath]
+   * @return {Promise<{ stdout: string, stderr: string }>}
+   */
+  async callInChild(command, artisanPath = Path.pwd('artisan.js')) {
+    if (process.env.NODE_ENV) {
+      command = `NODE_ENV=${process.env.NODE_ENV} node ${artisanPath} ${command}`
+    } else {
+      command = `node ${artisanPath} ${command}`
+    }
+
+    return Exec.command(command)
   }
 
   /**
