@@ -158,10 +158,10 @@ export class Command {
    * Create a column for an object or array.
    *
    * @param {Record<string, any> | any[]} data
-   * @param {any} [options]
+   * @param {{ columns: string[] }} [options]
    * @return {string}
    */
-  createColumn(data: Record<string, any> | any[], options?: any): string
+  createColumn(data: Record<string, any> | any[], options?: { columns: string[] }): string
 
   /**
    * Create a big rainbow string.
