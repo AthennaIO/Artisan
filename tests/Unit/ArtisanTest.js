@@ -19,6 +19,7 @@ test.group('ArtisanTest', group => {
   group.each.setup(async () => {
     await new Folder(Path.stubs('app')).copy(Path.app())
     await new Folder(Path.stubs('config')).copy(Path.config())
+    await new File(Path.stubs('artisan.js')).copy(Path.pwd('artisan.js'))
 
     await new Config().safeLoad(Path.config('app.js'))
     await new Config().safeLoad(Path.config('logging.js'))
@@ -36,13 +37,19 @@ test.group('ArtisanTest', group => {
   group.each.teardown(async () => {
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.config())
+    await File.safeRemove(Path.pwd('artisan.js'))
   })
 
   test('should be able to execute test:error command from routes/console', async ({ assert }) => {
     await import('#tests/Stubs/routes/console')
 
-    await Artisan.call('test:error')
-    await Artisan.call('test:error treated')
+    const notTreatedError = await Artisan.callInChild('test:error')
+
+    assert.isTrue(notTreatedError.stderr.includes('Testing Error'))
+
+    const treatedError = await Artisan.callInChild('test:error treated')
+
+    assert.isTrue(treatedError.stderr.includes('Testing Exception'))
   }).timeout(60000)
 
   test('should be able to set custom templates on artisan template helper', async ({ assert }) => {
