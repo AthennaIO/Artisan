@@ -38,6 +38,23 @@ export class Command {
   handle(...args: any[]): Promise<void>
 
   /**
+   * Execute the console command.
+   *
+   * @param {string} argument
+   * @return {Promise<void>}
+   */
+  handle(argument: string): Promise<void>
+
+  /**
+   * Execute the console command.
+   *
+   * @param {string} argument
+   * @param {any} options
+   * @return {Promise<void>}
+   */
+  handle(argument: string, options?: any): Promise<void>
+
+  /**
    * Create a simple log with Chalk API.
    *
    * @param {string} message
@@ -141,10 +158,10 @@ export class Command {
    * Create a column for an object or array.
    *
    * @param {Record<string, any> | any[]} data
-   * @param {any} [options]
+   * @param {{ columns: string[] }} [options]
    * @return {string}
    */
-  createColumn(data: Record<string, any> | any[], options?: any): string
+  createColumn(data: Record<string, any> | any[], options?: { columns: string[] }): string
 
   /**
    * Create a big rainbow string.
@@ -415,6 +432,15 @@ export class ArtisanImpl {
    * @return Promise<Commander>
    */
   call(command: string): Promise<Commander>
+
+  /**
+   * Call any command from Artisan and return as child process.
+   *
+   * @param {string} command
+   * @param {string} [artisanPath]
+   * @return {Promise<{ stdout: string, stderr: string }>}
+   */
+  callInChild(command: string, artisanPath?: string): Promise<{ stdout: string, stderr: string }>
 
   /**
    * List all commands with description.

@@ -29,17 +29,6 @@ export class List extends Command {
   }
 
   /**
-   * Set additional flags in the commander instance.
-   * This method is executed when registering your command.
-   *
-   * @param {import('commander').Command} commander
-   * @return {import('commander').Command}
-   */
-  addFlags(commander) {
-    return commander
-  }
-
-  /**
    * Execute the console command.
    *
    * @param {string} alias

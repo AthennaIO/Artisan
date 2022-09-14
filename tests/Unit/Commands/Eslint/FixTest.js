@@ -15,7 +15,7 @@ import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 
-test.group('ListTest', group => {
+test.group('MakeCommandTest', group => {
   group.each.setup(async () => {
     await new Folder(Path.stubs('app')).copy(Path.app())
     await new Folder(Path.stubs('config')).copy(Path.config())
@@ -38,19 +38,7 @@ test.group('ListTest', group => {
     await Folder.safeRemove(Path.config())
   })
 
-  test('should be able to list all commands from eslint alias', async () => {
-    await Artisan.call('list eslint')
-  }).timeout(60000)
-
-  test('should be able to list all commands from make alias', async () => {
-    await Artisan.call('list make')
-  }).timeout(60000)
-
-  test('should be able to list all commands from list alias', async () => {
-    await Artisan.call('list list')
-  }).timeout(60000)
-
-  test('should be able to list all commands from not-existent alias', async () => {
-    await Artisan.call('list not-existent')
+  test('should be able to execute eslint fix in specific files', async ({ assert }) => {
+    await Artisan.call(`eslint:fix ${Path.tests('index.js')}`)
   }).timeout(60000)
 })

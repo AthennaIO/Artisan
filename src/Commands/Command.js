@@ -20,6 +20,7 @@ import { Config, Exec } from '@secjs/utils'
 import { Artisan } from '#src/index'
 import { TemplateHelper } from '#src/Helpers/TemplateHelper'
 import { NotImplementedHandleException } from '#src/Exceptions/NotImplementedHandleException'
+import { NotImplementedSignatureException } from '#src/Exceptions/NotImplementedSignatureException'
 
 export class Command {
   /**
@@ -28,7 +29,7 @@ export class Command {
    * @return {string}
    */
   get signature() {
-    throw new Error('Signature getter not implemented.')
+    throw new NotImplementedSignatureException(this.constructor.name)
   }
 
   /**
@@ -215,7 +216,7 @@ export class Command {
    * Create a column for an object or array.
    *
    * @param {Record<string, any> | any[]} data
-   * @param {any} [options]
+   * @param {{ columns: string[] }} [options]
    * @return {string}
    */
   createColumn(data, options) {

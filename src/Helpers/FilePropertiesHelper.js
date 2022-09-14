@@ -252,7 +252,7 @@ export class FilePropertiesHelper {
     )
 
     if (!matches) {
-      return
+      return file
     }
 
     const match = matches[0]
