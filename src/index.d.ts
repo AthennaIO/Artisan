@@ -429,7 +429,7 @@ export class ArtisanImpl {
    * Call any command from Artisan.
    *
    * @param {string} command
-   * @return Promise<Command>
+   * @return Promise<Commander>
    */
   call(command: string): Promise<Commander>
 
