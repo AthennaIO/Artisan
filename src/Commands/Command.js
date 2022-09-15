@@ -82,58 +82,73 @@ export class Command {
   }
 
   /**
-   * Create an info log in the console channel.
+   * Create a trace log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  info(message, options) {
-    Log.channel('console').info(message, options)
-  }
-
-  /**
-   * Create a warn log in the console channel.
-   *
-   * @param {string} message
-   * @param {any} [options]
-   * @return {void}
-   */
-  warn(message, options) {
-    Log.channel('console').warn(message, options)
-  }
-
-  /**
-   * Create an error log in the console channel.
-   *
-   * @param {string} message
-   * @param {any} [options]
-   * @return {void}
-   */
-  error(message, options) {
-    Log.channel('console').error(message, options)
+  trace(message) {
+    Log.channel('console').trace(message)
   }
 
   /**
    * Create a debug log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  debug(message, options) {
-    Log.channel('console').debug(message, options)
+  debug(message) {
+    Log.channel('console').debug(message)
+  }
+
+  /**
+   * Create an info log in the console channel.
+   *
+   * @param {string} message
+   * @return {void}
+   */
+  info(message) {
+    Log.channel('console').info(message)
   }
 
   /**
    * Create a success log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  success(message, options) {
-    Log.channel('console').success(message, options)
+  success(message) {
+    Log.channel('console').success(message)
+  }
+
+  /**
+   * Create a warn log in the console channel.
+   *
+   * @param {string} message
+   * @return {void}
+   */
+  warn(message) {
+    Log.channel('console').warn(message)
+  }
+
+  /**
+   * Create an error log in the console channel.
+   *
+   * @param {string} message
+   * @return {void}
+   */
+  error(message) {
+    Log.channel('console').error(message)
+  }
+
+  /**
+   * Create a fatal log in the console channel.
+   *
+   * @param {string} message
+   * @return {void}
+   */
+  fatal(message) {
+    Log.channel('console').fatal(message)
   }
 
   /**
