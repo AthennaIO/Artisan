@@ -42,6 +42,8 @@ export class ConsoleExceptionHandler {
 
       Log.channel('exception').error(prettyError.concat('\n'))
 
+      process.exit()
+
       return
     }
 
@@ -57,5 +59,7 @@ export class ConsoleExceptionHandler {
     const prettyError = await exception.prettify()
 
     Log.channel('exception').error(prettyError.concat('\n'))
+
+    process.exit()
   }
 }
