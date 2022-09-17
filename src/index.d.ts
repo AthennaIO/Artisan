@@ -32,6 +32,13 @@ export class Command {
   /**
    * Execute the console command.
    *
+   * @return {Promise<void>}
+   */
+  handle(): Promise<void>
+
+  /**
+   * Execute the console command.
+   *
    * @param {any[]} args
    * @return {Promise<void>}
    */
