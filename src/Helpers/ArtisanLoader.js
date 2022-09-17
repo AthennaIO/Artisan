@@ -1,5 +1,5 @@
-import { Folder, Module, Path } from '@secjs/utils'
 import { join } from 'node:path'
+import { Folder, Module, Path } from '@secjs/utils'
 
 export class ArtisanLoader {
   /**
