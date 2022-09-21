@@ -184,7 +184,7 @@ export class Command {
    * @param {string} command
    * @param {string} [message]
    */
-  execCommand(command: string, message?: string): Promise<void>
+  execCommand(command: string, message?: string): Promise<any>
 }
 
 export class ConsoleKernel {

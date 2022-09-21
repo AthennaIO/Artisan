@@ -264,9 +264,11 @@ export class Command {
     }
 
     try {
-      await Exec.command(command)
+      const result = await Exec.command(command)
 
       if (message) spinner.succeed(message)
+
+      return result
     } catch (err) {
       if (message) spinner.fail(message)
 
