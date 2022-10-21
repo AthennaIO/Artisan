@@ -12,7 +12,8 @@ import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
 import { Log } from '@athenna/logger'
-import { Config, Exec, Path } from '@secjs/utils'
+import { Config } from '@athenna/config'
+import { Exec, Path } from '@athenna/common'
 import { Command as Commander } from 'commander'
 
 import { Command } from '#src/Commands/Command'

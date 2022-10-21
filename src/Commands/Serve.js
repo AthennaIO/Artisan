@@ -9,7 +9,7 @@
 
 import nodemon from 'nodemon'
 
-import { Module, Path } from '@secjs/utils'
+import { Module, Path } from '@athenna/common'
 
 import { Command } from '#src/index'
 

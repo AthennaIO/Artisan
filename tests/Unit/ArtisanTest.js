@@ -8,7 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { Config, File, Folder, Path } from '@secjs/utils'
+import { Config } from '@athenna/config'
+import { File, Folder, Path } from '@athenna/common'
 
 import { Artisan, TemplateHelper } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
@@ -21,8 +22,8 @@ test.group('ArtisanTest', group => {
     await new Folder(Path.stubs('config')).copy(Path.config())
     await new File(Path.stubs('artisan.js')).copy(Path.pwd('artisan.js'))
 
-    await new Config().safeLoad(Path.config('app.js'))
-    await new Config().safeLoad(Path.config('logging.js'))
+    await Config.safeLoad(Path.config('app.js'))
+    await Config.safeLoad(Path.config('logging.js'))
 
     new LoggerProvider().register()
     new ArtisanProvider().register()

@@ -8,7 +8,7 @@
  */
 
 import { parse } from 'node:path'
-import { Path } from '@secjs/utils'
+import { Path } from '@athenna/common'
 import { Command } from '#src/index'
 
 export class MakeFix extends Command {

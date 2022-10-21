@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Path } from '@secjs/utils'
+import { Path } from '@athenna/common'
 import { Artisan, Command } from '#src/index'
 import { FilePropertiesHelper } from '#src/Helpers/FilePropertiesHelper'
 

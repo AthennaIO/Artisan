@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Path, Module } from '@secjs/utils'
+import { Path, Module } from '@athenna/common'
 
 import { Command } from '#src/index'
 
