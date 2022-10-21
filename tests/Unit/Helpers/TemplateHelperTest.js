@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { Path } from '@secjs/utils'
+import { Path } from '@athenna/common'
 import { TemplateHelper } from '#src/index'
 import { NotFoundTemplateException } from '#src/Exceptions/NotFoundTemplateException'
 

@@ -1,6 +1,6 @@
 import ejs from 'ejs'
 
-import { File, Folder, String } from '@secjs/utils'
+import { File, Folder, String } from '@athenna/common'
 import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
 import { NotFoundTemplateException } from '#src/Exceptions/NotFoundTemplateException'
 

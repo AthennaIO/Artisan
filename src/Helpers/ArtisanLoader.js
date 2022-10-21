@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { Folder, Module, Path } from '@secjs/utils'
+import { Folder, Module, Path } from '@athenna/common'
 
 export class ArtisanLoader {
   /**

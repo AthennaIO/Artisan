@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Module, Path } from '@secjs/utils'
+import { Module, Path } from '@athenna/common'
 
 import { Artisan, ArtisanLoader, TemplateHelper } from '#src/index'
 
@@ -24,7 +24,7 @@ export class ConsoleKernel {
   /**
    * Register custom templates files.
    *
-   * @return {import('@secjs/utils').File[] | Promise<any[]>}
+   * @return {import('@athenna/common').File[] | Promise<any[]>}
    */
   get templates() {
     return [...ArtisanLoader.loadTemplates()]

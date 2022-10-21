@@ -8,7 +8,7 @@
  */
 
 import { parse } from 'node:path'
-import { Exception } from '@secjs/utils'
+import { Exception } from '@athenna/common'
 
 export class AlreadyExistFileException extends Exception {
   /**

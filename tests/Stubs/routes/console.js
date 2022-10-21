@@ -1,5 +1,5 @@
 import { Artisan } from '#src/index'
-import { Exception } from '@secjs/utils'
+import { Exception } from '@athenna/common'
 
 Artisan.command('test:error [treated]', async function (treated) {
   if (treated) {

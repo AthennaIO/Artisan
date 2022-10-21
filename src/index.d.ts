@@ -2,7 +2,7 @@ import * as ora from 'ora'
 import { Command as Commander } from 'commander'
 
 import { Facade } from '@athenna/ioc'
-import { File } from '@secjs/utils'
+import { File } from '@athenna/common'
 
 export const Artisan: Facade & ArtisanImpl
 
@@ -13,6 +13,7 @@ export class Command {
    * @type {string}
    */
   get signature(): string
+
   /**
    * The console command description.
    *
@@ -168,7 +169,10 @@ export class Command {
    * @param {{ columns: string[] }} [options]
    * @return {string}
    */
-  createColumn(data: Record<string, any> | any[], options?: { columns: string[] }): string
+  createColumn(
+    data: Record<string, any> | any[],
+    options?: { columns: string[] },
+  ): string
 
   /**
    * Create a big rainbow string.
@@ -198,7 +202,7 @@ export class ConsoleKernel {
   /**
    * Register custom templates files.
    *
-   * @return {import('@secjs/utils').File[] | Promise<any[]>}
+   * @return {import('@athenna/common').File[] | Promise<any[]>}
    */
   get templates(): any[] | Promise<any[]>
 
@@ -363,7 +367,11 @@ export class FilePropertiesHelper {
    * @param {string} content
    * @return {Promise<File>}
    */
-  static addContentToArrayProperty(path: string, matcher: string, content: string): Promise<File>
+  static addContentToArrayProperty(
+    path: string,
+    matcher: string,
+    content: string,
+  ): Promise<File>
 
   /**
    * Add content to object property in file.
@@ -373,7 +381,11 @@ export class FilePropertiesHelper {
    * @param {string} content
    * @return {Promise<File>}
    */
-  static addContentToObjectProperty(path: string, matcher: string, content: string): Promise<File>
+  static addContentToObjectProperty(
+    path: string,
+    matcher: string,
+    content: string,
+  ): Promise<File>
 
   /**
    * Add content to function property in file.
@@ -383,7 +395,11 @@ export class FilePropertiesHelper {
    * @param {string} content
    * @return {Promise<File>}
    */
-  static addContentToFunctionProperty(path: string, matcher: string, content: string): Promise<File>
+  static addContentToFunctionProperty(
+    path: string,
+    matcher: string,
+    content: string,
+  ): Promise<File>
 
   /**
    * Replace the content of the array getter inside a file.
@@ -393,7 +409,11 @@ export class FilePropertiesHelper {
    * @param {string} content
    * @return {Promise<File>}
    */
-  static addContentToArrayGetter(path: string, getter: string, content: string): Promise<File>
+  static addContentToArrayGetter(
+    path: string,
+    getter: string,
+    content: string,
+  ): Promise<File>
 
   /**
    * Replace the content of the object getter inside a file.
@@ -403,7 +423,11 @@ export class FilePropertiesHelper {
    * @param {string} content
    * @return {Promise<File>}
    */
-  static addContentToObjectGetter(path: string, getter: string, content: string): Promise<File>
+  static addContentToObjectGetter(
+    path: string,
+    getter: string,
+    content: string,
+  ): Promise<File>
 }
 
 export class ConsoleExceptionHandler {
@@ -447,7 +471,10 @@ export class ArtisanImpl {
    * @param {string} [artisanPath]
    * @return {Promise<{ stdout: string, stderr: string }>}
    */
-  callInChild(command: string, artisanPath?: string): Promise<{ stdout: string, stderr: string }>
+  callInChild(
+    command: string,
+    artisanPath?: string,
+  ): Promise<{ stdout: string; stderr: string }>
 
   /**
    * List all commands with description.

@@ -8,7 +8,7 @@
  */
 
 import { test } from '@japa/runner'
-import { File, Path } from '@secjs/utils'
+import { File, Path } from '@athenna/common'
 import { FilePropertiesHelper } from '#src/Helpers/FilePropertiesHelper'
 
 test.group('FilePropertiesHelperTest', group => {

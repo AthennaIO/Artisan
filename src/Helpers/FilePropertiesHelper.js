@@ -1,4 +1,4 @@
-import { File } from '@secjs/utils'
+import { File } from '@athenna/common'
 
 export class FilePropertiesHelper {
   /**

@@ -14,8 +14,9 @@ import Table from 'cli-table'
 import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
+import { Config } from '@athenna/config'
 import { Log } from '@athenna/logger'
-import { Config, Exec } from '@secjs/utils'
+import { Exec } from '@athenna/common'
 
 import { Artisan } from '#src/index'
 import { TemplateHelper } from '#src/Helpers/TemplateHelper'
