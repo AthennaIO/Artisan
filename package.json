@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "The Athenna CLI application. Built on top of commander.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -36,6 +36,7 @@
   "exports": {
     ".": "./src/index.js",
     "./facades/Artisan": "./src/Facades/Log.js",
+    "./facades/Template": "./src/Facades/Template.js",
     "./commands/List": "./src/Commands/List.js",
     "./commands/Serve": "./src/Commands/Serve.js",
     "./commands/Eslint": "./src/Commands/Eslint/Fix.js",
@@ -44,7 +45,8 @@
     "./commands/Make/Facade": "./src/Commands/Make/Facade.js",
     "./commands/Make/Provider": "./src/Commands/Make/Provider.js",
     "./commands/Make/Service": "./src/Commands/Make/Service.js",
-    "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js"
+    "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js",
+    "./providers/TemplateProvider": "./src/Providers/TemplateProvider.js"
   },
   "imports": {
     "#src/*": "./src/*.js",
@@ -59,7 +61,7 @@
     "cli-table": "0.3.11",
     "columnify": "1.6.0",
     "commander": "9.2.0",
-    "ejs": "3.1.7",
+    "edge.js": "5.5.0",
     "figlet": "1.5.2",
     "nodemon": "2.0.17",
     "ora": "5.4.1"
@@ -142,7 +144,8 @@
       "node": true
     },
     "globals": {
-      "ioc": true
+      "ioc": true,
+      "Env": true
     },
     "plugins": [
       "prettier"

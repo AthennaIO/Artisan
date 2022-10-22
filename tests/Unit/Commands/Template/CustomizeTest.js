@@ -14,6 +14,7 @@ import { File, Folder, Path } from '@athenna/common'
 import { Artisan } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
+import { TemplateProvider } from '#src/Providers/TemplateProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 
 test.group('TemplateCustomizeTest', group => {
@@ -26,6 +27,7 @@ test.group('TemplateCustomizeTest', group => {
 
     new LoggerProvider().register()
     new ArtisanProvider().register()
+    new TemplateProvider().register()
 
     const kernel = new Kernel()
 
@@ -47,7 +49,7 @@ test.group('TemplateCustomizeTest', group => {
 
     await kernel.registerTemplates()
 
-    assert.isTrue(await File.exists(Path.resources('templates/command.ejs')))
+    assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
   }).timeout(60000)
 
   test('should not re-move templates that are already inside resources/templates folder', async ({ assert }) => {
@@ -61,6 +63,6 @@ test.group('TemplateCustomizeTest', group => {
 
     await kernel.registerTemplates()
 
-    assert.isTrue(await File.exists(Path.resources('templates/command.ejs')))
+    assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
   }).timeout(60000)
 })

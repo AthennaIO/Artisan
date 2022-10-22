@@ -5,12 +5,14 @@ import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 import { Artisan } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
+import { TemplateProvider } from '#src/Providers/TemplateProvider'
 
 await Config.safeLoad(Path.config('app.js'))
 await Config.safeLoad(Path.config('logging.js'))
 
 new LoggerProvider().register()
 new ArtisanProvider().register()
+new TemplateProvider().register()
 
 const kernel = new Kernel()
 

@@ -12,5 +12,5 @@ import { Facade } from '@athenna/ioc'
 |
 */
 
-/** @type {Facade & import('#app/YourProvider/<%= namePascal %>')} */
-export const <%= namePascal %> = Facade.createFor('Your/ProviderAlias/<%= namePascal %>')
+/** @type {Facade & import('#app/YourProvider/{{ namePascal }}')} */
+export const {{ namePascal }} = Facade.createFor('Your/ProviderAlias/{{ namePascal }}')

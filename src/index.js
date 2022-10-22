@@ -19,6 +19,7 @@ import { Command as Commander } from 'commander'
 import { Command } from '#src/Commands/Command'
 
 export * from './Facades/Artisan.js'
+export * from './Facades/Template.js'
 export * from './Commands/Command.js'
 export * from './Kernels/ConsoleKernel.js'
 export * from './Helpers/ArtisanLoader.js'

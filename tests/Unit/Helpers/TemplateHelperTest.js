@@ -9,27 +9,32 @@
 
 import { test } from '@japa/runner'
 import { Path } from '@athenna/common'
-import { TemplateHelper } from '#src/index'
+import { Template } from '#src/index'
+import { TemplateProvider } from '#src/Providers/TemplateProvider'
 import { NotFoundTemplateException } from '#src/Exceptions/NotFoundTemplateException'
 
 test.group('TemplateHelperTest', group => {
-  test('should be able to add templates to template helper', async ({ assert }) => {
-    TemplateHelper.addTemplates(Path.stubs('templates'))
+  group.each.setup(() => {
+    new TemplateProvider().register()
+  })
 
-    assert.isTrue(TemplateHelper.hasTemplate('command'))
+  test('should be able to add templates to template helper', async ({ assert }) => {
+    Template.addTemplates(Path.stubs('templates'))
+
+    assert.isTrue(Template.hasTemplate('command'))
   })
 
   test('should be able to remove templates from template helper', async ({ assert }) => {
-    TemplateHelper.removeTemplates('command')
+    Template.removeTemplates('command')
 
-    assert.isFalse(TemplateHelper.hasTemplate('command'))
+    assert.isFalse(Template.hasTemplate('command'))
   })
 
   test('should not throw any exception when removing a template that does not exist', async ({ assert }) => {
-    assert.doesNotThrows(() => TemplateHelper.removeTemplate('command'))
+    assert.doesNotThrows(() => Template.removeTemplate('command'))
   })
 
   test('should throw a not found template exception when trying to get a template', async ({ assert }) => {
-    assert.throws(() => TemplateHelper.getTemplate('not-found'), NotFoundTemplateException)
+    assert.throws(() => Template.getTemplate('not-found'), NotFoundTemplateException)
   })
 })

@@ -19,7 +19,7 @@ import { Log } from '@athenna/logger'
 import { Exec } from '@athenna/common'
 
 import { Artisan } from '#src/index'
-import { TemplateHelper } from '#src/Helpers/TemplateHelper'
+import { Template } from '#src/Facades/Template'
 import { NotImplementedHandleException } from '#src/Exceptions/NotImplementedHandleException'
 import { NotImplementedSignatureException } from '#src/Exceptions/NotImplementedSignatureException'
 
@@ -161,7 +161,7 @@ export class Command {
    * @return {Promise<File>}
    */
   async makeFile(path, templateName, lint) {
-    const file = await TemplateHelper.fabricate(templateName, path)
+    const file = await Template.fabricate(templateName, path)
 
     if (lint) {
       await Artisan.call(`eslint:fix ${file.path} --quiet`)

@@ -11,9 +11,10 @@ import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { File, Folder, Path } from '@athenna/common'
 
-import { Artisan, TemplateHelper } from '#src/index'
+import { Artisan, Template } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
+import { TemplateProvider } from '#src/Providers/TemplateProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 
 test.group('MakeCommandTest', group => {
@@ -26,6 +27,7 @@ test.group('MakeCommandTest', group => {
 
     new LoggerProvider().register()
     new ArtisanProvider().register()
+    new TemplateProvider().register()
 
     const kernel = new Kernel()
 
@@ -53,7 +55,7 @@ test.group('MakeCommandTest', group => {
   }).timeout(60000)
 
   test('should be able to replace template names and template values', async ({ assert }) => {
-    TemplateHelper.addProperty('namePascal', 'Zap')
+    Template.addProperty('namePascal', 'Zap')
 
     await Artisan.call('make:command testCommands')
 
@@ -62,6 +64,6 @@ test.group('MakeCommandTest', group => {
     assert.isTrue(file.fileExists)
     assert.isTrue(file.getContentSync().toString().includes('class Zap'))
 
-    TemplateHelper.removeProperty('namePascal')
+    Template.removeProperty('namePascal')
   }).timeout(60000)
 })

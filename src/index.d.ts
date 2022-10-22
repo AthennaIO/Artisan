@@ -1,10 +1,12 @@
 import * as ora from 'ora'
 import { Command as Commander } from 'commander'
 
+import { Edge } from 'edge.js'
 import { Facade } from '@athenna/ioc'
 import { File } from '@athenna/common'
 
 export const Artisan: Facade & ArtisanImpl
+export const Template: Facade & TemplateHelper
 
 export class Command {
   /**
@@ -250,14 +252,21 @@ export class TemplateHelper {
    *
    * @type {File[]}
    */
-  static templates: File[]
+  templates: File[]
 
   /**
    * Custom properties to set when fabricating templates.
    *
    * @type {any}
    */
-  static customProperties: any
+  customProperties: any
+
+  /**
+   * Edge template engine instance.
+   *
+   * @type {Edge}
+   */
+  edge: Edge
 
   /**
    * Verify if template exists by name.
@@ -265,7 +274,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {boolean}
    */
-  static hasTemplate(name: string): boolean
+  hasTemplate(name: string): boolean
 
   /**
    * Add new template or subscribe an existent one.
@@ -273,7 +282,7 @@ export class TemplateHelper {
    * @param path {string}
    * @return {void}
    */
-  static addTemplate(path: string): void
+  addTemplate(path: string): void
 
   /**
    * Add templates in folder or subscribe the existent.
@@ -281,7 +290,7 @@ export class TemplateHelper {
    * @param path {string}
    * @return {void}
    */
-  static addTemplates(path: string): void
+  addTemplates(path: string): void
 
   /**
    * Add template file or subscribe the existent.
@@ -289,7 +298,7 @@ export class TemplateHelper {
    * @param file {File}
    * @return {void}
    */
-  static addTemplateFile(file: File): void
+  addTemplateFile(file: File): void
 
   /**
    * Add templates in folder or subscribe the existent.
@@ -297,7 +306,7 @@ export class TemplateHelper {
    * @param files {File[]}
    * @return {void}
    */
-  static addTemplatesFiles(files: File[]): void
+  addTemplatesFiles(files: File[]): void
 
   /**
    * Get the template file by name.
@@ -305,7 +314,7 @@ export class TemplateHelper {
    * @param {string} name
    * @return {File}
    */
-  static getTemplate(name: string): File
+  getTemplate(name: string): File
 
   /**
    * Remove the template by name.
@@ -313,7 +322,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {void}
    */
-  static removeTemplate(name: string): void
+  removeTemplate(name: string): void
 
   /**
    * Remove the templates by names.
@@ -321,7 +330,7 @@ export class TemplateHelper {
    * @param names {string}
    * @return {void}
    */
-  static removeTemplates(...names: string[]): void
+  removeTemplates(...names: string[]): void
 
   /**
    * Set custom template properties.
@@ -330,7 +339,7 @@ export class TemplateHelper {
    * @param value {any}
    * @return {void}
    */
-  static addProperty(key: string, value: any): void
+  addProperty(key: string, value: any): void
 
   /**
    * Remove the custom template property.
@@ -338,7 +347,7 @@ export class TemplateHelper {
    * @param key {string}
    * @return {void}
    */
-  static removeProperty(key: string): void
+  removeProperty(key: string): void
 
   /**
    * Get template params to render in templates.
@@ -346,7 +355,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {any}
    */
-  static getTemplateParams(name: string): any
+  getTemplateParams(name: string): any
 
   /**
    * Fabricate the file by templateName.
@@ -355,7 +364,7 @@ export class TemplateHelper {
    * @param filePath {string}
    * @return {Promise<File>}
    */
-  static fabricate(templateName, filePath): Promise<File>
+  fabricate(templateName, filePath): Promise<File>
 }
 
 export class FilePropertiesHelper {
