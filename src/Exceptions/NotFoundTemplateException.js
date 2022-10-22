@@ -1,5 +1,5 @@
 /**
- * @athenna/logger
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -16,7 +16,7 @@ export class NotFoundTemplateException extends Exception {
    * @param {string} templateName
    */
   constructor(templateName) {
-    const content = `The ({yellow} "${templateName}") has not been found inside TemplateHelper. Add it using ({yellow} "TemplateHelper.addTemplate") method.`
+    const content = `The ({yellow} "${templateName}") has not been found. Add it using ({yellow} "Template.addTemplate") method.`
 
     super(content, 500, 'E_SIMPLE_CLI')
   }

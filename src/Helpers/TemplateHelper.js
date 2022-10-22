@@ -1,4 +1,4 @@
-import ejs from 'ejs'
+import { Edge } from 'edge.js'
 
 import { File, Folder, String } from '@athenna/common'
 import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
@@ -10,14 +10,30 @@ export class TemplateHelper {
    *
    * @type {File[]}
    */
-  static templates = []
+  templates = []
 
   /**
    * Custom properties to set when fabricating templates.
    *
    * @type {any}
    */
-  static customProperties = {}
+  customProperties = {}
+
+  /**
+   * Edge template engine instance.
+   *
+   * @type {Edge}
+   */
+  edge = null
+
+  /**
+   * Creates a new instance of TemplateHelper
+   *
+   * @return {TemplateHelper}
+   */
+  constructor() {
+    this.edge = new Edge({ cache: false })
+  }
 
   /**
    * Verify if template exists by name.
@@ -25,7 +41,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {boolean}
    */
-  static hasTemplate(name) {
+  hasTemplate(name) {
     return !!this.templates.find(f => f.name === name)
   }
 
@@ -35,7 +51,7 @@ export class TemplateHelper {
    * @param path {string}
    * @return {void}
    */
-  static addTemplate(path) {
+  addTemplate(path) {
     const file = new File(path).loadSync({ withContent: false })
 
     if (this.hasTemplate(file.name)) {
@@ -51,7 +67,7 @@ export class TemplateHelper {
    * @param path {string}
    * @return {void}
    */
-  static addTemplates(path) {
+  addTemplates(path) {
     const folder = new Folder(path).loadSync({ withFileContent: false })
 
     folder.files.forEach(file => this.addTemplate(file.path))
@@ -63,7 +79,7 @@ export class TemplateHelper {
    * @param file {File}
    * @return {void}
    */
-  static addTemplateFile(file) {
+  addTemplateFile(file) {
     if (this.hasTemplate(file.name)) {
       this.removeTemplate(file.name)
     }
@@ -77,7 +93,7 @@ export class TemplateHelper {
    * @param files {File[]}
    * @return {void}
    */
-  static addTemplatesFiles(files) {
+  addTemplatesFiles(files) {
     files.forEach(file => this.addTemplateFile(file))
   }
 
@@ -87,7 +103,7 @@ export class TemplateHelper {
    * @param {string} name
    * @return {File}
    */
-  static getTemplate(name) {
+  getTemplate(name) {
     const template = this.templates.find(file => file.name === name)
 
     if (!template) {
@@ -103,7 +119,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {void}
    */
-  static removeTemplate(name) {
+  removeTemplate(name) {
     if (!this.hasTemplate(name)) {
       return
     }
@@ -119,7 +135,7 @@ export class TemplateHelper {
    * @param names {string}
    * @return {void}
    */
-  static removeTemplates(...names) {
+  removeTemplates(...names) {
     names.forEach(name => this.removeTemplate(name))
   }
 
@@ -130,7 +146,7 @@ export class TemplateHelper {
    * @param value {any}
    * @return {void}
    */
-  static addProperty(key, value) {
+  addProperty(key, value) {
     this.customProperties[key] = value
   }
 
@@ -140,7 +156,7 @@ export class TemplateHelper {
    * @param key {string}
    * @return {void}
    */
-  static removeProperty(key) {
+  removeProperty(key) {
     if (!this.customProperties[key]) {
       return
     }
@@ -154,7 +170,7 @@ export class TemplateHelper {
    * @param name {string}
    * @return {any}
    */
-  static getTemplateParams(name) {
+  getTemplateParams(name) {
     const timestamp = Date.now()
 
     const nameUp = name.toUpperCase()
@@ -188,7 +204,7 @@ export class TemplateHelper {
    * @param filePath {string}
    * @return {Promise<File>}
    */
-  static async fabricate(templateName, filePath) {
+  async fabricate(templateName, filePath) {
     if (await File.exists(filePath)) {
       throw new AlreadyExistFileException(filePath)
     }
@@ -196,10 +212,9 @@ export class TemplateHelper {
     const file = new File(filePath, Buffer.from(''))
     const template = await this.getTemplate(templateName).getContent()
 
-    const content = Buffer.from(
-      ejs.render(template.toString(), this.getTemplateParams(file.name)),
-    )
+    const state = this.getTemplateParams(file.name)
+    const content = await this.edge.renderRaw(template.toString(), state)
 
-    return new File(filePath, content).load()
+    return new File(filePath, Buffer.from(content)).load()
   }
 }

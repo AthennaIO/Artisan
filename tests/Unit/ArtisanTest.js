@@ -11,9 +11,10 @@ import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { File, Folder, Path } from '@athenna/common'
 
-import { Artisan, TemplateHelper } from '#src/index'
+import { Artisan, Template } from '#src/index'
 import { Kernel } from '#tests/Stubs/app/Console/Kernel'
 import { ArtisanProvider } from '#src/Providers/ArtisanProvider'
+import { TemplateProvider } from '#src/Providers/TemplateProvider'
 import { LoggerProvider } from '@athenna/logger/providers/LoggerProvider'
 
 test.group('ArtisanTest', group => {
@@ -27,6 +28,7 @@ test.group('ArtisanTest', group => {
 
     new LoggerProvider().register()
     new ArtisanProvider().register()
+    new TemplateProvider().register()
 
     const kernel = new Kernel()
 
@@ -54,7 +56,7 @@ test.group('ArtisanTest', group => {
   }).timeout(60000)
 
   test('should be able to set custom templates on artisan template helper', async ({ assert }) => {
-    TemplateHelper.addTemplate(Path.stubs('templates/command.ejs'))
+    Template.addTemplate(Path.stubs('templates/command.edge'))
 
     await Artisan.call('make:command CustomCommand')
 

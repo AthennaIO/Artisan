@@ -9,7 +9,7 @@
 
 import { Module, Path } from '@athenna/common'
 
-import { Artisan, ArtisanLoader, TemplateHelper } from '#src/index'
+import { Artisan, ArtisanLoader, Template } from '#src/index'
 
 export class ConsoleKernel {
   /**
@@ -86,6 +86,6 @@ export class ConsoleKernel {
    * @return {Promise<void>}
    */
   async registerTemplates() {
-    TemplateHelper.addTemplatesFiles(this.templates)
+    Template.addTemplatesFiles(this.templates)
   }
 }
