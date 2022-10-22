@@ -32,13 +32,13 @@ export class ArtisanLoader {
 
     const templates = new Folder(templatesPath)
       .loadSync()
-      .getFilesByPattern('**/*.ejs')
+      .getFilesByPattern('**/*.edge')
 
     if (Folder.existsSync(Path.resources('templates'))) {
       templates.push(
         ...new Folder(Path.resources('templates'))
           .loadSync()
-          .getFilesByPattern('**/*.ejs'),
+          .getFilesByPattern('**/*.edge'),
       )
     }
 
