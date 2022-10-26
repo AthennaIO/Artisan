@@ -19,7 +19,7 @@ export class ReplaceFile {
       'ieumjhg',
     ]
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (Env('NODE_ENV') !== 'production') {
       internalCommands.push(
         ...ArtisanLoader.loadCommands(),
         'dasdada',
