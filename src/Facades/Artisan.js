@@ -10,6 +10,6 @@
 import { Facade } from '@athenna/ioc'
 
 /**
- * @type {Facade & import('#src/index').ArtisanImpl}
+ * @type {typeof Facade & import('#src/index').ArtisanImpl}
  */
 export const Artisan = Facade.createFor('Athenna/Core/Artisan')
