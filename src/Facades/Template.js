@@ -10,6 +10,6 @@
 import { Facade } from '@athenna/ioc'
 
 /**
- * @type {Facade & import('#src/Helpers').TemplateHelper}
+ * @type {typeof Facade & import('#src/Helpers').TemplateHelper}
  */
 export const Template = Facade.createFor('Athenna/Helpers/Template')
