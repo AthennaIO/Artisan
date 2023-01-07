@@ -5,8 +5,8 @@ import { Edge } from 'edge.js'
 import { Facade } from '@athenna/ioc'
 import { File } from '@athenna/common'
 
-export const Artisan: Facade & ArtisanImpl
-export const Template: Facade & TemplateHelper
+export const Artisan: typeof Facade & ArtisanImpl
+export const Template: typeof Facade & TemplateHelper
 
 export class Command {
   /**
