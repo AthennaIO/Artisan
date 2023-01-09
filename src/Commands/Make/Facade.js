@@ -53,7 +53,7 @@ export class MakeFacade extends Command {
    */
   async handle(name, options) {
     const resource = 'Facade'
-    const path = Path.facades(`${name}.js`)
+    const path = Path.facades(`${name}.${Path.ext()}`)
 
     this.title(`MAKING ${resource}\n`, 'bold', 'green')
 

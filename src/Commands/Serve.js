@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import nodemon from 'nodemon'
-
+import { Command } from '#src/index'
+import { createRequire } from 'node:module'
 import { Module, Path } from '@athenna/common'
 
-import { Command } from '#src/index'
+const require = createRequire(import.meta.url)
 
 export class Serve extends Command {
   /**
@@ -57,17 +57,18 @@ export class Serve extends Command {
     process.env.BOOT_LOGS = 'true'
 
     if (options.watch) {
+      const nodemon = require('nodemon')
       const ignorePaths = `--ignore ${Path.tests()} ${Path.storage()} ${Path.nodeModules()}`
 
       nodemon(
         `--quiet ${ignorePaths} --watch ${Path.pwd()} --exec 'node ${Path.bootstrap(
-          'main.js',
+          `main.${Path.ext()}`,
         )}'`,
       )
 
       return
     }
 
-    await Module.import(Path.bootstrap('main.js'))
+    await Module.import(Path.bootstrap(`main.${Path.ext()}`))
   }
 }

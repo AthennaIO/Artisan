@@ -56,7 +56,7 @@ export class MakeProvider extends Command {
    */
   async handle(name, options) {
     const resource = 'Provider'
-    const path = Path.providers(`${name}.js`)
+    const path = Path.providers(`${name}.${Path.ext()}`)
 
     this.title(`MAKING ${resource}\n`, 'bold', 'green')
 
@@ -65,7 +65,7 @@ export class MakeProvider extends Command {
     this.success(`${resource} ({yellow} "${file.name}") successfully created.`)
 
     if (options.register) {
-      const path = Path.config('app.js')
+      const path = Path.config(`app.${Path.ext()}`)
 
       await FilePropertiesHelper.addContentToArrayProperty(
         path,

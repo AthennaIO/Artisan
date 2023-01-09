@@ -53,7 +53,7 @@ export class MakeException extends Command {
    */
   async handle(name, options) {
     const resource = 'Exception'
-    const path = Path.app(`Exceptions/${name}.js`)
+    const path = Path.app(`Exceptions/${name}.${Path.ext()}`)
 
     this.title(`MAKING ${resource}\n`, 'bold', 'green')
 
