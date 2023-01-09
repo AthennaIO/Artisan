@@ -53,7 +53,7 @@ export class MakeService extends Command {
    */
   async handle(name, options) {
     const resource = 'Service'
-    const path = Path.services(`${name}.js`)
+    const path = Path.services(`${name}.${Path.ext()}`)
 
     this.title(`MAKING ${resource}\n`, 'bold', 'green')
 

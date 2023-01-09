@@ -78,7 +78,7 @@ export class ArtisanImpl {
    * @param {string} [artisanPath]
    * @return {Promise<{ stdout: string, stderr: string }>}
    */
-  async callInChild(command, artisanPath = Path.pwd('artisan.js')) {
+  async callInChild(command, artisanPath = Path.pwd(`artisan.${Path.ext()}`)) {
     if (Env('NODE_ENV')) {
       command = `NODE_ENV=${process.env.NODE_ENV} node ${artisanPath} ${command}`
     } else {

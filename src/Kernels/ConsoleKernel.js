@@ -73,7 +73,9 @@ export class ConsoleKernel {
    * @return {Promise<void>}
    */
   async registerErrorHandler() {
-    const Handler = await Module.getFrom(Path.console('Exceptions/Handler.js'))
+    const Handler = await Module.getFrom(
+      Path.console(`Exceptions/Handler.${Path.ext()}`),
+    )
 
     const handler = new Handler()
 
