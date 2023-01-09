@@ -49,7 +49,7 @@ export class TemplateCustomize extends Command {
   async handle() {
     this.title('MOVING TEMPLATES\n', 'bold', 'green')
 
-    const Kernel = await Module.getFrom(Path.console('Kernel.js'))
+    const Kernel = await Module.getFrom(Path.console(`Kernel.${Path.ext()}`))
 
     const kernel = new Kernel()
 

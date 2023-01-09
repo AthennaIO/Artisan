@@ -8,8 +8,8 @@
  */
 
 import { parse } from 'node:path'
-import { Path } from '@athenna/common'
 import { Command } from '#src/index'
+import { Path } from '@athenna/common'
 
 export class MakeFix extends Command {
   /**
