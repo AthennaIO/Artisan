@@ -58,13 +58,10 @@ export class Serve extends Command {
 
     if (options.watch) {
       const nodemon = require('nodemon')
+      const execCmd = `'npm start ${Env('NODEMON_NPM_ARGS', '')}'`
       const ignorePaths = `--ignore ${Path.tests()} ${Path.storage()} ${Path.nodeModules()}`
 
-      nodemon(
-        `--quiet ${ignorePaths} --watch ${Path.pwd()} --exec 'node ${Path.bootstrap(
-          `main.${Path.ext()}`,
-        )}'`,
-      )
+      nodemon(`--quiet ${ignorePaths} --watch ${Path.pwd()} --exec ${execCmd}`)
 
       return
     }

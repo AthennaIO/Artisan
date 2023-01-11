@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "The Athenna CLI application. Built on top of commander.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
