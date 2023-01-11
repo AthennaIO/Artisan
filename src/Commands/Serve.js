@@ -57,9 +57,13 @@ export class Serve extends Command {
     process.env.BOOT_LOGS = 'true'
 
     if (options.watch) {
+      let execCmd = "'npm run start --silent'"
       const nodemon = require('nodemon')
-      const execCmd = `'npm start ${Env('NODEMON_NPM_ARGS', '')}'`
       const ignorePaths = `--ignore ${Path.tests()} ${Path.storage()} ${Path.nodeModules()}`
+
+      if (Env('NODEMON_NPM_ARGS', '') !== '') {
+        execCmd = execCmd.concat(' ', Env('NODEMON_NPM_ARGS'))
+      }
 
       nodemon(`--quiet ${ignorePaths} --watch ${Path.pwd()} --exec ${execCmd}`)
 
