@@ -36,6 +36,22 @@ test.group('FilePropertiesHelperTest', group => {
     )
   })
 
+  test('should not add content to functions properties because property has comments', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToFunctionProperty(
+      Path.stubs('replaceFileCopy.js'),
+      'internalCommandsComment.push',
+      "'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isFalse(
+      content.includes(
+        "internalCommandsComment.push(...ArtisanLoader.loadCommands,'dasdada','dsadsad','dsadsaa','dswesas','ewqasdw','aqwerfs','dswpoik','lklopls','ieumjhg','hello')",
+      ),
+    )
+  })
+
   test('should not add content to functions properties because does not match', async ({ assert }) => {
     const file = await FilePropertiesHelper.addContentToFunctionProperty(
       Path.stubs('replaceFileCopy.js'),
@@ -64,6 +80,22 @@ test.group('FilePropertiesHelperTest', group => {
     assert.isTrue(
       content.includes(
         "const internalCommands = ['dasdada','dsadsad','dsadsaa','dswesas','ewqasdw','aqwerfs','dswpoik','lklopls','ieumjhg','hello']",
+      ),
+    )
+  })
+
+  test('should not add content to array properties because property has comments', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToArrayProperty(
+      Path.stubs('replaceFileCopy.js'),
+      'const internalCommandsComment = ',
+      "'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isFalse(
+      content.includes(
+        "const internalCommandsComment = ['dasdada','dsadsad','dsadsaa','dswesas','ewqasdw','aqwerfs','dswpoik','lklopls','ieumjhg','hello']",
       ),
     )
   })
@@ -100,6 +132,22 @@ test.group('FilePropertiesHelperTest', group => {
     )
   })
 
+  test('should not add content to object properties because property has comments', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToObjectProperty(
+      Path.stubs('replaceFileCopy.js'),
+      'const objectComment = ',
+      "nice: 'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isFalse(
+      content.includes(
+        "const objectComment = {dasdada:'dasdada',dsadsad:'dsadsad',dsadsaa:'dsadsaa',dswesas:'dswesas',ewqasdw:'ewqasdw',aqwerfs:'aqwerfs',dswpoik:'dswpoik',lklopls:'lklopls',ieumjhg:'ieumjhg',nice: 'hello'}",
+      ),
+    )
+  })
+
   test('should not add content to object properties because does not match', async ({ assert }) => {
     const file = await FilePropertiesHelper.addContentToObjectProperty(
       Path.stubs('replaceFileCopy.js'),
@@ -131,6 +179,18 @@ test.group('FilePropertiesHelperTest', group => {
   test('should not add content to array getter because does not match', async ({ assert }) => {
     const file = await FilePropertiesHelper.addContentToArrayGetter(
       Path.stubs('replaceFileCopy.js'),
+      'templatesComment',
+      "'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isFalse(content.includes('get templatesComment() {\n' + " return ['hello']\n" + '  }'))
+  })
+
+  test('should not add content to array getter because does not match', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToArrayGetter(
+      Path.stubs('replaceFileCopy.js'),
       'templatess',
       "'hello'",
     )
@@ -150,6 +210,18 @@ test.group('FilePropertiesHelperTest', group => {
     const content = file.getContentSync().toString()
 
     assert.isTrue(content.includes('get getterObj() {\n' + " return {nice: 'hello'}\n" + '  }'))
+  })
+
+  test('should not add content to object getter because property has comments', async ({ assert }) => {
+    const file = await FilePropertiesHelper.addContentToObjectGetter(
+      Path.stubs('replaceFileCopy.js'),
+      'getterObjComment',
+      "nice: 'hello'",
+    )
+
+    const content = file.getContentSync().toString()
+
+    assert.isFalse(content.includes('get getterObjComment() {\n' + " return {nice: 'hello'}\n" + '  }'))
   })
 
   test('should not add content to object getter because does not match', async ({ assert }) => {

@@ -35,11 +35,15 @@ export class FilePropertiesHelper {
       .replace(/(\[|\])/g, '')
       .split(',')
 
-    /**
-     * In case "matcher" is an empty array.
-     * Example: "matcher" = []
-     */
+    if (this.#hasComments(arrayString)) {
+      return file
+    }
+
     if (arrayString.length) {
+      /**
+       * In case "matcher" is an empty array.
+       * Example: "matcher" = []
+       */
       const last = arrayString.length - 1
 
       if (arrayString[last] === '') {
@@ -92,6 +96,10 @@ export class FilePropertiesHelper {
       .replace(/\n/g, '')
       .replace(/(\{|\})/g, '')
       .split(',')
+
+    if (this.#hasComments(arrayString)) {
+      return file
+    }
 
     /**
      * In case "matcher" is an empty array.
@@ -151,6 +159,10 @@ export class FilePropertiesHelper {
       .replace(/(\(|\))/g, '')
       .split(',')
 
+    if (this.#hasComments(arrayString)) {
+      return file
+    }
+
     /**
      * In case "matcher" is an empty array.
      * Example: "matcher" = []
@@ -208,6 +220,10 @@ export class FilePropertiesHelper {
       .replace(/(\[|\])/g, '')
       .split(',')
 
+    if (this.#hasComments(arrayString)) {
+      return file
+    }
+
     /**
      * In case "matcher" is an empty array.
      * Example: "matcher" = []
@@ -264,6 +280,10 @@ export class FilePropertiesHelper {
       .replace(/(\{|\})/g, '')
       .split(',')
 
+    if (this.#hasComments(arrayString)) {
+      return file
+    }
+
     /**
      * In case "matcher" is an empty object.
      * Example: "matcher" = {}
@@ -285,5 +305,19 @@ export class FilePropertiesHelper {
 
     await file.remove()
     return new File(file.path, Buffer.from(fileContent)).load()
+  }
+
+  /**
+   * Verify if matches has comment.
+   *
+   * @param {string[]} matches
+   * @return {boolean}
+   */
+  static #hasComments(matches) {
+    if (!matches || !matches.length) {
+      return false
+    }
+
+    return !!matches.find(a => a.startsWith('//') || a.endsWith('//'))
   }
 }
