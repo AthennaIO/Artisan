@@ -8,6 +8,7 @@
  */
 
 import figlet from 'figlet'
+import rTracer from 'cls-rtracer'
 import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
