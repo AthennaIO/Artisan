@@ -258,6 +258,12 @@ export class ArtisanImpl {
 
     this.setVersion(Config.get('app.version'))
 
+    if (Config.is('app.traceArtisan', true)) {
+      await rTracer.runWithId(async () =>
+        this.#commander.parseAsync(process.argv),
+      )
+    }
+
     await this.#commander.parseAsync(process.argv)
   }
 }
