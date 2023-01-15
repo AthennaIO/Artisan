@@ -34,8 +34,9 @@ export class ConsoleExceptionHandler {
       delete body.stack
     }
 
-    let logger = Logger.getConsoleLogger({
+    let logger = Logger.getVanillaLogger({
       level: 'trace',
+      driver: 'console',
       streamType: 'stderr',
       formatter: body.code === 'E_SIMPLE_CLI' ? 'cli' : 'none',
     })

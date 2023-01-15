@@ -31,7 +31,7 @@ export class Command {
    */
   #logger = Config.exists('logging.channels.console')
     ? Log.channel('console')
-    : Logger.getConsoleLogger({ formatter: 'cli' })
+    : Logger.getVanillaLogger({ driver: 'console', formatter: 'cli' })
 
   /**
    * The name and signature of the console command.
