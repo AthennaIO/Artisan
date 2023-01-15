@@ -1,10 +1,11 @@
 import * as ora from 'ora'
-import { Command as Commander } from 'commander'
+import { Command as CommanderImpl } from 'commander'
 
 import { Edge } from 'edge.js'
 import { Facade } from '@athenna/ioc'
 import { File } from '@athenna/common'
 
+export type Commander = CommanderImpl
 export const Artisan: typeof Facade & ArtisanImpl
 export const Template: typeof Facade & TemplateHelper
 

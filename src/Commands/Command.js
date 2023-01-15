@@ -14,9 +14,9 @@ import Table from 'cli-table'
 import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
-import { Config } from '@athenna/config'
-import { Log } from '@athenna/logger'
 import { Exec } from '@athenna/common'
+import { Config } from '@athenna/config'
+import { Log, Logger } from '@athenna/logger'
 
 import { Artisan } from '#src/index'
 import { Template } from '#src/Facades/Template'
@@ -24,6 +24,15 @@ import { NotImplementedHandleException } from '#src/Exceptions/NotImplementedHan
 import { NotImplementedSignatureException } from '#src/Exceptions/NotImplementedSignatureException'
 
 export class Command {
+  /**
+   * The command logger.
+   *
+   * @type {Logger}
+   */
+  #logger = Config.exists('logging.channels.console')
+    ? Log.channel('console')
+    : Logger.getConsoleLogger({ formatter: 'cli' })
+
   /**
    * The name and signature of the console command.
    *
@@ -71,7 +80,7 @@ export class Command {
    * @return {void}
    */
   log(message, ...chalkArgs) {
-    if (Config.get('logging.channels.console.driver') === 'null') {
+    if (Config.is('logging.channels.console.driver', 'null')) {
       return
     }
 
@@ -89,7 +98,7 @@ export class Command {
    * @return {void}
    */
   trace(message) {
-    Log.channel('console').trace(message)
+    this.#logger.trace(message)
   }
 
   /**
@@ -99,7 +108,7 @@ export class Command {
    * @return {void}
    */
   debug(message) {
-    Log.channel('console').debug(message)
+    this.#logger.debug(message)
   }
 
   /**
@@ -109,7 +118,7 @@ export class Command {
    * @return {void}
    */
   info(message) {
-    Log.channel('console').info(message)
+    this.#logger.info(message)
   }
 
   /**
@@ -119,7 +128,7 @@ export class Command {
    * @return {void}
    */
   success(message) {
-    Log.channel('console').success(message)
+    this.#logger.success(message)
   }
 
   /**
@@ -129,7 +138,7 @@ export class Command {
    * @return {void}
    */
   warn(message) {
-    Log.channel('console').warn(message)
+    this.#logger.warn(message)
   }
 
   /**
@@ -139,7 +148,7 @@ export class Command {
    * @return {void}
    */
   error(message) {
-    Log.channel('console').error(message)
+    this.#logger.error(message)
   }
 
   /**
@@ -149,7 +158,7 @@ export class Command {
    * @return {void}
    */
   fatal(message) {
-    Log.channel('console').fatal(message)
+    this.#logger.fatal(message)
   }
 
   /**

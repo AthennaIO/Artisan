@@ -1,6 +1,6 @@
-import { Log } from '@athenna/logger'
 import { Config } from '@athenna/config'
-import { Exception, String } from '@athenna/common'
+import { String } from '@athenna/common'
+import { Log, Logger } from '@athenna/logger'
 
 export class ConsoleExceptionHandler {
   /**
@@ -34,32 +34,29 @@ export class ConsoleExceptionHandler {
       delete body.stack
     }
 
+    let logger = Logger.getConsoleLogger({
+      level: 'trace',
+      streamType: 'stderr',
+      formatter: body.code === 'E_SIMPLE_CLI' ? 'cli' : 'none',
+    })
+
     if (body.code === 'E_SIMPLE_CLI') {
-      return Log.channel('console').error(body.message)
+      if (Config.exists('logging.channels.console')) {
+        logger = Log.channel('console')
+      }
+
+      return logger.error(body.message)
     }
 
-    if (error.prettify) {
-      const prettyError = await error.prettify()
-
-      Log.channel('exception').error(prettyError.concat('\n'))
-
-      process.exit()
-
-      return
+    if (!error.prettify) {
+      error = error.toAthennaException()
     }
 
-    const exception = new Exception(
-      body.message,
-      body.statusCode,
-      body.code,
-      body.help,
-    )
+    if (Config.exists('logging.channels.exception')) {
+      logger = Log.channel('exception')
+    }
 
-    exception.stack = body.stack
-
-    const prettyError = await exception.prettify()
-
-    Log.channel('exception').error(prettyError.concat('\n'))
+    logger.error((await error.prettify()).concat('\n'))
 
     process.exit()
   }

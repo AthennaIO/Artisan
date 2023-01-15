@@ -64,4 +64,16 @@ test.group('ArtisanTest', group => {
 
     assert.isTrue(file.content.toString().includes('Custom template command!'))
   }).timeout(60000)
+
+  test('should be able to use the console logger if logging config file is not set', async ({ assert }) => {
+    await import('#tests/Stubs/routes/console')
+
+    const treatedError = await Artisan.callInChild('test:error treated', Path.stubs('artisanNoConfig.js'))
+
+    assert.isTrue(treatedError.stderr.includes('Testing Exception'))
+
+    const treatedSimpleError = await Artisan.callInChild('test:error treated simple', Path.stubs('artisanNoConfig.js'))
+
+    assert.isTrue(treatedSimpleError.stderr.includes('Testing Exception'))
+  }).timeout(60000)
 })
