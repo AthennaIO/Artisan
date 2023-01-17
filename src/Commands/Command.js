@@ -55,8 +55,8 @@ export class Command {
    * Set additional flags in the commander instance.
    * This method is executed when registering your command.
    *
-   * @param {import('commander').Command} commander
-   * @return {import('commander').Command}
+   * @param {import('#src/index').Commander} commander
+   * @return {import('#src/index').Commander}
    */
   addFlags(commander) {
     return commander

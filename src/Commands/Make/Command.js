@@ -33,8 +33,8 @@ export class MakeCommand extends Command {
    * Set additional flags in the commander instance.
    * This method is executed when registering your command.
    *
-   * @param {import('commander').Command} commander
-   * @return {import('commander').Command}
+   * @param {import('#src/index').Commander} commander
+   * @return {import('#src/index').Commander}
    */
   addFlags(commander) {
     return commander.option(
@@ -53,7 +53,7 @@ export class MakeCommand extends Command {
    */
   async handle(name, options) {
     const resource = 'Command'
-    const path = Path.app(`Console/Commands/${name}.${Path.ext()}`)
+    const path = Path.console(`Commands/${name}.${Path.ext()}`)
 
     this.title(`MAKING ${resource}\n`, 'bold', 'green')
 

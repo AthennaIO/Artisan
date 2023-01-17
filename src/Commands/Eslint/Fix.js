@@ -9,7 +9,7 @@
 
 import { parse } from 'node:path'
 import { Command } from '#src/index'
-import { Path } from '@athenna/common'
+import { File, Path } from '@athenna/common'
 
 export class MakeFix extends Command {
   /**
@@ -34,8 +34,8 @@ export class MakeFix extends Command {
    * Set additional flags in the commander instance.
    * This method is executed when registering your command.
    *
-   * @param {import('commander').Command} commander
-   * @return {import('commander').Command}
+   * @param {import('#src/index').Commander} commander
+   * @return {import('#src/index').Commander}
    */
   addFlags(commander) {
     return commander
@@ -54,6 +54,10 @@ export class MakeFix extends Command {
    * @return {Promise<void>}
    */
   async handle(filePath, options) {
+    if (!(await File.exists(Path.bin('eslint')))) {
+      return
+    }
+
     if (!options.quiet) {
       this.title(`LINTING ${options.resource}\n`, 'bold', 'green')
     }

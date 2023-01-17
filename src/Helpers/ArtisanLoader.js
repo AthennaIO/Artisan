@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { Folder, Module, Path } from '@athenna/common'
+import { Folder, Module } from '@athenna/common'
 
 export class ArtisanLoader {
   /**
@@ -25,18 +25,6 @@ export class ArtisanLoader {
     const dirname = Module.createDirname(import.meta.url)
     const templatesPath = join(dirname, '..', '..', 'templates')
 
-    const templates = new Folder(templatesPath)
-      .loadSync()
-      .getFilesByPattern('**/*.edge')
-
-    if (Folder.existsSync(Path.resources('templates'))) {
-      templates.push(
-        ...new Folder(Path.resources('templates'))
-          .loadSync()
-          .getFilesByPattern('**/*.edge'),
-      )
-    }
-
-    return templates
+    return new Folder(templatesPath).loadSync().getFilesByPattern('**/*.edge')
   }
 }
