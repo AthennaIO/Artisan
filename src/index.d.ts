@@ -28,8 +28,8 @@ export class Command {
    * Set additional flags in the commander instance.
    * This method is executed when registering your command.
    *
-   * @param {import('commander').Command} commander
-   * @return {import('commander').Command}
+   * @param {Commander} commander
+   * @return {Commander}
    */
   addFlags(commander: Commander): Commander
 
@@ -78,37 +78,33 @@ export class Command {
    * Create an info log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  info(message: string, options?: any): void
+  info(message: string): void
 
   /**
    * Create a warn log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  warn(message: string, options?: any): void
+  warn(message: string): void
 
   /**
    * Create an error log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  error(message: string, options?: any): void
+  error(message: string): void
 
   /**
    * Create a debug log in the console channel.
    *
    * @param {string} message
-   * @param {any} [options]
    * @return {void}
    */
-  debug(message: string, options?: any): void
+  debug(message: string): void
 
   /**
    * Create a success log in the console channel.
