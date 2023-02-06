@@ -1,47 +1,15 @@
 import { Command } from '@athenna/artisan'
 
 export class {{ namePascal }} extends Command {
-    /**
-    * Resolve any dependency of the service container
-    * inside the constructor.
-    */
-    constructor() {
-      super()
-    }
+  public static signature(): string {
+    return '{{ nameCamel }}'
+  }
 
-    /**
-    * The name and signature of the console command.
-    */
-    get signature() {
-        return 'your:command <yourArgument>'
-    }
+  public static description(): string {
+    return 'The description of {{ nameCamel }} command.'
+  }
 
-    /**
-    * The console command description.
-    */
-    get description() {
-        return 'Your command description.'
-    }
-
-    /**
-    * Set additional flags in the commander instance.
-    * This method is executed when registering your command.
-    *
-    * @param {import('@athenna/artisan').Commander} commander
-    * @return {import('@athenna/artisan').Commander}
-    */
-    addFlags(commander) {
-      return commander
-    }
-
-    /**
-    * Execute the console command.
-    *
-    * @param {string} argument
-    * @param {any} options
-    * @return {Promise<void>}
-    */
-    async handle(argument, options) {
-      //
-    }
+  public async handle(): Promise<void> {
+    //
+  }
 }
