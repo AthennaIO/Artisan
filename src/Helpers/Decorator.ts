@@ -32,6 +32,44 @@ export class Decorator {
     return Reflect.getMetadata(key, target)
   }
 
+  public static setOption(
+    target: any,
+    key: string,
+    signature: string,
+  ): typeof Decorator {
+    let signatureOption = ''
+    const metadataKey = 'artisan::options'
+
+    if (signature.includes('--no-')) {
+      signatureOption = signature.split('--no-')[1]
+    }
+
+    if (signature.includes('--')) {
+      signatureOption = signature.split('--')[1]
+    }
+
+    signatureOption = signatureOption
+      .replace(/<([^)]+)>/g, '')
+      .replace(/\[([^)]+)]/g, '')
+      .replace(/ /g, '')
+
+    if (!Reflect.hasMetadata(metadataKey, target)) {
+      Reflect.defineMetadata(metadataKey, { [signatureOption]: key }, target)
+    }
+
+    const options = Reflect.getMetadata(metadataKey, target)
+
+    if (options.signature === signatureOption) {
+      return this
+    }
+
+    options[signatureOption] = key
+
+    Reflect.defineMetadata(key, options, target)
+
+    return this
+  }
+
   public static setArgument(target: any, argument: string): typeof Decorator {
     const key = 'artisan::arguments'
 

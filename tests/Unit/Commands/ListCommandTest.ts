@@ -9,15 +9,16 @@
 
 import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
+import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
-import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
-test.group('MakeCommandCommandTest', group => {
+test.group('ListCommandTest', group => {
+  const artisan = Path.pwd('bin/artisan.ts')
+
   group.each.setup(async () => {
     process.env.IS_TS = 'true'
-    process.env.ARTISAN_TESTING = 'true'
 
     await Config.loadAll(Path.stubs('config'))
 
@@ -35,11 +36,15 @@ test.group('MakeCommandCommandTest', group => {
     await Folder.safeRemove(Path.app())
   })
 
-  test('should be able to create a command file', async ({ assert }) => {
-    await Artisan.call('make:command TestCommand')
+  test('should be able to list other commands by alias', async ({ assert }) => {
+    const { stdout } = await Artisan.callInChild('list make', artisan)
 
-    const path = Path.console('Commands/TestCommand.ts')
-
-    assert.isTrue(await File.exists(path))
+    assert.equal(
+      stdout,
+      '[ LISTING MAKE ]\n' +
+        '\n' +
+        'COMMAND             DESCRIPTION             \n' +
+        'make:command <name> Make a new command file.\n',
+    )
   })
 })

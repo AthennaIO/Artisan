@@ -19,19 +19,19 @@ import { ArgumentOptions } from '#src/Types/ArgumentOptions'
 export function Argument(options?: ArgumentOptions): PropertyDecorator {
   return (target: any, key: string | symbol) => {
     options = Options.create(options, {
-      name: String(key),
+      signature: String(key),
       required: true,
     })
 
     if (!options.required) {
-      options.name = `[${options.name}]`
+      options.signature = `[${options.signature}]`
     }
 
-    const commander = Decorator.setArgument(target, options.name).getCommand(
+    const commander = Decorator.setArgument(target, String(key)).getCommand(
       target,
       'artisan::commander',
     )
 
-    commander.argument(options.name, options.description, options.default)
+    commander.argument(options.signature, options.description, options.default)
   }
 }

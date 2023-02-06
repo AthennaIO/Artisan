@@ -10,5 +10,11 @@
 import { Path } from '@athenna/common'
 
 export default {
-  commands: [Path.pwd('src/Commands/MakeCommandCommand.ts')],
+  typescript: Env('IS_TS', false),
+  commands: [
+    Path.stubs('Test.ts'),
+    Path.pwd('src/Commands/ListCommand.ts'),
+    Path.pwd('src/Commands/MakeCommandCommand.ts'),
+    Path.pwd('src/Commands/TemplateCustomize.ts'),
+  ],
 }

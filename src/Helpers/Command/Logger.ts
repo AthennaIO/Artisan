@@ -25,7 +25,7 @@ export class Logger extends AthennaLogger {
   public constructor() {
     super()
 
-    this.channelOrVanilla(Env('ARTISAN_TESTING') ? 'discard' : 'console')
+    this.channelOrVanilla('console')
   }
 
   /**
@@ -41,13 +41,10 @@ export class Logger extends AthennaLogger {
    * ```
    */
   public simple(...args: any[]) {
-    let driver = Config.get('logging.channels.console.driver', 'console')
+    const level = Config.get('logging.channels.console.trace', 'trace')
+    const driver = Config.get('logging.channels.console.driver', 'console')
 
-    if (Env('ARTISAN_TESTING')) {
-      driver = 'null'
-    }
-
-    return this.standalone({ driver }).success(...args)
+    return this.standalone({ level, driver }).success(...args)
   }
 
   /**
@@ -256,7 +253,7 @@ export class Logger extends AthennaLogger {
     data: any[] | Record<string, any>,
     opts?: columnify.GlobalOptions,
   ): void {
-    this.simple(columnify(data, opts).concat('\n'))
+    this.simple(columnify(data, opts))
   }
 
   /**

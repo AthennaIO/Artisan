@@ -10,7 +10,11 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
+import { Exec } from '@athenna/common'
 import { Config } from '@athenna/config'
+import { Command } from '#src/Artisan/Command'
+import { Commander } from '#src/Artisan/Commander'
+import { CommandSettings } from '#src/Types/CommandSettings'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
 import { COMMANDS_SETTINGS } from '#src/Constants/CommandsSettings'
 
@@ -18,7 +22,7 @@ export class ArtisanImpl {
   /**
    * Register the command if it is not registered yet.
    */
-  public async register(command: any) {
+  public register(command: any): Commander {
     const key = 'artisan::commander'
     const Command = command.constructor
 
@@ -29,16 +33,61 @@ export class ArtisanImpl {
     }
 
     const commander = CommanderHandler.getCommander()
+      .command(Command.signature())
+      .description(Command.description())
+      .action(CommanderHandler.bindHandler(command))
+      .showHelpAfterError()
 
-    Reflect.defineMetadata(
-      key,
-      commander
-        .command(Command.signature())
-        .description(Command.description())
-        .action(CommanderHandler.bindHandler(command))
-        .showHelpAfterError(),
-      command,
-    )
+    Reflect.defineMetadata(key, commander, command)
+
+    return commander
+  }
+
+  /**
+   * Create commands like a route.
+   *
+   * @example
+   * ```ts
+   * Artisan.route('hello', function (hello: string, options: any) {
+   *   console.log(hello)
+   *   console.log(options.hello)
+   * })
+   *  .argument('<hello>', 'Description for hello arg.')
+   *  .option('--hello', 'Description for hello option.')
+   * ```
+   */
+  public route(
+    signature: string,
+    handler: (this: Command, ...args: any[]) => Promise<void>,
+  ): Commander {
+    class HandleCommand extends Command {
+      public static signature() {
+        return signature
+      }
+
+      public async handle() {}
+
+      protected exec(...args: any[]) {
+        const fn = handler.bind(this)
+
+        const commander: Commander = Reflect.getMetadata(
+          'artisan::commander',
+          this,
+        )
+
+        return fn(...[...args, commander.opts()])
+      }
+    }
+
+    const commander = this.register(new HandleCommand())
+
+    commander.constructor.prototype.settings = function (
+      settings: CommandSettings,
+    ) {
+      COMMANDS_SETTINGS.set(this.name(), settings)
+    }
+
+    return commander
   }
 
   /**
@@ -46,11 +95,43 @@ export class ArtisanImpl {
    *
    * @example
    * ```ts
-   * Artisan.call('serve', '--watch')
+   * Artisan.call('serve --watch')
    * ```
    */
   public async call(command: string): Promise<void> {
-    return this.parse(['ts-node', 'artisan', ...command.split(' ')])
+    return this.parse(['node', 'artisan', ...command.split(' ')])
+  }
+
+  /**
+   * Call an Artisan command inside a child process.
+   * This method needs to execute a file to bootstrap
+   * under the hood, by default the "Path.pwd(`artisan.${Path.ext()}`)"
+   * is used.
+   *
+   * @example
+   * ```ts
+   * Artisan.callInChild('serve --watch')
+   * // or
+   * Artisan.callInChild('serve --watch', Path.pwd('other-artisan.ts'))
+   * ```
+   */
+  public async callInChild(
+    command: string,
+    path = Path.pwd(`artisan.${Path.ext()}`),
+  ): Promise<{ stdout: string; stderr: string }> {
+    let executor = 'node'
+
+    if (Config.get('rc.typescript', false)) {
+      executor = 'ts-node'
+    }
+
+    if (Env('NODE_ENV')) {
+      command = `NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} ${command}`
+    } else {
+      command = `${executor} ${path} ${command}`
+    }
+
+    return Exec.command(command, { ignoreErrors: true })
   }
 
   /**
@@ -93,7 +174,7 @@ export class ArtisanImpl {
 
     await CommanderHandler.setVersion(Config.get('app.version')).parse(argv)
 
-    if (!stayAlive && !Env('ARTISAN_TESTING', false)) {
+    if (!stayAlive) {
       process.exit(0)
     }
   }

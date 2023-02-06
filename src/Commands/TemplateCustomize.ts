@@ -25,11 +25,13 @@ export class TemplateCustomize extends Command {
     const paths = Config.get('view.templates.paths')
 
     const promises = Object.keys(paths).map(key => {
-      if (key.includes('resources/templates')) {
+      const path = paths[key]
+
+      if (path.includes('resources/templates')) {
         return null
       }
 
-      const file = new File(key)
+      const file = new File(path)
 
       return file.copy(Path.resources(`templates/${file.base}`))
     })

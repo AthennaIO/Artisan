@@ -19,11 +19,15 @@ import { OptionOptions } from '#src/Types/OptionOptions'
 export function Option(options?: OptionOptions): PropertyDecorator {
   return (target: any, key: string | symbol) => {
     options = Options.create(options, {
-      name: `--${String(key)}`,
+      signature: `--${String(key)}`,
     })
 
-    const commander = Decorator.getCommand(target, 'artisan::commander')
+    const commander = Decorator.setOption(
+      target,
+      String(key),
+      options.signature,
+    ).getCommand(target, 'artisan::commander')
 
-    commander.option(options.name, options.description, options.default)
+    commander.option(options.signature, options.description, options.default)
   }
 }

@@ -8,8 +8,32 @@
  */
 
 import { Command } from '#src/Artisan/Command'
+import { Argument, Option } from '#src'
 
 export class Test extends Command {
+  @Argument()
+  public requiredArg: string
+
+  @Option({
+    signature: '-o, --other',
+    description: 'Option.',
+  })
+  public option: string
+
+  @Option({
+    signature: '-oo, --otherOption',
+    default: 'notRequiredOption',
+    description: 'Other option.',
+  })
+  public notRequiredOption: string
+
+  @Argument({
+    required: false,
+    default: 'notRequiredArg',
+    description: 'Not required arg.',
+  })
+  public notRequiredArg: string
+
   public static signature(): string {
     return 'test'
   }
@@ -19,6 +43,6 @@ export class Test extends Command {
   }
 
   public async handle(): Promise<void> {
-    console.log('oi')
+    console.log(this.requiredArg, this.notRequiredArg, this.option, this.notRequiredOption)
   }
 }

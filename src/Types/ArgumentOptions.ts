@@ -8,7 +8,7 @@
  */
 
 export type ArgumentOptions = {
-  name?: string
+  signature?: string
   default?: any
   required?: boolean
   description?: string

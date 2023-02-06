@@ -77,18 +77,19 @@ export abstract class Command {
   /**
    * Execute the command setting args and options in the class
    */
-  protected exec(): Promise<void> {
+  protected exec(...args: any[]): Promise<void> {
     if (!this.paint) this.paint = Color
     if (!this.logger) this.logger = new Logger()
     if (!this.prompt) this.prompt = new Prompt()
 
-    const args: string[] = Reflect.getMetadata('artisan::arguments', this)
+    const artisanOpts = Reflect.getMetadata('artisan::options', this)
+    const artisanArgs = Reflect.getMetadata('artisan::arguments', this)
     const commander: Commander = Reflect.getMetadata('artisan::commander', this)
 
     const opts = commander.opts()
 
-    args?.forEach(arg => (this[arg] = commander.args.shift()))
-    Object.keys(opts).forEach(key => (this[key] = opts[key]))
+    artisanArgs?.forEach(arg => (this[arg] = args.shift()))
+    Object.keys(opts).forEach(key => (this[artisanOpts[key]] = opts[key]))
 
     return this.handle()
   }

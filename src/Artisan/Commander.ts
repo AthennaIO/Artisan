@@ -7,4 +7,13 @@
  * file that was distributed with this source code.
  */
 
-export { Command as Commander } from 'commander'
+import { CommandSettings } from '#src'
+import { Command as Commander } from 'commander'
+
+declare module 'commander' {
+  interface Command {
+    settings(settings: CommandSettings): void
+  }
+}
+
+export { Commander }

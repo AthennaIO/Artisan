@@ -7,8 +7,7 @@
  * file that was distributed with this source code.
  */
 
-export type OptionOptions = {
-  signature?: string
-  default?: any
-  description?: string
+export default {
+  debug: true,
+  version: '1.0.0',
 }

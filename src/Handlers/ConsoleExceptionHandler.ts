@@ -16,55 +16,33 @@ export class ConsoleExceptionHandler {
    * The exception handler of all Artisan commands.
    */
   public async handle(error: any): Promise<void> {
-    const code = error.code || error.name
-
-    const body: any = {
-      code: String.toSnakeCase(code).toUpperCase(),
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    }
-
-    if (error.help) {
-      body.help = error.help
-    }
+    error.code = String.toSnakeCase(error.code || error.name).toUpperCase()
 
     const isInternalServerError =
       error.name && (error.name === 'Error' || error.name === 'TypeError')
-    const isDebugMode = Config.get('app.debug')
-
-    if (isInternalServerError && !isDebugMode) {
-      body.name = 'Internal server error'
-      body.message = 'An internal server exception has occurred.'
-
-      delete body.stack
-    }
-
-    if (body.code === 'E_SIMPLE_CLI') {
-      Log.channelOrVanilla('console').error(body.message)
-
-      return this.exit()
-    }
+    const isDebugMode = Config.get('app.debug', true)
 
     if (!error.prettify) {
       error = error.toAthennaException()
+    }
+
+    if (isInternalServerError && !isDebugMode) {
+      error.name = 'Internal server error'
+      error.message = 'An internal server exception has occurred.'
+
+      delete error.stack
+    }
+
+    if (error.code === 'E_SIMPLE_CLI') {
+      Log.channelOrVanilla('console').error(error.message)
+
+      return process.exit(1)
     }
 
     Log.channelOrVanilla('exception').error(
       (await error.prettify()).concat('\n'),
     )
 
-    return this.exit()
-  }
-
-  /**
-   * Helper to exit the process if is not in testing environment.
-   */
-  private exit(code = 1) {
-    if (!Env('ARTISAN_TESTING', false)) {
-      return
-    }
-
-    process.exit(code)
+    return process.exit(1)
   }
 }
