@@ -323,7 +323,7 @@ export class Logger extends AthennaLogger {
   /**
    * Create a task runner that will log the status of each task. The task
    * method is very useful when you need to do a lot of tasks in order, giving
-   * a status to all the tasks and how much time it have taked to execute.
+   * a status to all the tasks and how much time it has taken to execute.
    *
    * @example
    * ```ts

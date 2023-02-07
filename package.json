@@ -110,6 +110,7 @@
     "exclude": [
       "src/Artisan/Command.ts",
       "src/Artisan/Commander.ts",
+      "src/Artisan/Configurer.ts",
       "src/Commands/ListCommand.ts",
       "src/Commands/MakeCommandCommand.ts"
     ],

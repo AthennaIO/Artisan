@@ -7,13 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { View } from '@athenna/view'
+import { Color } from '@athenna/common'
 import { Commander } from '#src/Artisan/Commander'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
-import { File, Color, String } from '@athenna/common'
+import { Generator } from '#src/Helpers/Command/Generator'
 import { CommandSettings } from '#src/Types/CommandSettings'
-import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
 
 export abstract class Command {
   /**
@@ -75,12 +74,21 @@ export abstract class Command {
   public prompt = new Prompt()
 
   /**
+   * The geneartor used to make files. The generator uses the
+   * athenna/view package to generate files from templates. A
+   * briefly knowlodge about how to setup templates inside
+   * athenna/view is very good to use this helper.
+   */
+  public generator = new Generator()
+
+  /**
    * Execute the command setting args and options in the class
    */
   protected __exec(...args: any[]): Promise<void> {
     if (!this.paint) this.paint = Color
     if (!this.logger) this.logger = new Logger()
     if (!this.prompt) this.prompt = new Prompt()
+    if (!this.generator) this.generator = new Generator()
 
     const artisanOpts = Reflect.getMetadata('artisan::options', this)
     const artisanArgs = Reflect.getMetadata('artisan::arguments', this)
@@ -99,80 +107,4 @@ export abstract class Command {
    * to execute your command.
    */
   public abstract handle(): Promise<void>
-
-  /**
-   * Make a new file using templates.
-   *
-   * @example
-   * ```ts
-   * const path = Path.http(`Controllers/MyController.${Path.ext()}`)
-   * const template = 'artisan::controller'
-   * const properties = { custom: 'custom-props-for-template' }
-   *
-   * const file = await this.makeFile(path, template, properties)
-   *
-   * this.logger.success(`Controller ({yellow} "${file.name}") successfully created.`)
-   * ```
-   * The following properties will exist in templates when using this method:
-   *
-   * ```ts
-   * {
-   *   nameUp: 'MYCONTROLLER',
-   *   nameCamel: 'myController',
-   *   namePlural: 'MyControllers',
-   *   namePascal: 'MyController',
-   *   namePluralCamel: 'myControllers',
-   *   namePluralPascal: 'MyControllers',
-   *   nameUpTimestamp: 'MYCONTROLLER1675363499530',
-   *   nameCamelTimestamp: 'myController1675363499530',
-   *   namePluralTimestamp: 'MyControllers1675363499530',
-   *   namePascalTimestamp: 'MyController1675363499530',
-   *   namePluralCamelTimestamp: 'myControllers1675363499530',
-   *   namePluralPascalTimestamp: 'MyControllers1675363499530',
-   *   ...properties, // <- Custom properties
-   * }
-   * ```
-   *
-   * All of the above properties could be changed using the third argument of "makeFile" method.
-   *
-   */
-  public async makeFile(
-    path: string,
-    templateName: string,
-    customProperties: any = {},
-  ): Promise<File> {
-    const file = new File(path, Buffer.from(''))
-
-    if (file.fileExists) {
-      throw new AlreadyExistFileException(path)
-    }
-
-    const timestamp = Date.now()
-    const nameUp = file.name.toUpperCase()
-    const nameCamel = String.toCamelCase(file.name)
-    const namePlural = String.pluralize(file.name)
-    const namePascal = String.toPascalCase(file.name)
-    const namePluralCamel = String.toCamelCase(String.pluralize(file.name))
-    const namePluralPascal = String.toPascalCase(String.pluralize(file.name))
-
-    const content = await View.render(templateName, {
-      nameUp,
-      nameCamel,
-      namePlural,
-      namePascal,
-      namePluralCamel,
-      namePluralPascal,
-      nameUpTimestamp: `${nameUp}${timestamp}`,
-      nameCamelTimestamp: `${nameCamel}${timestamp}`,
-      namePluralTimestamp: `${namePlural}${timestamp}`,
-      namePascalTimestamp: `${namePascal}${timestamp}`,
-      namePluralCamelTimestamp: `${namePluralCamel}${timestamp}`,
-      namePluralPascalTimestamp: `${namePluralPascal}${timestamp}`,
-      ...customProperties,
-    })
-
-    file.content = Buffer.from(content)
-
-    return file.load()
-  }
 }

@@ -25,15 +25,16 @@ export class MakeCommandCommand extends Command {
   }
 
   public async handle(): Promise<void> {
-    const resource = 'Command'
-    const path = Path.console(`Commands/${this.name}.${Path.ext()}`)
+    this.logger.title('MAKING COMMAND\n', 'bold', 'green')
 
-    this.logger.title(`MAKING ${resource}\n`, 'bold', 'green')
-
-    const file = await this.makeFile(path, 'artisan::command')
+    const file = await this.generator
+      .path(Path.console(`Commands/${this.name}.${Path.ext()}`))
+      .template('artisan::command')
+      .setNameProperties(true)
+      .make()
 
     this.logger.success(
-      `${resource} ({yellow} "${file.name}") successfully created.`,
+      `Command ({yellow} "${file.name}") successfully created.`,
     )
   }
 }

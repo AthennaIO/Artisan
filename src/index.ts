@@ -8,6 +8,7 @@
  */
 
 export * from './Artisan/Command.js'
+export * from './Artisan/Configurer.js'
 export * from './Artisan/ArtisanImpl.js'
 
 export * from './Types/TableRow.js'
@@ -21,6 +22,7 @@ export * from './Decorators/Argument.js'
 
 export * from './Facades/Artisan.js'
 export * from './Providers/ArtisanProvider.js'
+export * from './Constants/CommandsSettings.js'
 
 export * from './Kernels/ConsoleKernel.js'
 export * from './Handlers/CommanderHandler.js'
