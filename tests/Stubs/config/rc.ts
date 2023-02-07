@@ -17,4 +17,10 @@ export default {
     Path.pwd('src/Commands/MakeCommandCommand.ts'),
     Path.pwd('src/Commands/TemplateCustomize.ts'),
   ],
+  commandsManifest: {
+    test: Path.stubs('Test.ts'),
+    list: Path.pwd('src/Commands/ListCommand.ts'),
+    'make:command': Path.pwd('src/Commands/MakeCommandCommand.ts'),
+    'template:customize': Path.pwd('src/Commands/TemplateCustomize.ts'),
+  },
 }

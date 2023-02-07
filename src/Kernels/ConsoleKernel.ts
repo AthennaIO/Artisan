@@ -17,18 +17,18 @@ export class ConsoleKernel {
    * Register all the commands found inside "rc.commands" config inside
    * the service provider and also register it in Commander.
    */
-  async registerCommands() {
-    const modules = Config.get<string[]>('rc.commands').map(c => import(c))
-    const commands = await Module.getAllWithAlias(
-      modules,
-      'App/Console/Commands',
-    )
+  async registerCommands(argv: string[] = []) {
+    const commandName = argv[2]
+    const path = Config.get(`rc.commandsManifest.${commandName}`)
 
-    commands.forEach(({ alias, module }) => {
-      const command = ioc.singleton(alias, module).safeUse(alias)
+    if (path) {
+      return this.registerCommandByPath(path)
+    }
 
-      Artisan.register(command)
-    })
+    const paths = Config.get<string[]>('rc.commands')
+    const promises = paths.map(path => this.registerCommandByPath(path))
+
+    await Promise.all(promises)
   }
 
   /**
@@ -48,5 +48,20 @@ export class ConsoleKernel {
     const handler = new Handler()
 
     CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
+  }
+
+  /**
+   * Register a command by the path. This method will register the
+   * command inside the service provider and also in Artisan.
+   */
+  public async registerCommandByPath(path: string) {
+    const { module, alias } = await Module.getFromWithAlias(
+      path,
+      'App/Console/Commands',
+    )
+
+    const command = ioc.singleton(alias, module).safeUse(alias)
+
+    Artisan.register(command)
   }
 }
