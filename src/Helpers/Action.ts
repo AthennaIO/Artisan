@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Log } from '@athenna/logger'
 import { Color } from '@athenna/common'
 
 export class Action {
@@ -107,14 +108,6 @@ export class Action {
   }
 
   /**
-   * Simple write a log to the stdout concatenating a '\n'
-   * character at the end.
-   */
-  private log(msg: string): void {
-    process.stdout.write(Color.apply(msg).concat('\n'))
-  }
-
-  /**
    * Get only the necessary spaces for the action. This
    * method will use the "biggestAction" property to determine
    * how much space the action in the method argument will need
@@ -145,5 +138,16 @@ export class Action {
     }
 
     return action
+  }
+
+  /**
+   * Simple vanilla logger implementation to work the same way
+   * of Artisan logger.
+   */
+  private log(...args: any[]) {
+    const level = Config.get('logging.channels.console.trace', 'trace')
+    const driver = Config.get('logging.channels.console.driver', 'console')
+
+    return Log.standalone({ level, driver }).success(...args)
   }
 }

@@ -89,6 +89,22 @@ export class Instruction {
   }
 
   /**
+   * Create the sticker and return as string.
+   */
+  public toString(opts?: CliTable3.TableConstructorOptions): string {
+    const table = new Table()
+
+    if (this._head) {
+      table.head(this._head)
+    }
+
+    return table.row([this._rows]).toString({
+      chars: boxes.round,
+      ...opts,
+    })
+  }
+
+  /**
    * Render the instruction in the console.
    *
    * @example

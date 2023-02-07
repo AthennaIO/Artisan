@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Exec } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
@@ -44,5 +45,41 @@ Artisan.route('hello', async function (hello: string) {
 })
   .argument('<hello>')
   .settings({ loadApp: false, stayAlive: false, environment: ['hello'] })
+
+Artisan.route('logger', async function () {
+  this.logger.simple('hello')
+  this.logger.title('\nhello\n', 'bold', 'green')
+
+  this.logger.update('hello test')
+  this.logger.update('hello updated')
+  this.logger.rainbow('hello')
+  this.logger
+    .spinner()
+    .start('hello start spinner')
+    .succeed('hello end spinner')
+  await this.logger.promiseSpinner(() => Exec.sleep(10), {
+    successText: 'hello success',
+    failText: 'hello fail',
+  })
+  this.logger
+    .task()
+    .add('hello', async task => task.complete())
+    .run()
+  this.logger.table().head('hello').render()
+  this.logger.sticker().add('').render()
+  this.logger.instruction().add('').render()
+  this.logger.column(
+    {
+      hello: 'world',
+    },
+    { columns: ['KEY', 'VALUE'] },
+  )
+
+  const action = this.logger.action('create')
+
+  action.succeeded('app/Services/Service.ts')
+  action.skipped('app/Services/Service.ts', 'File already exists')
+  action.failed('app/Services/Service.ts', 'Something went wrong')
+})
 
 await Artisan.parse(process.argv, 'Artisan')

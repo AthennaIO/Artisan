@@ -12,7 +12,7 @@ import ora, { Ora } from 'ora'
 import { ChalkInstance } from 'chalk'
 import { Is, Color } from '@athenna/common'
 import { TaskCallback } from '#src/Types/TaskCallback'
-import { IdleTaskException } from '#src/Exceptions/IdleTaskException'
+import { RunningTaskException } from '#src/Exceptions/RunningTaskException'
 
 export type TaskMap = { title: string; cb: TaskCallback }
 
@@ -113,12 +113,15 @@ export class TaskManager {
   /**
    * The status of the task.
    */
-  public status: 'idle' | 'fail' | 'complete' = 'idle'
+  public status: 'idle' | 'running' | 'fail' | 'complete' = 'idle'
 
   public constructor(task: TaskMap, nextTasksTitle?: string[]) {
     this.task = task
     this.time = Date.now()
-    this.spinner = ora({ spinner: 'arrow' })
+    this.spinner = ora({
+      spinner: 'arrow',
+      isSilent: Config.is('logging.channels.console.driver', 'null'),
+    })
     this.nextTasksTitle = nextTasksTitle
       .map(nextTaskTitle => Color.dim(`→ ${nextTaskTitle}`))
       .join('\n')
@@ -129,12 +132,13 @@ export class TaskManager {
    * complete.
    */
   public async run(): Promise<'fail' | 'complete'> {
+    this.status = 'running'
     this.spinner.start(`${this.task.title}\n${this.nextTasksTitle}`)
 
     await this.task.cb(this)
 
-    if (this.status === 'idle') {
-      throw new IdleTaskException(this.task.title)
+    if (this.status === 'running') {
+      throw new RunningTaskException(this.task.title)
     }
 
     return this.status as 'fail' | 'complete'

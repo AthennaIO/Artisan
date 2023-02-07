@@ -138,25 +138,6 @@ export class Logger extends AthennaLogger {
    * ```
    * Output:
    * ```bash
-   * ```
-   */
-
-  /**
-   * Create a spinner to load something.
-   *
-   * @example
-   * ```ts
-   * const spinner = this.logger.spinner('Loading unicorns')
-   *
-   * spinner.start()
-   *
-   * setTimeout(() => {
-   *   spinner.color = 'yellow'
-   *   spinner.text = 'Loading rainbows'
-   * }, 1000)
-   * ```
-   * Output:
-   * ```bash
    * ⠦ Loading unicorns
    * ```
    */

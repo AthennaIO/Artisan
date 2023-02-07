@@ -8,6 +8,8 @@
  */
 
 import boxes from 'cli-boxes'
+import CliTable3 from 'cli-table3'
+
 import { Table } from '#src/Helpers/Table'
 
 export class Sticker {
@@ -87,6 +89,22 @@ export class Sticker {
   }
 
   /**
+   * Create the sticker and return as string.
+   */
+  public toString(opts?: CliTable3.TableConstructorOptions): string {
+    const table = new Table()
+
+    if (this._head) {
+      table.head(this._head)
+    }
+
+    return table.row([this._rows]).toString({
+      chars: boxes.round,
+      ...opts,
+    })
+  }
+
+  /**
    * Render the sticker in the console.
    *
    * @example
@@ -106,7 +124,7 @@ export class Sticker {
    * ╰──────────────────────────────────────────────────────────╯
    * ```
    */
-  public render(): void {
+  public render(opts?: CliTable3.TableConstructorOptions): void {
     const table = new Table()
 
     if (this._head) {
@@ -115,6 +133,7 @@ export class Sticker {
 
     return table.row([this._rows]).render({
       chars: boxes.round,
+      ...opts,
     })
   }
 }
