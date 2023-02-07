@@ -46,11 +46,11 @@ export class CommanderHandler {
    */
   public static bindHandler(target: any): any {
     if (!this.exceptionHandler) {
-      return target.exec.bind(target)
+      return target.__exec.bind(target)
     }
 
     return (...args: any[]) =>
-      target.exec
+      target.__exec
         .bind(target)(...args)
         .catch(this.exceptionHandler)
   }

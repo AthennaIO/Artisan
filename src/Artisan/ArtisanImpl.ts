@@ -67,7 +67,7 @@ export class ArtisanImpl {
 
       public async handle() {}
 
-      protected exec(...args: any[]) {
+      protected __exec(...args: any[]) {
         const fn = handler.bind(this)
 
         const commander: Commander = Reflect.getMetadata(

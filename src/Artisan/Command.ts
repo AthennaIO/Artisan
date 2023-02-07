@@ -77,7 +77,7 @@ export abstract class Command {
   /**
    * Execute the command setting args and options in the class
    */
-  protected exec(...args: any[]): Promise<void> {
+  protected __exec(...args: any[]): Promise<void> {
     if (!this.paint) this.paint = Color
     if (!this.logger) this.logger = new Logger()
     if (!this.prompt) this.prompt = new Prompt()
