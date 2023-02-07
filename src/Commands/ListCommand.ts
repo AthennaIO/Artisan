@@ -22,7 +22,9 @@ export class ListCommand extends Command {
   }
 
   public async handle(): Promise<void> {
-    this.logger.title(`LISTING ${this.alias}\n`, 'bold', 'green')
+    this.logger.simple(
+      `({bold,green} [ LISTING ${this.alias.toUpperCase()} ])\n`,
+    )
 
     const commands = CommanderHandler.getCommands(this.alias)
 

@@ -13,7 +13,6 @@ import logUpdate from 'log-update'
 import chalkRainbow from 'chalk-rainbow'
 import ora, { oraPromise, Ora, Options, PromiseOptions } from 'ora'
 
-import { Chalk } from 'chalk'
 import { Task } from '#src/Helpers/Task'
 import { Table } from '#src/Helpers/Table'
 import { Action } from '#src/Helpers/Action'
@@ -29,15 +28,16 @@ export class Logger extends AthennaLogger {
   }
 
   /**
-   * Log a simple message without any formatter.
+   * Log a simple message without any formatter. You can
+   * still use the logging engine.
    *
    * @example
    * ```ts
-   * this.logger.simple('hello')
+   * this.logger.simple('({bold,green} [ MAKING CONTROLLER ])\n')
    * ```
    * Output:
    * ```bash
-   * hello
+   * [ MAKING CONTROLLER ] <- bold format with green color
    * ```
    */
   public simple(...args: any[]) {
@@ -45,53 +45,6 @@ export class Logger extends AthennaLogger {
     const driver = Config.get('logging.channels.console.driver', 'console')
 
     return this.standalone({ level, driver }).success(...args)
-  }
-
-  /**
-   * Log a title message with the possibility to add
-   * Chalk arguments.
-   *
-   * @example
-   * ```ts
-   * this.logger.title('message', 'bold', 'green')
-   * ```
-   * Output:
-   * ```bash
-   * [ MESSAGE ] <- Bold format and green color.
-   * ```
-   */
-  public title(title: string, ...chalkArgs: string[]): void {
-    let titleFormatted = `[ ${title.replace(/\n/g, '').toUpperCase()} ]`
-
-    const setNsStart = (formatted: string) => {
-      if (title.startsWith('\n')) {
-        title = title.replace('\n', '')
-        formatted = '\n' + formatted
-      } else {
-        return formatted
-      }
-
-      return setNsStart(formatted)
-    }
-
-    const setNsEnd = (formatted: string) => {
-      if (title.endsWith('\n')) {
-        title = title.slice(0, -1)
-        formatted = formatted + '\n'
-      } else {
-        return formatted
-      }
-
-      return setNsEnd(formatted)
-    }
-
-    titleFormatted = setNsStart(titleFormatted)
-    titleFormatted = setNsEnd(titleFormatted)
-
-    let chalk = new Chalk()
-    chalkArgs.forEach(arg => (chalk = chalk[arg]))
-
-    this.simple(chalk(titleFormatted))
   }
 
   /**

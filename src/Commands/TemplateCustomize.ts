@@ -20,7 +20,7 @@ export class TemplateCustomize extends Command {
   }
 
   public async handle(): Promise<void> {
-    this.logger.title('MOVING TEMPLATES\n', 'bold', 'green')
+    this.logger.simple('({bold,green} [ MOVING TEMPLATES ])\n')
 
     const paths = Config.get('view.templates.paths')
 

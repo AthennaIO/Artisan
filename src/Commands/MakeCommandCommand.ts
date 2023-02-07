@@ -25,7 +25,7 @@ export class MakeCommandCommand extends Command {
   }
 
   public async handle(): Promise<void> {
-    this.logger.title('MAKING COMMAND\n', 'bold', 'green')
+    this.logger.simple('({bold,green} [ MAKING COMMAND ])\n')
 
     const file = await this.generator
       .path(Path.console(`Commands/${this.name}.${Path.ext()}`))

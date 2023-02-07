@@ -48,7 +48,7 @@ Artisan.route('hello', async function (hello: string) {
 
 Artisan.route('logger', async function () {
   this.logger.simple('hello')
-  this.logger.title('\nhello\n', 'bold', 'green')
+  this.logger.simple('\n({bold,green} [ HELLO ])\n')
 
   this.logger.update('hello test')
   this.logger.update('hello updated')
