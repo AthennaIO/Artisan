@@ -40,6 +40,7 @@ test.group('CommanderHandlerTest', group => {
     const commands = CommanderHandler.getCommands()
 
     assert.deepEqual(commands, {
+      'configure <libraries>': 'Configure one or more libraries inside your application.',
       'test [options] <requiredArg> [notRequiredArg]': 'The description of test command.',
       'make:command <name>': 'Make a new command file.',
       'list <alias>': 'List all commands available of the alias.',

@@ -117,6 +117,7 @@ out
 # Transpiled code path
 dist
 build
+!tests/Stubs/library/build
 
 # IDE
 .idea

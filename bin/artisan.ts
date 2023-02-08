@@ -61,7 +61,7 @@ Artisan.route('logger', async function () {
     successText: 'hello success',
     failText: 'hello fail',
   })
-  this.logger
+  await this.logger
     .task()
     .add('hello', async task => task.complete())
     .run()

@@ -153,7 +153,7 @@ export class TaskManager {
    * await task.fail('Something went wrong')
    * ```
    */
-  public async fail(error: any) {
+  public async fail(error?: any) {
     const ms = this.getMs()
     const icon = Color.red('→')
     const msg = this.getMessage(error, Color.red)

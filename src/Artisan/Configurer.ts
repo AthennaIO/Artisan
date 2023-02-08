@@ -8,11 +8,22 @@
  */
 
 import { Color } from '@athenna/common'
+import { parse, resolve } from 'node:path'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
 
 export abstract class Configurer {
+  /**
+   * The paths property is an object with the pwd and
+   * configurer paths.
+   *
+   * Remembers that when running your Configurer, the
+   * Path class will be referencing the path of your
+   * application.
+   */
+  public paths = {}
+
   /**
    * The Athenna colors ui kit. This methods uses the
    * Color helper class from @athenna/common package.
@@ -43,6 +54,19 @@ export abstract class Configurer {
    * athenna/view is very good to use this helper.
    */
   public generator = new Generator()
+
+  /**
+   * Set the path of the configurer.
+   */
+  public setPath(path: string): Configurer {
+    this.paths = {
+      configurerClass: path,
+      configurer: parse(path).dir,
+      pwd: resolve(path, '..', '..', '..'),
+    }
+
+    return this
+  }
 
   /**
    * The configurer handler. This method will be called

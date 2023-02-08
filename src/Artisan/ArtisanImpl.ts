@@ -121,7 +121,7 @@ export class ArtisanImpl {
   ): Promise<{ stdout: string; stderr: string }> {
     let executor = 'node'
 
-    if (Config.get('rc.typescript', false)) {
+    if (Env('IS_TS', false)) {
       executor = 'ts-node'
     }
 

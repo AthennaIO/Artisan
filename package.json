@@ -52,8 +52,10 @@
     "edge.js": "^5.5.0",
     "figlet": "^1.5.2",
     "inquirer": "^9.1.4",
+    "knex": "^2.4.2",
     "log-update": "^5.0.1",
-    "ora": "^6.1.2"
+    "ora": "^6.1.2",
+    "pg": "^8.9.0"
   },
   "devDependencies": {
     "@athenna/common": "^3.0.0",
@@ -93,6 +95,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^3.1.0",
+    "js-yaml": "^4.1.0",
     "lint-staged": "^12.5.0",
     "minimist": "^1.2.7",
     "prettier": "^2.8.3",
@@ -199,5 +202,22 @@
         }
       ]
     }
+  },
+  "athenna": {
+    "commands": [
+      "./tests/Stubs/Test.ts",
+      "./src/Commands/ListCommand.ts",
+      "./src/Commands/ConfigureCommand.ts",
+      "./src/Commands/MakeCommandCommand.ts",
+      "./src/Commands/TemplateCustomize.ts"
+    ],
+    "commandsManifest": {
+      "test": "./tests/Stubs/Test.ts",
+      "list": "./src/Commands/ListCommand.ts",
+      "configure": "./src/Commands/ConfigureCommand.ts",
+      "make:command": "./src/Commands/MakeCommandCommand.ts",
+      "template:customize": "./src/Commands/TemplateCustomize.ts"
+    },
+    "providers": []
   }
 }
