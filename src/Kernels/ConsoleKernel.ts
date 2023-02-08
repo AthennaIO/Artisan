@@ -55,8 +55,12 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string) {
-    const { module, alias } = await Module.getFromWithAlias(
-      path,
+    if (!path.startsWith('#')) {
+      path = resolve(path)
+    }
+
+    const { module, alias } = await Module.getWithAlias(
+      await import(path),
       'App/Console/Commands',
     )
 

@@ -10,25 +10,18 @@
 import figlet from 'figlet'
 
 import { test } from '@japa/runner'
-import { fake, SinonSpy } from 'sinon'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
+import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
 
 test.group('ArtisanTest', group => {
-  let exitFake: SinonSpy<[code?: number], never> = null
   const artisan = Path.pwd('bin/artisan.ts')
 
-  function getExitFaker(): SinonSpy<[code?: number], never> {
-    exitFake = fake() as SinonSpy<[code?: number], never>
-
-    return exitFake
-  }
-
   group.each.setup(async () => {
-    process.exit = getExitFaker()
+    ExitFaker.fake()
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -44,6 +37,7 @@ test.group('ArtisanTest', group => {
   })
 
   group.each.teardown(async () => {
+    ExitFaker.release()
     await Folder.safeRemove(Path.app())
   })
 

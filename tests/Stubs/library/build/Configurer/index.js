@@ -9,11 +9,17 @@
 
 import yaml from 'js-yaml'
 
-import { Config } from '@athenna/config'
+import { Env, Config } from '@athenna/config'
 import { File, Exec, Path } from '@athenna/common'
 import { Configurer } from '../../../../../src/Artisan/Configurer.js'
 
 export default class LibraryConfigurer extends Configurer {
+  prompt = Env('ARTISAN_TESTING', false)
+    ? {
+        list: (_, __) => Promise.resolve('PostgreSQL'),
+      }
+    : super.prompt
+
   async configure() {
     const db = await this.prompt.list('Select the database driver you want to use', [
       'PostgreSQL',

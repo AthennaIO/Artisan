@@ -37,7 +37,7 @@ new ArtisanProvider().register()
 const kernel = new ConsoleKernel()
 
 await kernel.registerExceptionHandler()
-await kernel.registerCommands()
+await kernel.registerCommands(process.argv)
 
 Artisan.route('hello', async function (hello: string) {
   console.log(hello)

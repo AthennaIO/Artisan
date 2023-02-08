@@ -9,16 +9,20 @@
 
 import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
-import { Folder } from '@athenna/common'
+import { File, Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
-import { ConsoleKernel, ArtisanProvider } from '#src'
+import { ExitFaker } from '#tests/Helpers/ExitFaker'
+import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
 test.group('ConfigureCommandTest', group => {
-  // const artisan = Path.pwd('bin/artisan.ts')
+  const originalPJson = new File(Path.pwd('package.json')).getContentSync().toString()
 
   group.each.setup(async () => {
     process.env.IS_TS = 'true'
+    process.env.ARTISAN_TESTING = 'true'
+
+    ExitFaker.fake()
 
     await Config.loadAll(Path.stubs('config'))
 
@@ -29,14 +33,50 @@ test.group('ConfigureCommandTest', group => {
     const kernel = new ConsoleKernel()
 
     await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
+    await kernel.registerCommands(['ts-node', 'artisan', 'configure'])
   })
 
   group.each.teardown(async () => {
+    ExitFaker.release()
+
     await Folder.safeRemove(Path.app())
+    await Folder.safeRemove(Path.config())
+
+    await File.safeRemove(Path.pwd('.env'))
+    await File.safeRemove(Path.pwd('.env.test'))
+    await File.safeRemove(Path.pwd('.env.example'))
+    await File.safeRemove(Path.pwd('docker-compose.yml'))
+
+    const stream = new File(Path.pwd('package.json')).createWriteStream()
+
+    await new Promise((resolve, reject) => {
+      stream.write(originalPJson)
+      stream.end(resolve)
+      stream.on('error', reject)
+    })
   })
 
   test('should be able to configure libraries inside the application', async ({ assert }) => {
-    assert.isTrue(false)
+    await Artisan.call('configure ./tests/Stubs/library/build/Configurer/index.js')
+
+    const packageJson = await new File(Path.pwd('package.json'))
+      .getContent()
+      .then(content => JSON.parse(content.toString()))
+
+    assert.isDefined(packageJson.dependencies.pg)
+    assert.isDefined(packageJson.dependencies.knex)
+
+    assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
+    assert.containsSubset(packageJson.athenna.commands, ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
+
+    assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
+    assert.containsSubset(packageJson.athenna.providers, ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
+
+    assert.containsSubset(packageJson.athenna.commandsManifest, {
+      'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
+    })
+    assert.containsSubset(Config.get('rc.commandsManifest'), {
+      'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
+    })
   })
 })

@@ -205,18 +205,17 @@
   },
   "athenna": {
     "commands": [
-      "./tests/Stubs/Test.ts",
-      "./src/Commands/ListCommand.ts",
-      "./src/Commands/ConfigureCommand.ts",
-      "./src/Commands/MakeCommandCommand.ts",
-      "./src/Commands/TemplateCustomize.ts"
+      "#tests/Stubs/Test",
+      "#src/Commands/ListCommand",
+      "#src/Commands/ConfigureCommand",
+      "#src/Commands/MakeCommandCommand",
+      "#src/Commands/TemplateCustomize"
     ],
     "commandsManifest": {
-      "test": "./tests/Stubs/Test.ts",
-      "list": "./src/Commands/ListCommand.ts",
-      "configure": "./src/Commands/ConfigureCommand.ts",
-      "make:command": "./src/Commands/MakeCommandCommand.ts",
-      "template:customize": "./src/Commands/TemplateCustomize.ts"
+      "test": "#tests/Stubs/Test",
+      "configure": "#src/Commands/ConfigureCommand",
+      "make:command": "#src/Commands/MakeCommandCommand",
+      "template:customize": "#src/Commands/TemplateCustomize"
     },
     "providers": []
   }
