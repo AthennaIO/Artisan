@@ -50,7 +50,9 @@ export class ConfigureCommand extends Command {
   }
 
   private async configure(library: string) {
-    const isFile = await File.isFile(resolve(library))
+    const isFile =
+      (await File.exists(resolve(library))) &&
+      (await File.isFile(resolve(library)))
     const isInstalled = await this.isInstalled(library)
 
     if (!isFile && !isInstalled) {

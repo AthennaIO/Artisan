@@ -7,13 +7,15 @@
  * file that was distributed with this source code.
  */
 
+import { fake } from 'sinon'
 import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
-import { File, Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
+import { Exec, File, Folder } from '@athenna/common'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
+// import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
 
 test.group('ConfigureCommandTest', group => {
   const originalPJson = new File(Path.pwd('package.json')).getContentSync().toString()
@@ -56,7 +58,7 @@ test.group('ConfigureCommandTest', group => {
     })
   })
 
-  test('should be able to configure libraries inside the application', async ({ assert }) => {
+  test('should be able to configure paths inside the application', async ({ assert }) => {
     await Artisan.call('configure ./tests/Stubs/library/build/Configurer/index.js')
 
     const packageJson = await new File(Path.pwd('package.json'))
@@ -78,5 +80,21 @@ test.group('ConfigureCommandTest', group => {
     assert.containsSubset(Config.get('rc.commandsManifest'), {
       'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
     })
+  })
+
+  test('should be able to configure libraries inside the application and throw error when configurer does not exist', async ({
+    assert,
+  }) => {
+    const originalCommand = Exec.command
+    const commandFake = fake()
+
+    Exec.command = (...args: any[]) => Promise.resolve(commandFake(...args))
+
+    await Artisan.call('configure some-lib-name')
+
+    Exec.command = originalCommand
+
+    assert.isTrue(commandFake.calledOnceWith('npm install some-lib-name'))
+    assert.isTrue(ExitFaker.faker.calledWith(1)) // <- Means that some error happened
   })
 })

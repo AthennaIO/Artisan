@@ -19,6 +19,7 @@ import { Action } from '#src/Helpers/Action'
 import { Sticker } from '#src/Helpers/Sticker'
 import { Instruction } from '#src/Helpers/Instruction'
 import { Logger as AthennaLogger } from '@athenna/logger'
+import { Is } from '@athenna/common'
 
 export class Logger extends AthennaLogger {
   public constructor() {
@@ -95,7 +96,15 @@ export class Logger extends AthennaLogger {
    * ```
    */
   public spinner(msgOrOpts?: string | Options): Ora {
-    return ora(msgOrOpts)
+    const options: any = {
+      isSilent: Config.is('logging.channels.console.driver', 'null'),
+    }
+
+    if (Is.String(msgOrOpts)) {
+      options.text = msgOrOpts
+    }
+
+    return ora(options)
   }
 
   /**
@@ -128,7 +137,15 @@ export class Logger extends AthennaLogger {
     promise: any,
     msgOrOpts?: string | PromiseOptions<T>,
   ): Promise<T> {
-    return oraPromise(promise, msgOrOpts)
+    const options: any = {
+      isSilent: Config.is('logging.channels.console.driver', 'null'),
+    }
+
+    if (Is.String(msgOrOpts)) {
+      options.text = msgOrOpts
+    }
+
+    return oraPromise(promise, options)
   }
 
   /**

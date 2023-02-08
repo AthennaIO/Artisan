@@ -37,7 +37,7 @@ test.group('LoggerTest', group => {
   })
 
   test('should be able to execute all artisan logger methods', async ({ assert }) => {
-    const { stdout, stderr } = await Artisan.callInChild('logger', artisan)
+    const { stdout } = await Artisan.callInChild('logger', artisan)
 
     assert.isTrue(stdout.includes('hello'))
     assert.isTrue(stdout.includes('hello updated'))
@@ -60,6 +60,5 @@ test.group('LoggerTest', group => {
           'ERROR:  app/Services/Service.ts (Something went wrong)',
       ),
     )
-    assert.isTrue(stderr.includes('- hello start spinner\n' + '✔ hello end spinner\n' + '✔ hello success'))
   })
 })

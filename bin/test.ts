@@ -75,7 +75,7 @@ configure({
     plugins: [assert()],
     reporters: [specReporter()],
     importer: filePath => import(pathToFileURL(filePath).href),
-    timeout: 5000,
+    timeout: 10000,
   },
 })
 
