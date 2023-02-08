@@ -126,7 +126,7 @@ export class ArtisanImpl {
     }
 
     if (Env('NODE_ENV')) {
-      command = `NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} ${command}`
     } else {
       command = `${executor} ${path} ${command}`
     }

@@ -61,6 +61,8 @@ test.group('ArtisanTest', group => {
     const { stdout } = await Artisan.callInChild('hello world', artisan)
 
     assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environment: [ 'hello' ] }\n")
+
+    process.env.NODE_ENV = undefined
   })
 
   test('should be able to set arguments and options using Argument and Option decorators', async ({ assert }) => {
