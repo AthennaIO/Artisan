@@ -8,7 +8,7 @@
  */
 
 import { resolve } from 'node:path'
-import { Module } from '@athenna/common'
+import { File, Module } from '@athenna/common'
 import { Artisan } from '#src/Facades/Artisan'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
 
@@ -17,7 +17,7 @@ export class ConsoleKernel {
    * Register all the commands found inside "rc.commands" config inside
    * the service provider and also register it in Commander.
    */
-  async registerCommands(argv: string[] = []) {
+  public async registerCommands(argv: string[] = []) {
     const commandName = argv[2]
     const path = Config.get(`rc.commandsManifest.${commandName}`)
 
@@ -32,9 +32,23 @@ export class ConsoleKernel {
   }
 
   /**
+   * Register the route commands by importing the file. Artisan is the only
+   * type of service that loads the route file without using the "rc.preloads" property.
+   * This behavior was implemented because of the command settings. To load the preloads
+   * files, Artisan would need to bootstrap the Athenna application.
+   */
+  public async registerRouteCommands(path: string) {
+    if (!(await File.exists(path))) {
+      return
+    }
+
+    await import(path)
+  }
+
+  /**
    * Register the exception handler for all Artisan commands.
    */
-  async registerExceptionHandler(path?: string) {
+  public async registerExceptionHandler(path?: string) {
     if (!path) {
       path = resolve(
         Module.createDirname(import.meta.url),
@@ -59,8 +73,8 @@ export class ConsoleKernel {
       path = resolve(path)
     }
 
-    const { module, alias } = await Module.getWithAlias(
-      await import(path),
+    const { module, alias } = await Module.getFromWithAlias(
+      path,
       'App/Console/Commands',
     )
 
