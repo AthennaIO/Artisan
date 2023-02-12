@@ -60,7 +60,7 @@ test.group('ArtisanTest', group => {
 
     const { stdout } = await Artisan.callInChild('hello world', artisan)
 
-    assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environment: [ 'hello' ] }\n")
+    assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
 
     process.env.NODE_ENV = undefined
   })

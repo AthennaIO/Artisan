@@ -139,12 +139,12 @@ export class ArtisanImpl {
    * "argv" to execute the command.
    */
   public async parse(argv: string[], appName?: string): Promise<void> {
-    const { loadApp, stayAlive, environment } = COMMANDS_SETTINGS.get(
+    const { loadApp, stayAlive, environments } = COMMANDS_SETTINGS.get(
       argv[2],
     ) || {
       loadApp: false,
       stayAlive: false,
-      environment: ['console'],
+      environments: ['console'],
     }
 
     if (appName) {
@@ -167,9 +167,9 @@ export class ArtisanImpl {
     }
 
     if (loadApp) {
-      const application = ioc.safeUse('Athenna/Core/Application')
+      const ignite = ioc.safeUse('Athenna/Core/Ignite')
 
-      await application.boot(environment)
+      await ignite.fire(environments)
     }
 
     await CommanderHandler.setVersion(Config.get('app.version')).parse(argv)

@@ -44,7 +44,7 @@ Artisan.route('hello', async function (hello: string) {
   console.log(COMMANDS_SETTINGS.get('hello'))
 })
   .argument('<hello>')
-  .settings({ loadApp: false, stayAlive: false, environment: ['hello'] })
+  .settings({ loadApp: false, stayAlive: false, environments: ['hello'] })
 
 Artisan.route('logger', async function () {
   this.logger.simple('hello')

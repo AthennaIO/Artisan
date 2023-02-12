@@ -25,9 +25,9 @@ export type CommandSettings = {
   stayAlive?: boolean
 
   /**
-   * Set the environment where the command is running.
+   * Set the environments where the command is running.
    *
    * @default ['artisan']
    */
-  environment?: string[]
+  environments?: string[]
 }

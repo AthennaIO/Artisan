@@ -7,7 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import { CommandSettings } from '#src/Types/CommandSettings'
+
 /**
  * Hold all the commands settings.
  */
-export const COMMANDS_SETTINGS = new Map<string, any>()
+export const COMMANDS_SETTINGS = new Map<string, CommandSettings>()

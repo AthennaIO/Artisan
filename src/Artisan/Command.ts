@@ -39,14 +39,14 @@ export abstract class Command {
    *  {
    *    loadApp: false,
    *    stayAlive: false,
-   *    environment: ['console']
+   *    environments: ['console']
    *  }
    */
   public static settings(): CommandSettings {
     return {
       loadApp: false,
       stayAlive: false,
-      environment: ['console'],
+      environments: ['console'],
     }
   }
 
