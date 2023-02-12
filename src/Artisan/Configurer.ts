@@ -12,6 +12,7 @@ import { parse, resolve } from 'node:path'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
+import { Rc } from '../Helpers/Command/Rc.js'
 
 export abstract class Configurer {
   /**
@@ -23,6 +24,13 @@ export abstract class Configurer {
    * application.
    */
   public paths = {}
+
+  /**
+   * The Rc helper used to manage the .athennarc.json
+   * file. Very useful to add commands, providers and
+   * preloads properties in the file.
+   */
+  public rc = new Rc()
 
   /**
    * The Athenna colors ui kit. This methods uses the

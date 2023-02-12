@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Command } from '#src/Artisan/Command'
 import { Argument, Option } from '#src'
+import { Command } from '#src/Artisan/Command'
 
 export class Test extends Command {
   @Argument()

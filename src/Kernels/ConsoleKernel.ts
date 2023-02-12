@@ -73,8 +73,8 @@ export class ConsoleKernel {
       path = resolve(path)
     }
 
-    const { module, alias } = await Module.getFromWithAlias(
-      path,
+    const { module, alias } = await Module.getWithAlias(
+      await import(path),
       'App/Console/Commands',
     )
 

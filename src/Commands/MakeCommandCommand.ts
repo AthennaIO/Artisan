@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Path } from '@athenna/common'
+import { Path, String } from '@athenna/common'
 import { Command, Argument } from '#src'
 
 export class MakeCommandCommand extends Command {
@@ -35,6 +35,18 @@ export class MakeCommandCommand extends Command {
 
     this.logger.success(
       `Command ({yellow} "${file.name}") successfully created.`,
+    )
+
+    const signature = String.toCamelCase(file.name)
+    const importPath = `#app/Console/Commands/${file.name}`
+
+    await this.rc.addCommand(signature, importPath).save()
+
+    this.logger.success(
+      `Athenna RC updated: ({dim,yellow} [ commands += "${importPath}" ])`,
+    )
+    this.logger.success(
+      `Athenna RC updated: ({dim,yellow} { commandsManifest += "${signature}": "${importPath}" })`,
     )
   }
 }

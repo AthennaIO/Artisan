@@ -209,13 +209,15 @@
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",
-      "#src/Commands/TemplateCustomize"
+      "#src/Commands/TemplateCustomize",
+      "#app/Console/Commands/Testing"
     ],
     "commandsManifest": {
       "test": "#tests/Stubs/Test",
       "configure": "#src/Commands/ConfigureCommand",
       "make:command": "#src/Commands/MakeCommandCommand",
-      "template:customize": "#src/Commands/TemplateCustomize"
+      "template:customize": "#src/Commands/TemplateCustomize",
+      "testing": "#app/Console/Commands/Testing"
     },
     "providers": []
   }

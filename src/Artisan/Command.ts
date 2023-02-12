@@ -8,6 +8,7 @@
  */
 
 import { Color } from '@athenna/common'
+import { Rc } from '#src/Helpers/Command/Rc'
 import { Commander } from '#src/Artisan/Commander'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
@@ -51,6 +52,13 @@ export abstract class Command {
   }
 
   /**
+   * The Rc helper used to manage the .athennarc.json
+   * file. Very useful to add commands, providers and
+   * preloads properties in the file.
+   */
+  public rc = new Rc()
+
+  /**
    * The Athenna colors ui kit. This methods uses the
    * Color helper class from @athenna/common package.
    * All the methods will return an instance of Chalk
@@ -85,6 +93,7 @@ export abstract class Command {
    * Execute the command setting args and options in the class
    */
   protected __exec(...args: any[]): Promise<void> {
+    if (!this.rc) this.rc = new Rc()
     if (!this.paint) this.paint = Color
     if (!this.logger) this.logger = new Logger()
     if (!this.prompt) this.prompt = new Prompt()

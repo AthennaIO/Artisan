@@ -9,7 +9,7 @@
 
 import yaml from 'js-yaml'
 
-import { Env, Config } from '@athenna/config'
+import { Env } from '@athenna/config'
 import { File, Exec, Path } from '@athenna/common'
 import { Configurer } from '../../../../../src/Artisan/Configurer.js'
 
@@ -75,41 +75,10 @@ export default class LibraryConfigurer extends Configurer {
   }
 
   async taskThree() {
-    Config.set('rc.providers', [
-      ...Config.get('rc.providers', []),
-      './tests/Stubs/library/build/Providers/DatabaseProvider.js',
-    ])
-    Config.set('rc.commands', [
-      ...Config.get('rc.commands', []),
-      './tests/Stubs/library/build/Commands/MakeModelCommand.js',
-    ])
-    Config.set('rc.commandsManifest', {
-      ...Config.get('rc.commandsManifest', {}),
-      'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
-    })
-
-    const path = Config.is('rc.isInPackageJson', true) ? Path.pwd('package.json') : Path.pwd('.athennarc.json')
-
-    const file = new File(path, Buffer.from('{}'))
-    const json = await file.getContent().then(content => JSON.parse(content.toString()))
-
-    if (Config.is('rc.isInPackageJson', true)) {
-      json.athenna.commands = Config.get('rc.commands')
-      json.athenna.providers = Config.get('rc.providers')
-      json.athenna.commandsManifest = Config.get('rc.commandsManifest')
-    } else {
-      json.commands = Config.get('rc.commands')
-      json.providers = Config.get('rc.providers')
-      json.commandsManifest = Config.get('rc.commandsManifest')
-    }
-
-    const stream = file.createWriteStream()
-
-    return new Promise((resolve, reject) => {
-      stream.write(JSON.stringify(json, null, 2).concat('\n'))
-      stream.end(resolve)
-      stream.on('error', reject)
-    })
+    return this.rc
+      .addProvider('./tests/Stubs/library/build/Providers/DatabaseProvider.js')
+      .addCommand('make:model', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
+      .save()
   }
 
   async taskFour(db) {

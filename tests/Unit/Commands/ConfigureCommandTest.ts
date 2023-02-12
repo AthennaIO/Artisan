@@ -15,7 +15,6 @@ import { LoggerProvider } from '@athenna/logger'
 import { Exec, File, Folder } from '@athenna/common'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
-// import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
 
 test.group('ConfigureCommandTest', group => {
   const originalPJson = new File(Path.pwd('package.json')).getContentSync().toString()
