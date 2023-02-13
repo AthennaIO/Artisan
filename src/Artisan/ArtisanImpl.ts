@@ -12,8 +12,8 @@ import chalkRainbow from 'chalk-rainbow'
 
 import { Exec } from '@athenna/common'
 import { Config } from '@athenna/config'
-import { Command } from '#src/Artisan/Command'
 import { Commander } from '#src/Artisan/Commander'
+import { BaseCommand } from '#src/Artisan/BaseCommand'
 import { CommandSettings } from '#src/Types/CommandSettings'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
 import { COMMANDS_SETTINGS } from '#src/Constants/CommandsSettings'
@@ -58,9 +58,9 @@ export class ArtisanImpl {
    */
   public route(
     signature: string,
-    handler: (this: Command, ...args: any[]) => Promise<void>,
+    handler: (this: BaseCommand, ...args: any[]) => Promise<void>,
   ): Commander {
-    class HandleCommand extends Command {
+    class HandleCommand extends BaseCommand {
       public static signature() {
         return signature
       }

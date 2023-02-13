@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Command } from '#src'
 import { File } from '@athenna/common'
+import { Command, BaseCommand } from '#src'
 
-export class TemplateCustomize extends Command {
+@Command()
+export class TemplateCustomizeCommand extends BaseCommand {
   public static signature(): string {
     return 'template:customize'
   }

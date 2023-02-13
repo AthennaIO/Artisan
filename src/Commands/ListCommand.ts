@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Argument, Command, CommanderHandler } from '#src'
+import { Argument, BaseCommand, Command, CommanderHandler } from '#src'
 
-export class ListCommand extends Command {
+@Command()
+export class ListCommand extends BaseCommand {
   @Argument()
   public alias: string
 

@@ -8,9 +8,10 @@
  */
 
 import { Path, String } from '@athenna/common'
-import { Command, Argument } from '#src'
+import { Command, BaseCommand, Argument } from '#src'
 
-export class MakeCommandCommand extends Command {
+@Command()
+export class MakeCommandCommand extends BaseCommand {
   @Argument({
     description: 'The file name.',
   })

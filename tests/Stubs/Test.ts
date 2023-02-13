@@ -8,9 +8,9 @@
  */
 
 import { Argument, Option } from '#src'
-import { Command } from '#src/Artisan/Command'
+import { BaseCommand } from '#src/Artisan/BaseCommand'
 
-export class Test extends Command {
+export class Test extends BaseCommand {
   @Argument()
   public requiredArg: string
 

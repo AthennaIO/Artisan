@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-export * from './Artisan/Command.js'
 export * from './Artisan/Configurer.js'
+export * from './Artisan/BaseCommand.js'
 export * from './Artisan/ArtisanImpl.js'
 
 export * from './Types/TableRow.js'
@@ -18,6 +18,7 @@ export * from './Types/ArgumentOptions.js'
 export * from './Types/CommandSettings.js'
 
 export * from './Decorators/Option.js'
+export * from './Decorators/Command.js'
 export * from './Decorators/Argument.js'
 
 export * from './Facades/Artisan.js'

@@ -8,8 +8,8 @@
  */
 
 import { resolve } from 'node:path'
-import { File, Module } from '@athenna/common'
 import { Artisan } from '#src/Facades/Artisan'
+import { File, String, Module } from '@athenna/common'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
 
 export class ConsoleKernel {
@@ -68,7 +68,7 @@ export class ConsoleKernel {
    * Register a command by the path. This method will register the
    * command inside the service provider and also in Artisan.
    */
-  public async registerCommandByPath(path: string) {
+  public async registerCommandByPath(path: string): Promise<void> {
     if (!path.startsWith('#')) {
       path = resolve(path)
     }
@@ -78,7 +78,16 @@ export class ConsoleKernel {
       'App/Console/Commands',
     )
 
-    const command = ioc.singleton(alias, module).safeUse(alias)
+    const createCamelAlias = true
+    const camelTargetName = String.toCamelCase(module.name)
+
+    if (ioc.hasDependency(alias) || ioc.hasDependency(camelTargetName)) {
+      return
+    }
+
+    const command = ioc
+      .singleton(alias, module, createCamelAlias)
+      .safeUse(alias)
 
     Artisan.register(command)
   }

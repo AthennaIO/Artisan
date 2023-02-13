@@ -15,7 +15,7 @@ import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
-test.group('MakeCommandCommandTest', group => {
+test.group('TemplateCustomizeCommandTest', group => {
   group.each.setup(async () => {
     ExitFaker.fake()
 

@@ -15,7 +15,7 @@ import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
 import { CommandSettings } from '#src/Types/CommandSettings'
 
-export abstract class Command {
+export abstract class BaseCommand {
   /**
    * The command signature/name. This option will
    * define how the command should be called.
