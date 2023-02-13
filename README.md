@@ -1,6 +1,6 @@
 # Artisan 💻
 
-> The Athenna CLI application. Built on top of commander.
+> The Athenna CLI application. Built on top of commander and inspired in [@adonisjs/ace](https://github.com/adonisjs/ace).
 
 [![GitHub followers](https://img.shields.io/github/followers/athennaio.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/athennaio?tab=followers)
 [![GitHub stars](https://img.shields.io/github/stars/AthennaIO/Artisan.svg?style=social&label=Star&maxAge=2592000)](https://github.com/AthennaIO/Artisan/stargazers/)
