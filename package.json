@@ -35,7 +35,11 @@
   "types": "./build/index.d.ts",
   "exports": {
     ".": "./build/index.js",
-    "./providers/ArtisanProvider": "./build/Providers/ArtisanProvider.js"
+    "./providers/ArtisanProvider": "./build/Providers/ArtisanProvider.js",
+    "./commands/ListCommand": "./build/Commands/ListCommand.js",
+    "./commands/ConfigureCommand": "./build/Commands/ConfigureCommand.js",
+    "./commands/MakeCommandCommand": "./build/Commands/MakeCommandCommand.js",
+    "./commands/TemplateCustomizeCommand": "./build/Commands/TemplateCustomizeCommand.js"
   },
   "imports": {
     "#src/*": "./src/*.js",
@@ -209,7 +213,7 @@
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",
-      "#src/Commands/TemplateCustomize"
+      "#src/Commands/TemplateCustomizeCommand"
     ],
     "commandsManifest": {
       "test": "#tests/Stubs/Test",
