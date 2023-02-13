@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-export * from './Artisan/Configurer.js'
-export * from './Artisan/BaseCommand.js'
 export * from './Artisan/ArtisanImpl.js'
+export * from './Artisan/BaseCommand.js'
+export * from './Artisan/BaseConfigurer.js'
 
 export * from './Types/TableRow.js'
 export * from './Types/TaskCallback.js'

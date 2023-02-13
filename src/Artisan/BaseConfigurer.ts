@@ -9,12 +9,12 @@
 
 import { Color } from '@athenna/common'
 import { parse, resolve } from 'node:path'
+import { Rc } from '#src/Helpers/Command/Rc'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
-import { Rc } from '../Helpers/Command/Rc.js'
 
-export abstract class Configurer {
+export abstract class BaseConfigurer {
   /**
    * The paths property is an object with the pwd and
    * configurer paths.
@@ -66,7 +66,7 @@ export abstract class Configurer {
   /**
    * Set the path of the configurer.
    */
-  public setPath(path: string): Configurer {
+  public setPath(path: string): BaseConfigurer {
     this.paths = {
       configurerClass: path,
       configurer: parse(path).dir,

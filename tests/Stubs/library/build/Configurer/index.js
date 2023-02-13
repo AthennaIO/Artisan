@@ -11,9 +11,9 @@ import yaml from 'js-yaml'
 
 import { Env } from '@athenna/config'
 import { File, Exec, Path } from '@athenna/common'
-import { Configurer } from '../../../../../src/Artisan/Configurer.js'
+import { BaseConfigurer } from '../../../../../src/Artisan/BaseConfigurer.js'
 
-export default class LibraryConfigurer extends Configurer {
+export default class LibraryConfigurer extends BaseConfigurer {
   prompt = Env('ARTISAN_TESTING', false)
     ? {
         list: (_, __) => Promise.resolve('PostgreSQL'),
