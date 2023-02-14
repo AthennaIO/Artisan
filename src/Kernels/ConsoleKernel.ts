@@ -54,7 +54,7 @@ export class ConsoleKernel {
         Module.createDirname(import.meta.url),
         '..',
         'Handlers',
-        `ConsoleExceptionHandler.${Path.ext()}`,
+        `ConsoleExceptionHandler.js`,
       )
     }
 
