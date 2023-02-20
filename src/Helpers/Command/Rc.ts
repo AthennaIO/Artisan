@@ -16,19 +16,23 @@ export class Rc {
   }
 
   public constructor() {
-    this.setRcFile(
-      Config.is('rc.isInPackageJson', true)
-        ? Path.pwd('package.json')
-        : undefined,
-    )
+    this.setRcFile(Path.pwd('.athennarc.json'), true)
   }
 
   /**
    * Set the RC file that the Rc class should work with.
    */
-  public setRcFile(path = Path.pwd('.athennarc.json')): Rc {
+  public setRcFile(path = Path.pwd('.athennarc.json'), pjson = false): Rc {
+    if (Config.is('rc.isInPackageJson', true) && pjson) {
+      path = Path.pwd('package.json')
+    }
+
     this.rcFile = new File(path)
     this.rc = JSON.parse(this.rcFile.getContentSync().toString())
+
+    if (!this.rc.athenna) {
+      this.rc.athenna = {}
+    }
 
     return this
   }

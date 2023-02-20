@@ -70,8 +70,7 @@ export class ConsoleKernel {
    */
   public async registerCommandByPath(path: string): Promise<void> {
     if (!path.startsWith('#')) {
-      path = resolve(path)
-      path = pathToFileURL(path).href
+      path = pathToFileURL(resolve(path)).href
     }
 
     const Command = await Module.get(await import(path))
