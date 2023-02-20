@@ -8,8 +8,8 @@
  */
 
 import { resolve } from 'node:path'
-import { Command, Argument, BaseCommand } from '#src'
 import { Exec, File, Module } from '@athenna/common'
+import { Command, Argument, BaseCommand } from '#src'
 import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
 
 @Command()
@@ -43,11 +43,7 @@ export class ConfigureCommand extends BaseCommand {
       return true
     }
 
-    if (packageJson.devDependencies[library]) {
-      return true
-    }
-
-    return false
+    return !!packageJson.devDependencies[library]
   }
 
   private async configure(library: string) {

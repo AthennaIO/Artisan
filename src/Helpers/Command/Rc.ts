@@ -34,40 +34,36 @@ export class Rc {
   }
 
   /**
-   * Add a new command path to the "rc.commands" array and
-   * "rc.commandsManifest" object.
+   * Set or subscribe a KEY:VALUE property in some property of the RC configuration file.
+   *
+   * @example
+   * ```ts
+   * this.rc.setTo('commandsManifest', 'test', '#app/Console/Commands/TestCommand')
+   * ```
    */
-  public addCommand(signature: string, path: string): Rc {
-    Config.set('rc.commands', [...Config.get('rc.commands', []), path])
-    Config.set('rc.commandsManifest', {
-      ...Config.get('rc.commandsManifest', {}),
-      [signature]: path,
+  public setTo(rcKey: string, key: string, value: any): Rc {
+    Config.set(`rc.${rcKey}`, {
+      ...Config.get(`rc.${rcKey}`, {}),
+      [key]: value,
     })
 
-    this.rc.athenna.commands = Config.get('rc.commands')
-    this.rc.athenna.commandsManifest = Config.get('rc.commandsManifest')
+    this.rc.athenna[rcKey] = Config.get(`rc.${rcKey}`)
 
     return this
   }
 
   /**
-   * Add a new provider path to the "rc.providers" array.
+   * Push a new value in some property of the RC configuration file.
+   *
+   * @example
+   * ```ts
+   * this.rc.pushTo('commands', '#app/Console/Commands/TestCommand')
+   * ```
    */
-  public addProvider(path: string): Rc {
-    Config.set('rc.providers', [...Config.get('rc.providers', []), path])
+  public pushTo(rcKey: string, value: any): Rc {
+    Config.set(`rc.${rcKey}`, [...Config.get(`rc.${rcKey}`, []), value])
 
-    this.rc.athenna.providers = Config.get('rc.providers')
-
-    return this
-  }
-
-  /**
-   * Add a new preload path to the "rc.preloads" array.
-   */
-  public addPreload(path: string): Rc {
-    Config.set('rc.preloads', [...Config.get('rc.preloads', []), path])
-
-    this.rc.athenna.preloads = Config.get('rc.preloads')
+    this.rc.athenna[rcKey] = Config.get(`rc.${rcKey}`)
 
     return this
   }

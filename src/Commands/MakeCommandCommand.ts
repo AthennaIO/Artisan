@@ -13,7 +13,7 @@ import { Command, BaseCommand, Argument } from '#src'
 @Command()
 export class MakeCommandCommand extends BaseCommand {
   @Argument({
-    description: 'The file name.',
+    description: 'The command name.',
   })
   public name: string
 
@@ -41,7 +41,10 @@ export class MakeCommandCommand extends BaseCommand {
     const signature = String.toCamelCase(file.name)
     const importPath = `#app/Console/Commands/${file.name}`
 
-    await this.rc.addCommand(signature, importPath).save()
+    await this.rc
+      .pushTo('commands', importPath)
+      .setTo('commandsManifest', signature, importPath)
+      .save()
 
     this.logger.success(
       `Athenna RC updated: ({dim,yellow} [ commands += "${importPath}" ])`,

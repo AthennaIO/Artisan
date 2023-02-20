@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -118,8 +118,8 @@
       "src/Artisan/Command.ts",
       "src/Artisan/Commander.ts",
       "src/Artisan/Configurer.ts",
-      "src/Commands/ListCommand.ts",
-      "src/Commands/MakeCommandCommand.ts"
+      "src/Commands/*",
+      "src/Types/*"
     ],
     "reporter": [
       "text-summary",
@@ -209,7 +209,7 @@
   },
   "athenna": {
     "commands": [
-      "#tests/Stubs/Test",
+      "./tests/Stubs/Test.js",
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",

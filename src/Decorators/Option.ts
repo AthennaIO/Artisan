@@ -22,12 +22,6 @@ export function Option(options?: OptionOptions): PropertyDecorator {
       signature: `--${String(key)}`,
     })
 
-    const commander = Decorator.setOption(
-      target,
-      String(key),
-      options.signature,
-    ).getCommand(target, 'artisan::commander')
-
-    commander.option(options.signature, options.description, options.default)
+    Decorator.setOption(target, String(key), options)
   }
 }
