@@ -8,11 +8,10 @@
  */
 
 import { resolve } from 'node:path'
+import { Argument, BaseCommand } from '#src'
 import { Exec, File, Module } from '@athenna/common'
-import { Command, Argument, BaseCommand } from '#src'
 import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
 
-@Command()
 export class ConfigureCommand extends BaseCommand {
   @Argument({
     signature: '<libraries...>',

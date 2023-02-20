@@ -13,13 +13,13 @@ import logUpdate from 'log-update'
 import chalkRainbow from 'chalk-rainbow'
 import ora, { oraPromise, Ora, Options, PromiseOptions } from 'ora'
 
+import { Is } from '@athenna/common'
 import { Task } from '#src/Helpers/Task'
 import { Table } from '#src/Helpers/Table'
 import { Action } from '#src/Helpers/Action'
 import { Sticker } from '#src/Helpers/Sticker'
 import { Instruction } from '#src/Helpers/Instruction'
 import { Logger as AthennaLogger } from '@athenna/logger'
-import { Is } from '@athenna/common'
 
 export class Logger extends AthennaLogger {
   public constructor() {

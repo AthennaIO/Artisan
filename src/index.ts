@@ -18,7 +18,6 @@ export * from './Types/ArgumentOptions.js'
 export * from './Types/CommandSettings.js'
 
 export * from './Decorators/Option.js'
-export * from './Decorators/Command.js'
 export * from './Decorators/Argument.js'
 
 export * from './Facades/Artisan.js'

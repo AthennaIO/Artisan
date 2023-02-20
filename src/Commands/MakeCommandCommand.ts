@@ -7,10 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import { BaseCommand, Argument } from '#src'
 import { Path, String } from '@athenna/common'
-import { Command, BaseCommand, Argument } from '#src'
 
-@Command()
 export class MakeCommandCommand extends BaseCommand {
   @Argument({
     description: 'The command name.',
