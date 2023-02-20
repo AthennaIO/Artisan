@@ -8,6 +8,7 @@
  */
 
 import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { File, Module } from '@athenna/common'
 import { Artisan, CommanderHandler } from '#src'
 
@@ -41,7 +42,7 @@ export class ConsoleKernel {
       return
     }
 
-    await import(path)
+    await import(pathToFileURL(path).href)
   }
 
   /**
@@ -70,6 +71,7 @@ export class ConsoleKernel {
   public async registerCommandByPath(path: string): Promise<void> {
     if (!path.startsWith('#')) {
       path = resolve(path)
+      path = pathToFileURL(path).href
     }
 
     const Command = await Module.get(await import(path))
