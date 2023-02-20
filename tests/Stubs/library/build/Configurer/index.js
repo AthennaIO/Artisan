@@ -76,8 +76,9 @@ export default class LibraryConfigurer extends BaseConfigurer {
 
   async taskThree() {
     return this.rc
-      .addProvider('./tests/Stubs/library/build/Providers/DatabaseProvider.js')
-      .addCommand('make:model', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
+      .pushTo('providers', './tests/Stubs/library/build/Providers/DatabaseProvider.js')
+      .pushTo('commands', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
+      .setTo('commandsManifest', 'make:model', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
       .save()
   }
 

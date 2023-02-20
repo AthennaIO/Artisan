@@ -83,7 +83,7 @@ export default {
     |--------------------------------------------------------------------------
     |
     | Set the custom templates paths that "template:customize" command and View
-    | facade will use to store and load your custom templates. By default the
+    | facade will use to store and load your custom templates. By default, the
     | path is set as "resources/templates". All the ".edge" files found inside
     | will be loaded by their name, example: 'artisan::command'.
     |

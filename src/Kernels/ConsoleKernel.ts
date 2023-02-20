@@ -8,9 +8,8 @@
  */
 
 import { resolve } from 'node:path'
-import { Artisan } from '#src/Facades/Artisan'
-import { File, String, Module } from '@athenna/common'
-import { CommanderHandler } from '#src/Handlers/CommanderHandler'
+import { File, Module } from '@athenna/common'
+import { Artisan, CommanderHandler } from '#src'
 
 export class ConsoleKernel {
   /**
@@ -73,22 +72,8 @@ export class ConsoleKernel {
       path = resolve(path)
     }
 
-    const { module, alias } = await Module.getWithAlias(
-      await import(path),
-      'App/Console/Commands',
-    )
+    const Command = await Module.get(await import(path))
 
-    const createCamelAlias = true
-    const camelTargetName = String.toCamelCase(module.name)
-
-    if (ioc.hasDependency(alias) || ioc.hasDependency(camelTargetName)) {
-      return
-    }
-
-    const command = ioc
-      .singleton(alias, module, createCamelAlias)
-      .safeUse(alias)
-
-    Artisan.register(command)
+    Artisan.register(new Command())
   }
 }

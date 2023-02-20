@@ -27,11 +27,6 @@ export function Argument(options?: ArgumentOptions): PropertyDecorator {
       options.signature = `[${options.signature}]`
     }
 
-    const commander = Decorator.setArgument(target, String(key)).getCommand(
-      target,
-      'artisan::commander',
-    )
-
-    commander.argument(options.signature, options.description, options.default)
+    Decorator.setArgument(target, String(key), options)
   }
 }

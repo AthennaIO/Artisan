@@ -56,8 +56,7 @@ export class CommanderHandler {
   }
 
   /**
-   * Set the CLI version. By default the version
-   * set will be of the Athenna.
+   * Set the CLI version. By default, the version set will be of the Athenna.
    */
   public static setVersion(version?: string): typeof CommanderHandler {
     if (version) {

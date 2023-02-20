@@ -12,6 +12,7 @@ import chalkRainbow from 'chalk-rainbow'
 
 import { Exec } from '@athenna/common'
 import { Config } from '@athenna/config'
+import { Decorator } from '#src/Helpers/Decorator'
 import { Commander } from '#src/Artisan/Commander'
 import { BaseCommand } from '#src/Artisan/BaseCommand'
 import { CommandSettings } from '#src/Types/CommandSettings'
@@ -23,24 +24,17 @@ export class ArtisanImpl {
    * Register the command if it is not registered yet.
    */
   public register(command: any): Commander {
-    const key = 'artisan::commander'
     const Command = command.constructor
+
+    if (COMMANDS_SETTINGS.has(Command.signature())) {
+      return Decorator.getCommander(command)
+    }
 
     COMMANDS_SETTINGS.set(Command.signature(), Command.settings())
 
-    if (Reflect.hasMetadata(key, command)) {
-      return
-    }
-
-    const commander = CommanderHandler.getCommander()
-      .command(Command.signature())
-      .description(Command.description())
+    return Decorator.getCommander(command)
       .action(CommanderHandler.bindHandler(command))
       .showHelpAfterError()
-
-    Reflect.defineMetadata(key, commander, command)
-
-    return commander
   }
 
   /**
@@ -71,7 +65,7 @@ export class ArtisanImpl {
         const fn = handler.bind(this)
 
         const commander: Commander = Reflect.getMetadata(
-          'artisan::commander',
+          'artisan:commander',
           this,
         )
 

@@ -9,7 +9,7 @@
 
 import { Color } from '@athenna/common'
 import { Rc } from '#src/Helpers/Command/Rc'
-import { Commander } from '#src/Artisan/Commander'
+import { Decorator } from '#src/Helpers/Decorator'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
@@ -93,19 +93,13 @@ export abstract class BaseCommand {
    * Execute the command setting args and options in the class
    */
   protected __exec(...args: any[]): Promise<void> {
-    if (!this.rc) this.rc = new Rc()
-    if (!this.paint) this.paint = Color
-    if (!this.logger) this.logger = new Logger()
-    if (!this.prompt) this.prompt = new Prompt()
-    if (!this.generator) this.generator = new Generator()
-
-    const artisanOpts = Reflect.getMetadata('artisan::options', this)
-    const artisanArgs = Reflect.getMetadata('artisan::arguments', this)
-    const commander: Commander = Reflect.getMetadata('artisan::commander', this)
+    const commander = Decorator.getCommander(this)
+    const artisanOpts = Decorator.getOptions(this)
+    const artisanArgs = Decorator.getArguments(this)
 
     const opts = commander.opts()
 
-    artisanArgs?.forEach(arg => (this[arg] = args.shift()))
+    artisanArgs.forEach(arg => (this[arg] = args.shift()))
     Object.keys(opts).forEach(key => (this[artisanOpts[key]] = opts[key]))
 
     return this.handle()
