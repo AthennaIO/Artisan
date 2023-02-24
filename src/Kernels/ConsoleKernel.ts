@@ -42,7 +42,9 @@ export class ConsoleKernel {
       return
     }
 
-    await import(pathToFileURL(path).href)
+    const importPath = await import.meta.resolve(path, Config.get('rc.meta'))
+
+    await import(importPath)
   }
 
   /**
@@ -73,7 +75,12 @@ export class ConsoleKernel {
       path = pathToFileURL(resolve(path)).href
     }
 
-    const Command = await Module.get(await import(path))
+    const importMetaPath = await import.meta.resolve(
+      path,
+      Config.get('rc.meta'),
+    )
+
+    const Command = await Module.get(await import(importMetaPath))
 
     Artisan.register(new Command())
   }

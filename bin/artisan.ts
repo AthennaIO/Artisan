@@ -25,6 +25,7 @@ process.env.IS_TS = 'true'
 await Config.loadAll(Path.stubs('config'))
 
 Config.delete('app.version')
+Config.set('rc.meta', import.meta.url)
 Config.set('logging.channels.console.driver', 'console')
 Config.set('logging.channels.exception.driver', 'console')
 
