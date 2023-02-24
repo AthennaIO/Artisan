@@ -42,6 +42,10 @@ export class ConsoleKernel {
       return
     }
 
+    if (!path.startsWith('#')) {
+      path = pathToFileURL(path).href
+    }
+
     const importPath = await import.meta.resolve(path, Config.get('rc.meta'))
 
     await import(importPath)
