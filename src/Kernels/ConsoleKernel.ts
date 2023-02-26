@@ -38,17 +38,15 @@ export class ConsoleKernel {
    * files, Artisan would need to bootstrap the Athenna application.
    */
   public async registerRouteCommands(path: string) {
+    if (path.includes('./') || path.includes('../')) {
+      path = resolve(path)
+    }
+
     if (!(await File.exists(path))) {
       return
     }
 
-    if (!path.startsWith('#')) {
-      path = pathToFileURL(path).href
-    }
-
-    const importPath = await import.meta.resolve(path, Config.get('rc.meta'))
-
-    await import(importPath)
+    await this.resolvePathAndImport(path)
   }
 
   /**
@@ -64,7 +62,7 @@ export class ConsoleKernel {
       )
     }
 
-    const Handler = await Module.getFrom(path)
+    const Handler = await this.resolvePathAndImport(path)
     const handler = new Handler()
 
     CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
@@ -75,17 +73,25 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string): Promise<void> {
-    if (!path.startsWith('#')) {
-      path = pathToFileURL(resolve(path)).href
-    }
-
-    const importMetaPath = await import.meta.resolve(
-      path,
-      Config.get('rc.meta'),
-    )
-
-    const Command = await Module.get(await import(importMetaPath))
+    const Command = await this.resolvePathAndImport(path)
 
     Artisan.register(new Command())
+  }
+
+  /**
+   * Resolve the import path by meta URL and import it.
+   */
+  private resolvePathAndImport(path: string) {
+    if (path.includes('./') || path.includes('../')) {
+      path = resolve(path)
+    }
+
+    if (!path.startsWith('#')) {
+      path = pathToFileURL(path).href
+    }
+
+    return import.meta
+      .resolve(path, Config.get('rc.meta'))
+      .then(meta => Module.get(import(meta)))
   }
 }
