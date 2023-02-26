@@ -46,9 +46,7 @@ export class ConsoleKernel {
       path = pathToFileURL(path).href
     }
 
-    const importPath = await import.meta.resolve(path, Config.get('rc.meta'))
-
-    await import(importPath)
+    await this.resolvePathAndImport(path)
   }
 
   /**
@@ -64,7 +62,7 @@ export class ConsoleKernel {
       )
     }
 
-    const Handler = await Module.getFrom(path)
+    const Handler = await this.resolvePathAndImport(path)
     const handler = new Handler()
 
     CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
@@ -79,13 +77,17 @@ export class ConsoleKernel {
       path = pathToFileURL(resolve(path)).href
     }
 
-    const importMetaPath = await import.meta.resolve(
-      path,
-      Config.get('rc.meta'),
-    )
-
-    const Command = await Module.get(await import(importMetaPath))
+    const Command = await this.resolvePathAndImport(path)
 
     Artisan.register(new Command())
+  }
+
+  /**
+   * Resolve the import path by meta URL and import it.
+   */
+  private resolvePathAndImport(path: string) {
+    return import.meta
+      .resolve(path, Config.get('rc.meta'))
+      .then(meta => Module.get(import(meta)))
   }
 }
