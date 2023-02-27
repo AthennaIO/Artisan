@@ -59,6 +59,12 @@ export class CommanderHandler {
    * Set the CLI version. By default, the version set will be of the Athenna.
    */
   public static setVersion(version?: string): typeof CommanderHandler {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (this.commander._events['option:version']) {
+      return this
+    }
+
     if (version) {
       this.commander.version(`v${version}`, '-v, --version')
 
