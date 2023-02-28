@@ -10,7 +10,7 @@
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { File, Module } from '@athenna/common'
-import { Artisan, CommanderHandler } from '#src'
+import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
 export class ConsoleKernel {
   /**
@@ -54,12 +54,11 @@ export class ConsoleKernel {
    */
   public async registerExceptionHandler(path?: string) {
     if (!path) {
-      path = resolve(
-        Module.createDirname(import.meta.url),
-        '..',
-        'Handlers',
-        `ConsoleExceptionHandler.js`,
-      )
+      const handler = new ConsoleExceptionHandler()
+
+      CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
+
+      return
     }
 
     const Handler = await this.resolvePathAndImport(path)

@@ -18,8 +18,7 @@ export class ConsoleExceptionHandler {
   public async handle(error: any): Promise<void> {
     error.code = String.toSnakeCase(error.code || error.name).toUpperCase()
 
-    const isInternalServerError =
-      error.name && (error.name === 'Error' || error.name === 'TypeError')
+    const isInternalServerError = this.isInternalServerError(error)
     const isDebugMode = Config.get('app.debug', true)
 
     if (!error.prettify) {
@@ -44,5 +43,21 @@ export class ConsoleExceptionHandler {
     )
 
     return process.exit(1)
+  }
+
+  /**
+   * Returns a boolean indicating if the error is an internal server error.
+   */
+  private isInternalServerError(error: any): boolean {
+    return [
+      'Error',
+      'URIError',
+      'TypeError',
+      'EvalError',
+      'RangeError',
+      'SyntaxError',
+      'InternalError',
+      'ReferenceError',
+    ].includes(error.name)
   }
 }
