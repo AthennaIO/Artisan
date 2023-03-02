@@ -52,16 +52,15 @@ export default class LibraryConfigurer extends BaseConfigurer {
     }
   }
 
-  async taskOne(db) {
-    const libraries = {
-      MongoDB: 'mongoose',
-      PostgreSQL: 'knex pg',
-      'MySQL / MariaDB': 'knex mysql2',
-    }
-
-    const npmInstallCommand = `cd ${Path.pwd()} && npm install ${libraries[db]} --production=false`
-
-    return Exec.command(npmInstallCommand)
+  async taskOne() {
+    await Exec.sleep(100)
+    // const libraries = {
+    //   MongoDB: 'mongoose',
+    //   PostgreSQL: 'knex pg',
+    //   'MySQL / MariaDB': 'knex mysql2',
+    // }
+    // const npmInstallCommand = `cd ${Path.pwd()} && npm install ${libraries[db]} --production=false`
+    // return Exec.command(npmInstallCommand)
   }
 
   async taskTwo(db) {

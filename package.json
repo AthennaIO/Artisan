@@ -58,10 +58,8 @@
     "edge.js": "^5.5.0",
     "figlet": "^1.5.2",
     "inquirer": "^9.1.4",
-    "knex": "^2.4.2",
     "log-update": "^5.0.1",
-    "ora": "^6.1.2",
-    "pg": "^8.9.0"
+    "ora": "^6.1.2"
   },
   "devDependencies": {
     "@athenna/common": "^3.0.0",

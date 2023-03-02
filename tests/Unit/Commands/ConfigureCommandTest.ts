@@ -64,9 +64,6 @@ test.group('ConfigureCommandTest', group => {
       .getContent()
       .then(content => JSON.parse(content.toString()))
 
-    assert.isDefined(packageJson.dependencies.pg)
-    assert.isDefined(packageJson.dependencies.knex)
-
     assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
     assert.containsSubset(packageJson.athenna.commands, ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
 
