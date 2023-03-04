@@ -116,7 +116,7 @@ export class ArtisanImpl {
     const executor = `cd ${Path.pwd()} && npm run node`
 
     if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} -- ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} && ${executor} ${path} -- ${command}`
     } else {
       command = `${executor} ${path} -- ${command}`
     }
