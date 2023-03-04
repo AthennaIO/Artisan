@@ -10,8 +10,8 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
-import { Exec } from '@athenna/common'
 import { Config } from '@athenna/config'
+import { Exec, Path } from '@athenna/common'
 import { Decorator } from '#src/Helpers/Decorator'
 import { Commander } from '#src/Artisan/Commander'
 import { BaseCommand } from '#src/Artisan/BaseCommand'
@@ -120,6 +120,8 @@ export class ArtisanImpl {
     } else {
       command = `${executor} ${path} -- ${command}`
     }
+
+    console.log(command)
 
     return Exec.command(command, { ignoreErrors: true })
   }
