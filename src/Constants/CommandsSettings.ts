@@ -10,6 +10,12 @@
 import { CommandSettings } from '#src/Types/CommandSettings'
 
 /**
- * Hold all the commands settings.
+ * Commands settings holds all the commands settings by the command key.
+ *
+ * @example
+ * ```js
+ * COMMANDS_SETTINGS.get('make:command')
+ * // { loadApp: false, stayAlive: false, environments: ['console'] }
+ * ```
  */
 export const COMMANDS_SETTINGS = new Map<string, CommandSettings>()

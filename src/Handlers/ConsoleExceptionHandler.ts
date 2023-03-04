@@ -9,7 +9,7 @@
 
 import { Log } from '@athenna/logger'
 import { Config } from '@athenna/config'
-import { String } from '@athenna/common'
+import { Is, String } from '@athenna/common'
 
 export class ConsoleExceptionHandler {
   /**
@@ -18,10 +18,11 @@ export class ConsoleExceptionHandler {
   public async handle(error: any): Promise<void> {
     error.code = String.toSnakeCase(error.code || error.name).toUpperCase()
 
-    const isInternalServerError = this.isInternalServerError(error)
+    const isException = Is.Exception(error)
     const isDebugMode = Config.get('app.debug', true)
+    const isInternalServerError = Is.Error(error) && !isException
 
-    if (!error.prettify) {
+    if (!isException) {
       error = error.toAthennaException()
     }
 
@@ -38,26 +39,8 @@ export class ConsoleExceptionHandler {
       return process.exit(1)
     }
 
-    Log.channelOrVanilla('exception').error(
-      (await error.prettify()).concat('\n'),
-    )
+    Log.channelOrVanilla('exception').error(await error.prettify())
 
     return process.exit(1)
-  }
-
-  /**
-   * Returns a boolean indicating if the error is an internal server error.
-   */
-  private isInternalServerError(error: any): boolean {
-    return [
-      'Error',
-      'URIError',
-      'TypeError',
-      'EvalError',
-      'RangeError',
-      'SyntaxError',
-      'InternalError',
-      'ReferenceError',
-    ].includes(error.name)
   }
 }

@@ -9,6 +9,7 @@
 
 import { View } from '@athenna/view'
 import { File, String } from '@athenna/common'
+import { resolve, isAbsolute } from 'node:path'
 import { AlreadyExistFileException } from '#src/Exceptions/AlreadyExistFileException'
 
 export class Generator {
@@ -96,7 +97,7 @@ export class Generator {
    * ```
    */
   public async make(): Promise<File> {
-    const file = new File(this._path, Buffer.from(''))
+    const file = new File(this._path, '')
 
     if (file.fileExists) {
       throw new AlreadyExistFileException(this._path)
@@ -128,10 +129,24 @@ export class Generator {
       })
     }
 
+    if (View.hasTemplate(this._template)) {
+      const content = await View.render(this._template, this._properties)
+
+      return file.setContent(content)
+    }
+
+    let templatePath = Config.get(`rc.view.templates.${this._template}`)
+
+    if (!isAbsolute(templatePath)) {
+      templatePath = resolve(templatePath)
+    }
+
+    const fileTemplate = new File(templatePath)
+
+    View.createTemplate(this._template, await fileTemplate.getContentAsString())
+
     const content = await View.render(this._template, this._properties)
 
-    file.content = Buffer.from(content)
-
-    return file.load()
+    return file.setContent(content)
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.1.7",
+  "version": "3.1.8",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -62,11 +62,11 @@
     "ora": "^6.1.2"
   },
   "devDependencies": {
-    "@athenna/common": "^3.0.0",
-    "@athenna/config": "^3.0.0",
-    "@athenna/ioc": "^3.0.0",
-    "@athenna/logger": "^3.0.0",
-    "@athenna/view": "^3.0.0",
+    "@athenna/common": "^3.3.1",
+    "@athenna/config": "^3.1.2",
+    "@athenna/ioc": "^3.1.4",
+    "@athenna/logger": "^3.1.4",
+    "@athenna/view": "^3.0.1",
     "@japa/assert": "^1.3.6",
     "@japa/run-failed-tests": "^1.1.0",
     "@japa/runner": "^2.2.2",
@@ -208,6 +208,12 @@
     }
   },
   "athenna": {
+    "view": {
+      "disks": {},
+      "templates": {
+        "command": "./templates/command.edge"
+      }
+    },
     "commands": [
       "./tests/Stubs/Test.js",
       "#src/Commands/ListCommand",
