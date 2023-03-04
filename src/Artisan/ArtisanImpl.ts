@@ -113,16 +113,12 @@ export class ArtisanImpl {
     command: string,
     path = Path.pwd(`artisan.${Path.ext()}`),
   ): Promise<{ stdout: string; stderr: string }> {
-    let executor = 'node --experimental-import-meta-resolve'
-
-    if (Env('IS_TS', false)) {
-      executor = executor.concat(' --loader=ts-node/esm --no-warnings')
-    }
+    const executor = `cd ${Path.pwd()} && npm run node`
 
     if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${executor} ${path} -- ${command}`
     } else {
-      command = `${executor} ${path} ${command}`
+      command = `${executor} ${path} -- ${command}`
     }
 
     return Exec.command(command, { ignoreErrors: true })

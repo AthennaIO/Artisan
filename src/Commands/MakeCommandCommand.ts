@@ -29,7 +29,7 @@ export class MakeCommandCommand extends BaseCommand {
 
     const file = await this.generator
       .path(Path.console(`Commands/${this.name}.${Path.ext()}`))
-      .template('artisan::command')
+      .template('command')
       .setNameProperties(true)
       .make()
 

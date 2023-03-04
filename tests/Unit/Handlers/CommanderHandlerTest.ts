@@ -44,7 +44,8 @@ test.group('CommanderHandlerTest', group => {
       'test [options] <requiredArg> [notRequiredArg]': 'The description of test command.',
       'make:command <name>': 'Make a new command file.',
       'list <alias>': 'List all commands available of the alias.',
-      'template:customize': 'Export all the templates files of Athenna to the "resources/templates" path.',
+      'template:customize':
+        'Export all the templates files registered in "rc.view.templates" to the "resources/templates" path.',
     })
   })
 

@@ -26,7 +26,7 @@ switch (type) {
     error = new Error('hello')
     break
   case 'exception':
-    error = new Exception({ message: 'hello', help: 'hello' })
+    error = new Exception({ message: 'hello', help: 'world' })
     break
 }
 

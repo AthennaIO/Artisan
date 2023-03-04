@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
-import { File, Module } from '@athenna/common'
+import { Exec, File, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
 export class ConsoleKernel {
@@ -25,10 +23,10 @@ export class ConsoleKernel {
       return this.registerCommandByPath(path)
     }
 
-    const paths = Config.get<string[]>('rc.commands')
-    const promises = paths.map(path => this.registerCommandByPath(path))
-
-    await Promise.all(promises)
+    await Exec.concurrently(
+      Config.get('rc.commands'),
+      this.registerCommandByPath,
+    )
   }
 
   /**
@@ -38,15 +36,17 @@ export class ConsoleKernel {
    * files, Artisan would need to bootstrap the Athenna application.
    */
   public async registerRouteCommands(path: string) {
-    if (path.includes('./') || path.includes('../')) {
-      path = resolve(path)
+    if (path.startsWith('#')) {
+      await Module.resolve(path, Config.get('rc.meta'))
+
+      return
     }
 
     if (!(await File.exists(path))) {
       return
     }
 
-    await this.resolvePathAndImport(path)
+    await Module.resolve(path, Config.get('rc.meta'))
   }
 
   /**
@@ -61,7 +61,7 @@ export class ConsoleKernel {
       return
     }
 
-    const Handler = await this.resolvePathAndImport(path)
+    const Handler = await Module.resolve(path, Config.get('rc.meta'))
     const handler = new Handler()
 
     CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
@@ -72,25 +72,8 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string): Promise<void> {
-    const Command = await this.resolvePathAndImport(path)
+    const Command = await Module.resolve(path, Config.get('rc.meta'))
 
     Artisan.register(new Command())
-  }
-
-  /**
-   * Resolve the import path by meta URL and import it.
-   */
-  private resolvePathAndImport(path: string) {
-    if (path.includes('./') || path.includes('../')) {
-      path = resolve(path)
-    }
-
-    if (!path.startsWith('#')) {
-      path = pathToFileURL(path).href
-    }
-
-    return import.meta
-      .resolve(path, Config.get('rc.meta'))
-      .then(meta => Module.get(import(meta)))
   }
 }

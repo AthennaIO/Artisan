@@ -28,7 +28,7 @@ export class Rc {
     }
 
     this.rcFile = new File(path)
-    this.rc = JSON.parse(this.rcFile.getContentSync().toString())
+    this.rc = this.rcFile.getContentAsJsonSync()
 
     if (!this.rc.athenna) {
       this.rc.athenna = {}
@@ -76,18 +76,10 @@ export class Rc {
    * Save the new content in the Rc file.
    */
   public async save(): Promise<void> {
-    const stream = this.rcFile.createWriteStream()
+    const content = Config.is('rc.isInPackageJson', true)
+      ? this.rc
+      : this.rc.athenna
 
-    return new Promise((resolve, reject) => {
-      stream.write(
-        JSON.stringify(
-          Config.is('rc.isInPackageJson', true) ? this.rc : this.rc.athenna,
-          null,
-          2,
-        ).concat('\n'),
-      )
-      stream.end(resolve)
-      stream.on('error', reject)
-    })
+    await this.rcFile.setContent(JSON.stringify(content, null, 2).concat('\n'))
   }
 }

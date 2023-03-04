@@ -8,7 +8,8 @@
  */
 
 import { BaseCommand } from '#src'
-import { File } from '@athenna/common'
+import { Exec, File } from '@athenna/common'
+import { resolve, isAbsolute } from 'node:path'
 
 export class TemplateCustomizeCommand extends BaseCommand {
   public static signature(): string {
@@ -16,19 +17,19 @@ export class TemplateCustomizeCommand extends BaseCommand {
   }
 
   public static description(): string {
-    return 'Export all the templates files of Athenna to the "resources/templates" path.'
+    return 'Export all the templates files registered in "rc.view.templates" to the "resources/templates" path.'
   }
 
   public async handle(): Promise<void> {
     this.logger.simple('({bold,green} [ MOVING TEMPLATES ])\n')
 
-    const paths = Config.get('view.templates.paths')
+    const paths = Config.get('rc.view.templates')
 
-    const promises = Object.keys(paths).map(key => {
-      const path = paths[key]
+    await Exec.concurrently(Object.keys(paths), async key => {
+      let path = paths[key]
 
-      if (path.includes('resources/templates')) {
-        return null
+      if (!isAbsolute(path)) {
+        path = resolve(path)
       }
 
       const file = new File(path)
@@ -36,10 +37,8 @@ export class TemplateCustomizeCommand extends BaseCommand {
       return file.copy(Path.resources(`templates/${file.base}`))
     })
 
-    await Promise.all(promises)
-
     this.logger.success(
-      'Template files successfully moved to ({yellow} "resources/templates") folder.',
+      'Template files successfully moved to ({yellow} resources/templates) folder.',
     )
   }
 }

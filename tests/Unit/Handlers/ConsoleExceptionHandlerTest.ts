@@ -35,27 +35,31 @@ test.group('ConsoleExceptionHandlerTest', group => {
   })
 
   test('should be able to log the pretty exception from Error instances', async ({ assert }) => {
-    const { stderr } = await Exec.command(`ts-node --esm ${Path.stubs('exceptionHandler.ts')} error`, {
+    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error`, {
       ignoreErrors: true,
     })
 
-    assert.isTrue(stderr.includes('MESSAGE\n   hello'))
+    assert.isTrue(stderr.includes('hello'))
+    assert.isTrue(stderr.includes('ERROR'))
   })
 
   test('should be able to log the pretty exception from Exception instances', async ({ assert }) => {
-    const { stderr } = await Exec.command(`ts-node --esm ${Path.stubs('exceptionHandler.ts')} exception`, {
+    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- exception`, {
       ignoreErrors: true,
     })
 
-    assert.isTrue(stderr.includes('MESSAGE\n   hello'))
-    assert.isTrue(stderr.includes('HELP\n   hello'))
+    assert.isTrue(stderr.includes('hello'))
+    assert.isTrue(stderr.includes('world'))
+    assert.isTrue(stderr.includes('HELP'))
+    assert.isTrue(stderr.includes('EXCEPTION'))
   })
 
   test('should be able to hide errors if debug mode is not activated', async ({ assert }) => {
-    const { stderr } = await Exec.command(`ts-node --esm ${Path.stubs('exceptionHandler.ts')} error --no-debug`, {
+    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error --no-debug`, {
       ignoreErrors: true,
     })
 
-    assert.isTrue(stderr.includes('MESSAGE\n   An internal server exception has occurred.'))
+    assert.isTrue(stderr.includes('ERROR'))
+    assert.isTrue(stderr.includes('An\ninternal\nserver\nexception\nhas\noccurred.'))
   })
 })
