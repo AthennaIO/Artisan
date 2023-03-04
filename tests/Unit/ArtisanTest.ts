@@ -58,14 +58,12 @@ test.group('ArtisanTest', group => {
   test('should be able to register commands as routes', async ({ assert }) => {
     process.env.NODE_ENV = 'test'
 
-    const { stderr, stdout } = await Artisan.callInChild('hello world', artisan)
-
-    console.log(stderr)
+    const { stdout } = await Artisan.callInChild('hello world', artisan)
 
     assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
 
     process.env.NODE_ENV = undefined
-  }).pin()
+  })
 
   test('should be able to set arguments and options using Argument and Option decorators', async ({ assert }) => {
     const { stdout } = await Artisan.callInChild('test test --other', artisan)

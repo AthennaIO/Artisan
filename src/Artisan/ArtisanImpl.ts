@@ -121,8 +121,6 @@ export class ArtisanImpl {
       command = `${executor} ${path} -- ${command}`
     }
 
-    console.log(command)
-
     return Exec.command(command, { ignoreErrors: true })
   }
 
