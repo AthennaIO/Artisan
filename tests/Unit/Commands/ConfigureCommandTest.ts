@@ -17,7 +17,7 @@ import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
 test.group('ConfigureCommandTest', group => {
-  const originalPJson = new File(Path.pwd('package.json')).getContentSync().toString()
+  const originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
 
   group.each.setup(async () => {
     process.env.IS_TS = 'true'
@@ -48,13 +48,7 @@ test.group('ConfigureCommandTest', group => {
     await File.safeRemove(Path.pwd('.env.example'))
     await File.safeRemove(Path.pwd('docker-compose.yml'))
 
-    const stream = new File(Path.pwd('package.json')).createWriteStream()
-
-    await new Promise((resolve, reject) => {
-      stream.write(originalPJson)
-      stream.end(resolve)
-      stream.on('error', reject)
-    })
+    await new File(Path.pwd('package.json')).setContent(originalPJson)
   })
 
   test('should be able to configure paths inside the application', async ({ assert }) => {

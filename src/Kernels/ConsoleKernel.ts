@@ -23,9 +23,8 @@ export class ConsoleKernel {
       return this.registerCommandByPath(path)
     }
 
-    await Exec.concurrently(
-      Config.get('rc.commands'),
-      this.registerCommandByPath,
+    await Exec.concurrently(Config.get('rc.commands'), path =>
+      this.registerCommandByPath(path),
     )
   }
 
@@ -37,7 +36,7 @@ export class ConsoleKernel {
    */
   public async registerRouteCommands(path: string) {
     if (path.startsWith('#')) {
-      await Module.resolve(path, Config.get('rc.meta'))
+      await this.resolvePath(path)
 
       return
     }
@@ -46,7 +45,7 @@ export class ConsoleKernel {
       return
     }
 
-    await Module.resolve(path, Config.get('rc.meta'))
+    await this.resolvePath(path)
   }
 
   /**
@@ -61,7 +60,7 @@ export class ConsoleKernel {
       return
     }
 
-    const Handler = await Module.resolve(path, Config.get('rc.meta'))
+    const Handler = await this.resolvePath(path)
     const handler = new Handler()
 
     CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
@@ -72,8 +71,15 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string): Promise<void> {
-    const Command = await Module.resolve(path, Config.get('rc.meta'))
+    const Command = await this.resolvePath(path)
 
     Artisan.register(new Command())
+  }
+
+  /**
+   * Resolve the import path by meta URL and import it.
+   */
+  private async resolvePath(path: string) {
+    return Module.resolve(path, Config.get('rc.meta'))
   }
 }

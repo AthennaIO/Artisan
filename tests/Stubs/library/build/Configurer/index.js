@@ -156,12 +156,6 @@ export default class LibraryConfigurer extends BaseConfigurer {
 
     dockerCompose.services[key] = services[db][key]
 
-    const stream = file.createWriteStream()
-
-    return new Promise((resolve, reject) => {
-      stream.write(yaml.dump(dockerCompose).concat('\n'))
-      stream.end(resolve)
-      stream.on('error', reject)
-    })
+    return file.setContent(yaml.dump(dockerCompose).concat('\n'))
   }
 }

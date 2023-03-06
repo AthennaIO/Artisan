@@ -16,7 +16,7 @@ import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
 test.group('MakeCommandTest', group => {
-  const originalPJson = new File(Path.pwd('package.json')).getContentSync().toString()
+  const originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
 
   group.each.setup(async () => {
     ExitFaker.fake()
@@ -40,13 +40,7 @@ test.group('MakeCommandTest', group => {
 
     await Folder.safeRemove(Path.app())
 
-    const stream = new File(Path.pwd('package.json')).createWriteStream()
-
-    await new Promise((resolve, reject) => {
-      stream.write(originalPJson)
-      stream.end(resolve)
-      stream.on('error', reject)
-    })
+    await new File(Path.pwd('package.json')).setContent(originalPJson)
   })
 
   test('should be able to create a command file', async ({ assert }) => {

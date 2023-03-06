@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -37,6 +37,7 @@
   "types": "./build/index.d.ts",
   "exports": {
     ".": "./build/index.js",
+    "./templates/command": "./templates/command.edge",
     "./providers/ArtisanProvider": "./build/Providers/ArtisanProvider.js",
     "./commands/ListCommand": "./build/Commands/ListCommand.js",
     "./commands/ConfigureCommand": "./build/Commands/ConfigureCommand.js",
