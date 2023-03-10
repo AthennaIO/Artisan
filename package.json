@@ -224,13 +224,13 @@
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",
-      "#tests/Stubs/Commands/LoadAppCommand",
+      "#tests/Stubs/commands/LoadAppCommand",
       "#src/Commands/TemplateCustomizeCommand"
     ],
     "commandsManifest": {
       "test": "#tests/Stubs/Test",
       "configure": "#src/Commands/ConfigureCommand",
-      "loadapp": "#tests/Stubs/Commands/LoadAppCommand",
+      "loadapp": "#tests/Stubs/commands/LoadAppCommand",
       "make:command": "#src/Commands/MakeCommandCommand",
       "template:customize": "#src/Commands/TemplateCustomize"
     },
