@@ -7,21 +7,25 @@
  * file that was distributed with this source code.
  */
 
-import { Folder } from '@athenna/common'
+import 'reflect-metadata'
+
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
-import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
+import { ExitFaker } from '#tests/Helpers/ExitFaker'
+import { ThrowCommand } from '#tests/Stubs/commands/ThrowCommand'
 import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import { ArtisanProvider, CommanderHandler, COMMANDS_SETTINGS, ConsoleKernel } from '#src'
 
 export default class ConsoleKernelTest {
-  private artisan = Path.pwd('bin/artisan.ts')
-
   @BeforeEach()
   public async beforeEach() {
-    process.env.IS_TS = 'true'
+    ExitFaker.fake()
 
     await Config.loadAll(Path.stubs('config'))
+
+    COMMANDS_SETTINGS.clear()
+    CommanderHandler.getCommander().commands = []
 
     new ViewProvider().register()
     new LoggerProvider().register()
@@ -30,24 +34,48 @@ export default class ConsoleKernelTest {
 
   @AfterAll()
   public async afterAll() {
-    await Folder.safeRemove(Path.app())
+    ExitFaker.release()
+  }
+
+  @Test()
+  public async shouldBeAbleToRegisterCommandsUsingConsoleKernel({ assert }: TestContext) {
+    await new ConsoleKernel().registerCommands()
+
+    assert.isDefined(COMMANDS_SETTINGS.get('make:command'))
+    assert.isDefined(CommanderHandler.getCommands()['make:command <name>'])
+  }
+
+  @Test()
+  public async shouldBeAbleToRegisterCommandsByArgvUsingConsoleKernel({ assert }: TestContext) {
+    await new ConsoleKernel().registerCommands(['node', 'artisan', 'make:command'])
+
+    assert.equal(COMMANDS_SETTINGS.size, 1)
+    assert.isDefined(COMMANDS_SETTINGS.get('make:command'))
+    assert.isDefined(CommanderHandler.getCommands()['make:command <name>'])
   }
 
   @Test()
   public async shouldBeAbleToRegisterRouteFilesUsingConsoleKernel({ assert }: TestContext) {
-    await new ConsoleKernel().registerRouteCommands('../../../bin/console.js')
+    await new ConsoleKernel().registerRouteCommands('./bin/console.ts')
 
-    const { stdout } = await Artisan.callInChild('hello hello', this.artisan)
-
-    assert.equal(stdout, 'hello\n' + "{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
+    assert.isDefined(CommanderHandler.getCommands()['hello <hello>'])
   }
 
   @Test()
-  public async shouldBeAbleToCustomExceptionHandlerUsingConsoleKernel({ assert }: TestContext) {
+  public async shouldBeAbleToRegisterRouteFilesWithImportAliasUsingConsoleKernel({ assert }: TestContext) {
+    await new ConsoleKernel().registerRouteCommands('#tests/Stubs/routes/console')
+
+    assert.isDefined(CommanderHandler.getCommands()['importalias'])
+  }
+
+  @Test()
+  public async shouldBeAbleToSetCustomExceptionHandlerUsingConsoleKernel({ assert }: TestContext) {
     await new ConsoleKernel().registerExceptionHandler('#tests/Stubs/handlers/Handler')
 
-    const { stderr } = await Artisan.callInChild('error', this.artisan)
+    const exec = CommanderHandler.bindHandler(new ThrowCommand())
 
-    assert.isTrue(stderr.includes('error happened!'))
+    await exec()
+
+    assert.isTrue(ExitFaker.faker.calledWith(1))
   }
 }

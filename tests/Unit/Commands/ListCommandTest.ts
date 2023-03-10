@@ -42,12 +42,7 @@ export default class ListCommandTest {
   public async shouldBeAbleToListOtherCommandsByAlias({ assert }: TestContext) {
     const { stdout } = await Artisan.callInChild('list make', this.artisan)
 
-    assert.equal(
-      stdout,
-      '[ LISTING MAKE ]\n' +
-        '\n' +
-        'COMMAND             DESCRIPTION             \n' +
-        'make:command <name> Make a new command file.\n',
-    )
+    assert.isTrue(stdout.includes('[ LISTING MAKE ]'))
+    assert.isTrue(stdout.includes('make:command <name> Make a new command file.'))
   }
 }

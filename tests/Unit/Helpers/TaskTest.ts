@@ -8,19 +8,13 @@
  */
 
 import { Task } from '#src/Helpers/Task'
+import { BeforeEach, Test, TestContext } from '@athenna/test'
 import { RunningTaskException } from '#src/Exceptions/RunningTaskException'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
-import { Folder } from '@athenna/common'
 
 export default class TaskTest {
   @BeforeEach()
   public async beforeEach() {
     await Config.loadAll(Path.stubs('config'))
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    await Folder.safeRemove(Path.app())
   }
 
   @Test()

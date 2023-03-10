@@ -23,8 +23,8 @@ export class CommanderHandler {
   /**
    * Get the commander instance.
    */
-  public static getCommander(): Commander {
-    return this.commander
+  public static getCommander<T = Commander>(): T {
+    return this.commander as Commander as T
   }
 
   /**
@@ -66,12 +66,12 @@ export class CommanderHandler {
     }
 
     if (version) {
-      this.commander.version(`v${version}`, '-v, --version')
+      this.commander.version(version, '-v, --version')
 
       return this
     }
 
-    this.commander.version('Athenna Framework 3.0.0', '-v, --version')
+    this.commander.version('Athenna Framework v3.0.0', '-v, --version')
 
     return this
   }

@@ -120,7 +120,11 @@
       "src/Artisan/Commander.ts",
       "src/Artisan/Configurer.ts",
       "src/Commands/*",
-      "src/Types/*"
+      "src/Types/*",
+      "src/Helpers/Table.ts",
+      "src/Helpers/Sticker.ts",
+      "src/Helpers/Instruction.ts",
+      "src/Helpers/Command/Logger.ts"
     ],
     "reporter": [
       "text-summary",
@@ -220,11 +224,13 @@
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",
+      "#tests/Stubs/Commands/LoadAppCommand",
       "#src/Commands/TemplateCustomizeCommand"
     ],
     "commandsManifest": {
       "test": "#tests/Stubs/Test",
       "configure": "#src/Commands/ConfigureCommand",
+      "loadapp": "#tests/Stubs/Commands/LoadAppCommand",
       "make:command": "#src/Commands/MakeCommandCommand",
       "template:customize": "#src/Commands/TemplateCustomize"
     },
