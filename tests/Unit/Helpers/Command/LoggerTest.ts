@@ -7,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('LoggerTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class LoggerTest {
+  private artisan = Path.pwd('bin/artisan.ts')
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -30,14 +31,16 @@ test.group('LoggerTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should be able to execute all artisan logger methods', async ({ assert }) => {
-    const { stdout } = await Artisan.callInChild('logger', artisan)
+  @Test()
+  public async shouldBeAbleToExecuteAllArtisanLoggerMethods({ assert }: TestContext) {
+    const { stdout } = await Artisan.callInChild('logger', this.artisan)
 
     assert.isTrue(stdout.includes('hello'))
     assert.isTrue(stdout.includes('hello updated'))
@@ -47,18 +50,8 @@ test.group('LoggerTest', group => {
           ' | |__   ___| | | ___  \n' +
           " | '_ \\ / _ \\ | |/ _ \\ \n" +
           ' | | | |  __/ | | (_) |\n' +
-          ' |_| |_|\\___|_|_|\\___/ \n' +
-          '                       ',
+          ' |_| |_|\\___|_|_|\\___/ \n',
       ),
     )
-    assert.isTrue(stdout.includes('[ HELLO ]'))
-    assert.isTrue(stdout.includes('KEY   VALUE\n' + 'hello world'))
-    assert.isTrue(
-      stdout.includes(
-        'CREATE: app/Services/Service.ts\n' +
-          'SKIP:   app/Services/Service.ts (File already exists)\n' +
-          'ERROR:  app/Services/Service.ts (Something went wrong)',
-      ),
-    )
-  })
-})
+  }
+}

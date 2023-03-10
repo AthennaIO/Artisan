@@ -7,15 +7,16 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { Exec, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { ArtisanProvider, ConsoleKernel } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ConsoleExceptionHandlerTest', group => {
-  group.each.setup(async () => {
+export default class ConsoleExceptionHandlerTest {
+  @BeforeEach()
+  public async beforeEach() {
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -28,22 +29,25 @@ test.group('ConsoleExceptionHandlerTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should be able to log the pretty exception from Error instances', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToLogThePrettyExceptionFromErrorInstances({ assert }: TestContext) {
     const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error`, {
       ignoreErrors: true,
     })
 
     assert.isTrue(stderr.includes('hello'))
     assert.isTrue(stderr.includes('ERROR'))
-  })
+  }
 
-  test('should be able to log the pretty exception from Exception instances', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToLogThePrettyExceptionFromExceptionInstances({ assert }: TestContext) {
     const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- exception`, {
       ignoreErrors: true,
     })
@@ -52,14 +56,15 @@ test.group('ConsoleExceptionHandlerTest', group => {
     assert.isTrue(stderr.includes('world'))
     assert.isTrue(stderr.includes('HELP'))
     assert.isTrue(stderr.includes('EXCEPTION'))
-  })
+  }
 
-  test('should be able to hide errors if debug mode is not activated', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivated({ assert }: TestContext) {
     const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error --no-debug`, {
       ignoreErrors: true,
     })
 
     assert.isTrue(stderr.includes('ERROR'))
     assert.isTrue(stderr.includes('An\ninternal\nserver\nexception\nhas\noccurred.'))
-  })
-})
+  }
+}

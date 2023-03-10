@@ -7,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ArtisanProvider, CommanderHandler, ConsoleKernel } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('CommanderHandlerTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class CommanderHandlerTest {
+  private artisan = Path.pwd('bin/artisan.ts')
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -30,13 +31,15 @@ test.group('CommanderHandlerTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should be able to get all the commands registered inside commander', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommander({ assert }: TestContext) {
     const commands = CommanderHandler.getCommands()
 
     assert.deepEqual(commands, {
@@ -47,21 +50,23 @@ test.group('CommanderHandlerTest', group => {
       'template:customize':
         'Export all the templates files registered in "rc.view.templates" to the "resources/templates" path.',
     })
-  })
+  }
 
-  test('should be able to get all the commands registered inside commander by some alias', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommanderBySomeAlias({ assert }: TestContext) {
     const commands = CommanderHandler.getCommands('make')
 
     assert.deepEqual(commands, {
       'make:command <name>': 'Make a new command file.',
     })
-  })
+  }
 
-  test('should be able to set the oficial Athenna version if none is used', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToSetTheOficialAthennaVersionIfNoneIsUsed({ assert }: TestContext) {
     Config.delete('app.version')
 
-    const { stdout } = await Artisan.callInChild('--version', artisan)
+    const { stdout } = await Artisan.callInChild('--version', this.artisan)
 
     assert.isTrue(stdout.includes('Athenna Framework 3.0.0'))
-  })
-})
+  }
+}

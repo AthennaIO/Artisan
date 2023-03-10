@@ -7,12 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Color } from '@athenna/common'
 import { Instruction } from '#src/Helpers/Instruction'
+import { Test, TestContext } from '@athenna/test'
 
-test.group('InstructionTest', () => {
-  test('should be able to create instructions', async ({ assert }) => {
+export default class InstructionTest {
+  @Test()
+  public async shouldBeAbleToCreateInstructions({ assert }: TestContext) {
     const instruction = new Instruction().head('Project created').add('cd hello-world').toString()
 
     assert.equal(
@@ -25,5 +26,5 @@ test.group('InstructionTest', () => {
         '│                          │\n' +
         '╰──────────────────────────╯',
     )
-  })
-})
+  }
+}

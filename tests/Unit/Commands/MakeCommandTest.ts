@@ -7,18 +7,19 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
+import { AfterEach, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('MakeCommandTest', group => {
-  const originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
+export default class MakeCommandTest {
+  private originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     ExitFaker.fake()
 
     process.env.IS_TS = 'true'
@@ -33,17 +34,19 @@ test.group('MakeCommandTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterEach()
+  public async afterEach() {
     ExitFaker.release()
 
     await Folder.safeRemove(Path.app())
 
-    await new File(Path.pwd('package.json')).setContent(originalPJson)
-  })
+    await new File(Path.pwd('package.json')).setContent(this.originalPJson)
+  }
 
-  test('should be able to create a command file', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToCreateACommandFile({ assert }: TestContext) {
     await Artisan.call('make:command TestCommand')
 
     const path = Path.console('Commands/TestCommand.ts')
@@ -64,12 +67,13 @@ test.group('MakeCommandTest', group => {
     assert.containsSubset(packageJson.athenna.commandsManifest, {
       testCommand: '#app/Console/Commands/TestCommand',
     })
-  })
+  }
 
-  test('should throw an exception when the file already exists', async ({ assert }) => {
+  @Test()
+  public async shouldThrowAnExceptionWhenTheFileAlreadyExists({ assert }: TestContext) {
     await Artisan.call('make:command TestCommand')
     await Artisan.call('make:command TestCommand')
 
     assert.isTrue(ExitFaker.faker.calledWith(1))
-  })
-})
+  }
+}
