@@ -56,7 +56,7 @@ export default class TemplateCustomizeCommandTest {
   @Test()
   public async shouldNotExportTemplatesThatAreAlreadyInsideResourcesTemplatesPath({ assert }: TestContext) {
     const templatePath = Path.resources('templates/test.edge')
-    await new File(templatePath, Buffer.from('')).load()
+    await new File(templatePath, '').load()
 
     Config.set('view.templates.paths.test', templatePath)
 

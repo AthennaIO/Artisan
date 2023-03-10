@@ -10,8 +10,8 @@
 import inquirer from 'inquirer'
 
 import { Prompt } from '#src/Helpers/Command/Prompt'
-import { InquirerPromptException } from '#src/Exceptions/InquirerPromptException'
 import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import { InquirerPromptException } from '#src/Exceptions/InquirerPromptException'
 
 export default class PromptTest {
   private prompt = new Prompt()

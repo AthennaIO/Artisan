@@ -1,0 +1,23 @@
+{
+  "view": {
+    "disks": {},
+    "templates": {
+      "command": "./templates/command.edge"
+    }
+  },
+  "commands": [
+    "./tests/Stubs/Test.js",
+    "#src/Commands/ListCommand",
+    "#src/Commands/ConfigureCommand",
+    "#src/Commands/MakeCommandCommand",
+    "#src/Commands/TemplateCustomizeCommand"
+  ],
+  "commandsManifest": {
+    "test": "#tests/Stubs/Test",
+    "configure": "#src/Commands/ConfigureCommand",
+    "make:command": "#src/Commands/MakeCommandCommand",
+    "template:customize": "#src/Commands/TemplateCustomize"
+  },
+  "providers": [],
+  "isAthennaRc": true
+}

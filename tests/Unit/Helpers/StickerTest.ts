@@ -30,4 +30,27 @@ export default class StickerTest {
         '╰─────────────────────────╯',
     )
   }
+
+  @Test()
+  public async shouldBeAbleToSetNewLinesOnStickerRows({ assert }: TestContext) {
+    const sticker = new Sticker()
+      .head('Project created')
+      .add(`cd ${Color.cyan('hello-world')}`)
+      .add('')
+      .add(`npm run ${Color.cyan('start')}`)
+      .toString()
+
+    assert.equal(
+      Color.removeColors(sticker),
+      '╭─────────────────────────╮\n' +
+        '│     Project created     │\n' +
+        '├─────────────────────────┤\n' +
+        '│                         │\n' +
+        '│     cd hello-world      │\n' +
+        '│                         │\n' +
+        '│     npm run start       │\n' +
+        '│                         │\n' +
+        '╰─────────────────────────╯',
+    )
+  }
 }

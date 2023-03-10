@@ -9,6 +9,7 @@
 
 import figlet from 'figlet'
 
+import { fake } from 'sinon'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
@@ -74,5 +75,15 @@ export default class ArtisanTest {
     const { stdout } = await Artisan.callInChild('test test --other', this.artisan)
 
     assert.equal(stdout, 'test notRequiredArg true notRequiredOption\n')
+  }
+
+  @Test()
+  public async shouldBeAbleToLoadTheApplicationIfTheLoadAppOptionsIsTrue({ assert }: TestContext) {
+    const fakeIgniteFire = fake()
+    ioc.instance('Athenna/Core/Ignite', { fire: fakeIgniteFire })
+
+    await Artisan.call('loadapp')
+
+    assert.isTrue(fakeIgniteFire.calledWith(['worker', 'console']))
   }
 }

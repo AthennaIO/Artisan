@@ -7,51 +7,94 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '@athenna/config'
-import { Folder } from '@athenna/common'
-import { ViewProvider } from '@athenna/view'
-import { LoggerProvider } from '@athenna/logger'
-import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import figlet from 'figlet'
+import columnify from 'columnify'
+import chalkRainbow from 'chalk-rainbow'
+
+import { fake } from 'sinon'
+import { Task } from '#src/Helpers/Task'
+import { Table } from '#src/Helpers/Table'
+import { Action } from '#src/Helpers/Action'
+import { Sticker } from '#src/Helpers/Sticker'
+import { Logger } from '#src/Helpers/Command/Logger'
+import { Instruction } from '#src/Helpers/Instruction'
+import { BeforeEach, Test, TestContext } from '@athenna/test'
 
 export default class LoggerTest {
-  private artisan = Path.pwd('bin/artisan.ts')
+  private logger = new Logger()
 
   @BeforeEach()
   public async beforeEach() {
-    process.env.IS_TS = 'true'
+    Config.set('logging.channels.console.level', 'trace')
+    Config.set('logging.channels.console.driver', 'null')
 
-    await Config.loadAll(Path.stubs('config'))
-
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-
-    const kernel = new ConsoleKernel()
-
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    await Folder.safeRemove(Path.app())
+    this.logger = new Logger()
   }
 
   @Test()
-  public async shouldBeAbleToExecuteAllArtisanLoggerMethods({ assert }: TestContext) {
-    const { stdout } = await Artisan.callInChild('logger', this.artisan)
+  public async shouldBeAbleToLogSimpleValuesWithoutAnyFormatInStdout({ assert }: TestContext) {
+    const successFake = fake()
+    const standaloneFake = fake(_configs => ({ success: successFake }))
+    this.logger.standalone = standaloneFake as any
 
-    assert.isTrue(stdout.includes('hello'))
-    assert.isTrue(stdout.includes('hello updated'))
-    assert.isTrue(
-      stdout.includes(
-        '  _          _ _       \n' +
-          ' | |__   ___| | | ___  \n' +
-          " | '_ \\ / _ \\ | |/ _ \\ \n" +
-          ' | | | |  __/ | | (_) |\n' +
-          ' |_| |_|\\___|_|_|\\___/ \n',
-      ),
-    )
+    this.logger.simple('hello')
+
+    assert.isTrue(successFake.calledWith('hello'))
+    assert.isTrue(standaloneFake.calledWith({ level: 'trace', driver: 'null' }))
+  }
+
+  @Test()
+  public async shouldBeAbleToLogRainbowMessagesInStdout({ assert }: TestContext) {
+    const simpleMock = fake()
+    this.logger.simple = simpleMock
+
+    this.logger.rainbow('hello')
+
+    assert.isTrue(simpleMock.calledWith(chalkRainbow(figlet.textSync('hello')).concat('\n')))
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateANewTableHelperInstance({ assert }: TestContext) {
+    const table = this.logger.table()
+
+    assert.instanceOf(table, Table)
+  }
+
+  @Test()
+  public async shouldBeAbleToLogColumnifiedMessagesInStdout({ assert }: TestContext) {
+    const simpleMock = fake()
+    this.logger.simple = simpleMock
+
+    this.logger.column({ hello: 'world' })
+
+    assert.isTrue(simpleMock.calledWith(columnify({ hello: 'world' })))
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateANewActionHelperInstance({ assert }: TestContext) {
+    const action = this.logger.action('hello')
+
+    assert.instanceOf(action, Action)
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateANewInstructionHelperInstance({ assert }: TestContext) {
+    const instruction = this.logger.instruction()
+
+    assert.instanceOf(instruction, Instruction)
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateANewStickerHelperInstance({ assert }: TestContext) {
+    const sticker = this.logger.sticker()
+
+    assert.instanceOf(sticker, Sticker)
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateANewTaskHelperInstance({ assert }: TestContext) {
+    const task = this.logger.task()
+
+    assert.instanceOf(task, Task)
   }
 }

@@ -27,7 +27,7 @@ export type CommandSettings = {
   /**
    * Set the environments where the command is running.
    *
-   * @default ['artisan']
+   * @default ['console']
    */
   environments?: string[]
 }
