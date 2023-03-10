@@ -7,12 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Color } from '@athenna/common'
 import { Table } from '#src/Helpers/Table'
+import { Test, TestContext } from '@athenna/test'
 
-test.group('TableTest', () => {
-  test('should be able to create tables', async ({ assert }) => {
+export default class TableTest {
+  @Test()
+  public async shouldBeAbleToCreateTables({ assert }: TestContext) {
     const table = new Table().head('hello', 'world').row(['hello', 'world']).toString()
 
     assert.equal(
@@ -23,5 +24,5 @@ test.group('TableTest', () => {
         '│ hello │ world │\n' +
         '└───────┴───────┘',
     )
-  })
-})
+  }
+}

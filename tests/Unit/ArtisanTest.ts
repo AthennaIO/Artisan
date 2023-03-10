@@ -9,23 +9,23 @@
 
 import figlet from 'figlet'
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ArtisanTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class ArtisanTest {
+  private artisan = Path.pwd('bin/artisan.ts')
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     ExitFaker.fake()
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
-
     new ViewProvider().register()
     new LoggerProvider().register()
     new ArtisanProvider().register()
@@ -34,40 +34,45 @@ test.group('ArtisanTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     ExitFaker.release()
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should throw an error when trying to execute a command that does not exist', async ({ assert }) => {
-    const { stderr } = await Artisan.callInChild('not-found', artisan)
+  @Test()
+  public async shouldThrowAnErrorWhenTryingToExecuteACommandThatDoesNotExist({ assert }: TestContext) {
+    const { stderr } = await Artisan.callInChild('not-found', this.artisan)
 
     assert.equal(stderr, "error: unknown command 'not-found'\n")
-  })
+  }
 
-  test('should be able to log the application name in entrypoint commands', async ({ assert }) => {
-    const { stdout } = await Artisan.callInChild('', artisan)
+  @Test()
+  public async shouldBeAbleToLogTheApplicationNameInEntrypointCommands({ assert }: TestContext) {
+    const { stdout } = await Artisan.callInChild('', this.artisan)
 
     const appNameFiglet = figlet.textSync('Artisan')
 
     assert.equal(stdout, appNameFiglet.concat('\n\n'))
-  })
+  }
 
-  test('should be able to register commands as routes', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToRegisterCommandsAsRoutes({ assert }: TestContext) {
     process.env.NODE_ENV = 'test'
 
-    const { stdout } = await Artisan.callInChild('hello world', artisan)
+    const { stdout } = await Artisan.callInChild('hello world', this.artisan)
 
     assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
 
     process.env.NODE_ENV = undefined
-  })
+  }
 
-  test('should be able to set arguments and options using Argument and Option decorators', async ({ assert }) => {
-    const { stdout } = await Artisan.callInChild('test test --other', artisan)
+  @Test()
+  public async shouldBeAbleToSetArgumentsAndOptionsUsingArgumentAndOptionDecorators({ assert }: TestContext) {
+    const { stdout } = await Artisan.callInChild('test test --other', this.artisan)
 
     assert.equal(stdout, 'test notRequiredArg true notRequiredOption\n')
-  })
-})
+  }
+}

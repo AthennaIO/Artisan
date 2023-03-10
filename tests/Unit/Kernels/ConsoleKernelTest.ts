@@ -7,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Folder } from '@athenna/common'
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ConsoleKernelTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class ConsoleKernelTest {
+  private artisan = Path.pwd('bin/artisan.ts')
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -25,25 +26,28 @@ test.group('ConsoleKernelTest', group => {
     new ViewProvider().register()
     new LoggerProvider().register()
     new ArtisanProvider().register()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should be able to register route files using console kernel', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToRegisterRouteFilesUsingConsoleKernel({ assert }: TestContext) {
     await new ConsoleKernel().registerRouteCommands('../../../bin/console.js')
 
-    const { stdout } = await Artisan.callInChild('hello hello', artisan)
+    const { stdout } = await Artisan.callInChild('hello hello', this.artisan)
 
     assert.equal(stdout, 'hello\n' + "{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
-  })
+  }
 
-  test('should be able to custom exception handler using console kernel', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToCustomExceptionHandlerUsingConsoleKernel({ assert }: TestContext) {
     await new ConsoleKernel().registerExceptionHandler('#tests/Stubs/handlers/Handler')
 
-    const { stderr } = await Artisan.callInChild('error', artisan)
+    const { stderr } = await Artisan.callInChild('error', this.artisan)
 
     assert.isTrue(stderr.includes('error happened!'))
-  })
-})
+  }
+}
