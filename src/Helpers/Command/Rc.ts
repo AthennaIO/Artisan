@@ -11,7 +11,6 @@ import { File } from '@athenna/common'
 
 export class Rc {
   public rcFile: File
-  public rc: Record<string, any>
 
   public constructor() {
     this.setRcFile(Path.pwd('.athennarc.json'), true)
@@ -23,13 +22,11 @@ export class Rc {
   public setRcFile(path = Path.pwd('.athennarc.json'), pjson = false): Rc {
     if (Config.is('rc.isInPackageJson', true) && pjson) {
       this.rcFile = new File(Path.pwd('package.json'))
-      this.rc = this.rcFile.getContentAsJsonSync({ saveContent: true }).athenna
 
       return this
     }
 
     this.rcFile = new File(path)
-    this.rc = this.rcFile.getContentAsJsonSync()
 
     return this
   }
@@ -58,8 +55,6 @@ export class Rc {
 
     Config.set(`rc.${rcKey}`, value || key)
 
-    this.rc[rcKey] = Config.get(`rc.${rcKey}`)
-
     return this
   }
 
@@ -74,8 +69,6 @@ export class Rc {
   public pushTo(rcKey: string, value: any): Rc {
     Config.set(`rc.${rcKey}`, [...Config.get(`rc.${rcKey}`, []), value])
 
-    this.rc[rcKey] = Config.get(`rc.${rcKey}`)
-
     return this
   }
 
@@ -84,8 +77,11 @@ export class Rc {
    */
   public async save(): Promise<void> {
     const content = Config.is('rc.isInPackageJson', true)
-      ? { ...JSON.parse(this.rcFile.content.toString()), athenna: this.rc }
-      : this.rc
+      ? {
+          ...(await this.rcFile.getContentAsJson()),
+          athenna: Config.get('rc'),
+        }
+      : Config.get('rc')
 
     await this.rcFile.setContent(JSON.stringify(content, null, 2).concat('\n'))
   }

@@ -54,17 +54,15 @@ export default class MakeCommandTest {
     assert.isTrue(await File.exists(path))
     assert.isTrue(ExitFaker.faker.calledOnceWith(0))
 
-    const packageJson = await new File(Path.pwd('package.json'))
-      .getContent()
-      .then(content => JSON.parse(content.toString()))
+    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.containsSubset(Config.get('rc.commands'), ['#app/Console/Commands/TestCommand'])
-    assert.containsSubset(packageJson.athenna.commands, ['#app/Console/Commands/TestCommand'])
+    assert.containsSubset(athenna.commands, ['#app/Console/Commands/TestCommand'])
 
     assert.containsSubset(Config.get('rc.commandsManifest'), {
       testCommand: '#app/Console/Commands/TestCommand',
     })
-    assert.containsSubset(packageJson.athenna.commandsManifest, {
+    assert.containsSubset(athenna.commandsManifest, {
       testCommand: '#app/Console/Commands/TestCommand',
     })
   }

@@ -16,6 +16,8 @@ import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
 export default class TemplateCustomizeCommandTest {
+  private originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
+
   @BeforeEach()
   public async beforeEach() {
     ExitFaker.fake()
@@ -40,6 +42,8 @@ export default class TemplateCustomizeCommandTest {
 
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.resources())
+
+    await new File(Path.pwd('package.json')).setContent(this.originalPJson)
   }
 
   @Test()
@@ -48,9 +52,12 @@ export default class TemplateCustomizeCommandTest {
 
     const path = Path.resources()
 
+    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
+
     assert.isTrue(await Folder.exists(path))
     assert.isTrue(ExitFaker.faker.calledOnceWith(0))
     assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
+    assert.equal(athenna.view.templates.command, './resources/templates/command.edge')
   }
 
   @Test()

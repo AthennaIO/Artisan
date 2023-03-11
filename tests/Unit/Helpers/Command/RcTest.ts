@@ -38,7 +38,7 @@ export default class RcTest {
 
     this.rc.setRcFile(path)
 
-    assert.deepEqual(this.rc.rc, await new File(path).getContentAsJson())
+    assert.deepEqual(await this.rc.rcFile.getContentAsJson(), await new File(path).getContentAsJson())
   }
 
   @Test()

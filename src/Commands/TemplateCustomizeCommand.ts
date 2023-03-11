@@ -34,7 +34,11 @@ export class TemplateCustomizeCommand extends BaseCommand {
 
       const file = new File(path)
 
-      return file.copy(Path.resources(`templates/${file.base}`))
+      await file.copy(Path.resources(`templates/${file.base}`))
+
+      await this.rc
+        .setTo(`view.templates.${key}`, `./resources/templates/${file.base}`)
+        .save()
     })
 
     this.logger.success(
