@@ -28,7 +28,9 @@ export default class RcTest {
   @AfterEach()
   public async afterEach() {
     await Folder.safeRemove(Path.stubs('tmp'))
-    await new File(Path.stubs('.athennarc.json')).setContent(JSON.stringify(this.originalRcContent, null, 2))
+    await new File(Path.stubs('.athennarc.json')).setContent(
+      JSON.stringify(this.originalRcContent, null, 2).concat('\n'),
+    )
   }
 
   @Test()
