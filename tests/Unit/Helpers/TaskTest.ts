@@ -7,12 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Task } from '#src/Helpers/Task'
+import { BeforeEach, Test, TestContext } from '@athenna/test'
 import { RunningTaskException } from '#src/Exceptions/RunningTaskException'
 
-test.group('TaskTest', () => {
-  test('should be able to create tasks runner', async ({ assert }) => {
+export default class TaskTest {
+  @BeforeEach()
+  public async beforeEach() {
+    await Config.loadAll(Path.stubs('config'))
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateTasksRunner({ assert }: TestContext) {
     let value = 'hello'
 
     Config.set('logging.channels.console.driver', 'null')
@@ -35,9 +41,10 @@ test.group('TaskTest', () => {
       .run()
 
     assert.equal(value, 'hello')
-  })
+  }
 
-  test('should throw running task exception if executing callback without ending the task', async ({ assert }) => {
+  @Test()
+  public async shouldThrowRunningTaskExceptionIfExecutingCallbackAfterEndingTheTaskWithFail({ assert }: TestContext) {
     Config.set('logging.channels.console.driver', 'null')
 
     await assert.rejects(
@@ -49,5 +56,5 @@ test.group('TaskTest', () => {
           .run(),
       RunningTaskException,
     )
-  })
-})
+  }
+}

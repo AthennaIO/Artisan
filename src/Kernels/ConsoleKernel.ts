@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { isAbsolute, resolve } from 'node:path'
 import { Exec, File, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
@@ -39,6 +40,10 @@ export class ConsoleKernel {
       await this.resolvePath(path)
 
       return
+    }
+
+    if (!isAbsolute(path)) {
+      path = resolve(path)
     }
 
     if (!(await File.exists(path))) {
@@ -80,6 +85,9 @@ export class ConsoleKernel {
    * Resolve the import path by meta URL and import it.
    */
   private async resolvePath(path: string) {
-    return Module.resolve(path, Config.get('rc.meta'))
+    return Module.resolve(
+      `${path}?version=${Math.random()}`,
+      Config.get('rc.meta'),
+    )
   }
 }

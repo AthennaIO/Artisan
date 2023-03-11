@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.1.9",
+  "version": "3.2.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -37,7 +37,6 @@
   "types": "./build/index.d.ts",
   "exports": {
     ".": "./build/index.js",
-    "./templates/command": "./templates/command.edge",
     "./providers/ArtisanProvider": "./build/Providers/ArtisanProvider.js",
     "./commands/ListCommand": "./build/Commands/ListCommand.js",
     "./commands/ConfigureCommand": "./build/Commands/ConfigureCommand.js",
@@ -64,10 +63,11 @@
   },
   "devDependencies": {
     "@athenna/common": "^3.3.1",
-    "@athenna/config": "^3.1.2",
-    "@athenna/ioc": "^3.1.4",
-    "@athenna/logger": "^3.1.4",
-    "@athenna/view": "^3.0.1",
+    "@athenna/config": "^3.2.0",
+    "@athenna/ioc": "^3.1.5",
+    "@athenna/logger": "^3.1.5",
+    "@athenna/test": "^3.1.1",
+    "@athenna/view": "^3.0.3",
     "@japa/assert": "^1.3.6",
     "@japa/run-failed-tests": "^1.1.0",
     "@japa/runner": "^2.2.2",
@@ -120,7 +120,11 @@
       "src/Artisan/Commander.ts",
       "src/Artisan/Configurer.ts",
       "src/Commands/*",
-      "src/Types/*"
+      "src/Types/*",
+      "src/Helpers/Table.ts",
+      "src/Helpers/Sticker.ts",
+      "src/Helpers/Instruction.ts",
+      "src/Helpers/Command/Logger.ts"
     ],
     "reporter": [
       "text-summary",
@@ -220,11 +224,13 @@
       "#src/Commands/ListCommand",
       "#src/Commands/ConfigureCommand",
       "#src/Commands/MakeCommandCommand",
+      "#tests/Stubs/commands/LoadAppCommand",
       "#src/Commands/TemplateCustomizeCommand"
     ],
     "commandsManifest": {
       "test": "#tests/Stubs/Test",
       "configure": "#src/Commands/ConfigureCommand",
+      "loadapp": "#tests/Stubs/commands/LoadAppCommand",
       "make:command": "#src/Commands/MakeCommandCommand",
       "template:customize": "#src/Commands/TemplateCustomize"
     },

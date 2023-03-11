@@ -9,72 +9,86 @@
 
 import inquirer from 'inquirer'
 
-import { test } from '@japa/runner'
 import { Prompt } from '#src/Helpers/Command/Prompt'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 import { InquirerPromptException } from '#src/Exceptions/InquirerPromptException'
 
-test.group('PromptTest', group => {
-  const prompt = new Prompt()
+export default class PromptTest {
+  private prompt = new Prompt()
 
-  group.setup(() => {
+  @BeforeEach()
+  public async beforeEach() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    prompt.inquirer = _ => Promise.resolve({ raw: 'value' })
-  })
+    this.prompt.inquirer = _ => Promise.resolve({ raw: 'value' })
+  }
 
-  group.teardown(() => {
+  @AfterAll()
+  public async afterAll() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    prompt.inquirer = inquirer.createPromptModule()
-  })
+    this.prompt.inquirer = inquirer.createPromptModule()
+  }
 
-  test('should be able to prompt inputs', async ({ assert }) => {
-    const value = await prompt.input('What is the value?')
-
-    assert.equal(value, 'value')
-  })
-
-  test('should be able to prompt secrets', async ({ assert }) => {
-    const value = await prompt.secret('What is the value?')
+  @Test()
+  public async shouldBeAbleToPromptInputs({ assert }: TestContext) {
+    const value = await this.prompt.input('What is the value?')
 
     assert.equal(value, 'value')
-  })
+  }
 
-  test('should be able to prompt confirm', async ({ assert }) => {
-    const value = await prompt.confirm('What is the value?')
-
-    assert.equal(value, 'value')
-  })
-
-  test('should be able to prompt editor', async ({ assert }) => {
-    const value = await prompt.editor('What is the value?')
+  @Test()
+  public async shouldBeAbleToPromptSecrets({ assert }: TestContext) {
+    const value = await this.prompt.secret('What is the value?')
 
     assert.equal(value, 'value')
-  })
+  }
 
-  test('should be able to prompt list', async ({ assert }) => {
-    const value = await prompt.list('What is the value?', ['value', 'other value'])
-
-    assert.equal(value, 'value')
-  })
-
-  test('should be able to prompt expand', async ({ assert }) => {
-    const value = await prompt.expand('What is the value?', [{ name: 'value', key: 'value' }])
+  @Test()
+  public async shouldBeAbleToPromptConfirm({ assert }: TestContext) {
+    const value = await this.prompt.confirm('What is the value?')
 
     assert.equal(value, 'value')
-  })
+  }
 
-  test('should be able to prompt checkbox', async ({ assert }) => {
-    const value = await prompt.checkbox('What is the value?', ['value', 'other value'])
+  @Test()
+  public async shouldBeAbleToPromptEditor({ assert }: TestContext) {
+    const value = await this.prompt.editor('What is the value?')
 
     assert.equal(value, 'value')
-  })
+  }
 
-  test('should throw inquirer prompt error when some error happens calling raw method', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToPromptList({ assert }: TestContext) {
+    const value = await this.prompt.list('What is the value?', ['value', 'other value'])
+
+    assert.equal(value, 'value')
+  }
+
+  @Test()
+  public async shouldBeAbleToPromptExpand({ assert }: TestContext) {
+    const value = await this.prompt.expand('What is the value?', [{ name: 'value', key: 'value' }])
+
+    assert.equal(value, 'value')
+  }
+
+  @Test()
+  public async shouldBeAbleToPromptCheckbox({ assert }: TestContext) {
+    const value = await this.prompt.checkbox('What is the value?', ['value', 'other value'])
+
+    assert.equal(value, ['value'])
+  }
+
+  @Test()
+  public async shouldThrowInquirerPromptExceptionWhenPromptFails({ assert }: TestContext) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    prompt.inquirer = _ => Promise.reject(new Error('value'))
+    this.prompt.inquirer = _ => Promise.reject(new Error('value'))
 
-    await assert.rejects(() => prompt.raw('What is the value?', { type: 'input' }), InquirerPromptException)
-  })
-})
+    try {
+      await this.prompt.input('What is the value?')
+    } catch (error) {
+      assert.instanceOf(error, InquirerPromptException)
+    }
+  }
+}

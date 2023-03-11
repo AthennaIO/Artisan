@@ -8,22 +8,23 @@
  */
 
 import { fake } from 'sinon'
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Exec, File, Folder } from '@athenna/common'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
+import { AfterEach, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ConfigureCommandTest', group => {
-  const originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
+export default class ConfigureCommandTest {
+  private originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
+    ExitFaker.fake()
+
     process.env.IS_TS = 'true'
     process.env.ARTISAN_TESTING = 'true'
-
-    ExitFaker.fake()
 
     await Config.loadAll(Path.stubs('config'))
 
@@ -34,10 +35,11 @@ test.group('ConfigureCommandTest', group => {
     const kernel = new ConsoleKernel()
 
     await kernel.registerExceptionHandler()
-    await kernel.registerCommands(['ts-node', 'artisan', 'configure'])
-  })
+    await kernel.registerCommands()
+  }
 
-  group.each.teardown(async () => {
+  @AfterEach()
+  public async afterEach() {
     ExitFaker.release()
 
     await Folder.safeRemove(Path.app())
@@ -48,33 +50,33 @@ test.group('ConfigureCommandTest', group => {
     await File.safeRemove(Path.pwd('.env.example'))
     await File.safeRemove(Path.pwd('docker-compose.yml'))
 
-    await new File(Path.pwd('package.json')).setContent(originalPJson)
-  })
+    await new File(Path.pwd('package.json')).setContent(this.originalPJson)
+  }
 
-  test('should be able to configure paths inside the application', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToConfigurePathsInsideTheApplication({ assert }: TestContext) {
     await Artisan.call('configure ./tests/Stubs/library/build/Configurer/index.js')
 
-    const packageJson = await new File(Path.pwd('package.json'))
-      .getContent()
-      .then(content => JSON.parse(content.toString()))
+    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
-    assert.containsSubset(packageJson.athenna.commands, ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
+    assert.containsSubset(athenna.commands, ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
 
     assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
-    assert.containsSubset(packageJson.athenna.providers, ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
+    assert.containsSubset(athenna.providers, ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
 
-    assert.containsSubset(packageJson.athenna.commandsManifest, {
+    assert.containsSubset(athenna.commandsManifest, {
       'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
     })
     assert.containsSubset(Config.get('rc.commandsManifest'), {
       'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
     })
-  })
+  }
 
-  test('should be able to configure libraries inside the application and throw error when configurer does not exist', async ({
+  @Test()
+  public async shouldBeAbleToConfigureLibrariesInsideTheApplicationAndThrowErrorWhenConfigureDoesNotExist({
     assert,
-  }) => {
+  }: TestContext) {
     const originalCommand = Exec.command
     const commandFake = fake()
 
@@ -86,5 +88,5 @@ test.group('ConfigureCommandTest', group => {
 
     assert.isTrue(commandFake.calledOnceWith('npm install some-lib-name'))
     assert.isTrue(ExitFaker.faker.calledWith(1)) // <- Means that some error happened
-  })
-})
+  }
+}

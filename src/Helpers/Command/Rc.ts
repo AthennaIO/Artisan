@@ -11,9 +11,6 @@ import { File } from '@athenna/common'
 
 export class Rc {
   public rcFile: File
-  public rc: {
-    athenna: Record<string, any>
-  }
 
   public constructor() {
     this.setRcFile(Path.pwd('.athennarc.json'), true)
@@ -24,34 +21,39 @@ export class Rc {
    */
   public setRcFile(path = Path.pwd('.athennarc.json'), pjson = false): Rc {
     if (Config.is('rc.isInPackageJson', true) && pjson) {
-      path = Path.pwd('package.json')
+      this.rcFile = new File(Path.pwd('package.json'))
+
+      return this
     }
 
     this.rcFile = new File(path)
-    this.rc = this.rcFile.getContentAsJsonSync()
-
-    if (!this.rc.athenna) {
-      this.rc.athenna = {}
-    }
 
     return this
   }
 
   /**
    * Set or subscribe a KEY:VALUE property in some property of the RC configuration file.
+   * You can also pass any value as second parameter to set multiple properties at once.
    *
    * @example
    * ```ts
    * this.rc.setTo('commandsManifest', 'test', '#app/Console/Commands/TestCommand')
    * ```
+   * Or:
+   * @example
+   * ```ts
+   * this.rc.setTo('commandsManifest', { test: '#app/Console/Commands/TestCommand' })
+   * ```
    */
-  public setTo(rcKey: string, key: string, value: any): Rc {
-    Config.set(`rc.${rcKey}`, {
-      ...Config.get(`rc.${rcKey}`, {}),
-      [key]: value,
-    })
+  public setTo(rcKey: string, key: string | any, value?: any): Rc {
+    if (value) {
+      value = {
+        ...Config.get(`rc.${rcKey}`, {}),
+        [key]: value,
+      }
+    }
 
-    this.rc.athenna[rcKey] = Config.get(`rc.${rcKey}`)
+    Config.set(`rc.${rcKey}`, value || key)
 
     return this
   }
@@ -67,8 +69,6 @@ export class Rc {
   public pushTo(rcKey: string, value: any): Rc {
     Config.set(`rc.${rcKey}`, [...Config.get(`rc.${rcKey}`, []), value])
 
-    this.rc.athenna[rcKey] = Config.get(`rc.${rcKey}`)
-
     return this
   }
 
@@ -77,8 +77,11 @@ export class Rc {
    */
   public async save(): Promise<void> {
     const content = Config.is('rc.isInPackageJson', true)
-      ? this.rc
-      : this.rc.athenna
+      ? {
+          ...(await this.rcFile.getContentAsJson()),
+          athenna: Config.get('rc'),
+        }
+      : Config.get('rc')
 
     await this.rcFile.setContent(JSON.stringify(content, null, 2).concat('\n'))
   }

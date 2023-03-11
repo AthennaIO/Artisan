@@ -7,61 +7,68 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
-import { Config } from '@athenna/config'
-import { Folder } from '@athenna/common'
-import { ViewProvider } from '@athenna/view'
-import { LoggerProvider } from '@athenna/logger'
-import { Artisan, ArtisanProvider, CommanderHandler, ConsoleKernel } from '#src'
+import { CommanderHandler } from '#src'
+import { ListCommand } from '#src/Commands/ListCommand'
+import { BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('CommanderHandlerTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class CommanderHandlerTest {
+  @BeforeEach()
+  public async beforeEach() {
+    CommanderHandler.getCommander<any>()._events = {}
+    CommanderHandler.getCommander<any>().commands = []
+    CommanderHandler.getCommander<any>()._version = undefined
+  }
 
-  group.each.setup(async () => {
-    process.env.IS_TS = 'true'
+  @Test()
+  public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommander({ assert }: TestContext) {
+    CommanderHandler.getCommander()
+      .command('configure <libraries>')
+      .description('Configure one or more libraries inside your application.')
 
-    await Config.loadAll(Path.stubs('config'))
-
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-
-    const kernel = new ConsoleKernel()
-
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  })
-
-  group.each.teardown(async () => {
-    await Folder.safeRemove(Path.app())
-  })
-
-  test('should be able to get all the commands registered inside commander', async ({ assert }) => {
     const commands = CommanderHandler.getCommands()
 
     assert.deepEqual(commands, {
       'configure <libraries>': 'Configure one or more libraries inside your application.',
-      'test [options] <requiredArg> [notRequiredArg]': 'The description of test command.',
-      'make:command <name>': 'Make a new command file.',
-      'list <alias>': 'List all commands available of the alias.',
-      'template:customize':
-        'Export all the templates files registered in "rc.view.templates" to the "resources/templates" path.',
     })
-  })
+  }
 
-  test('should be able to get all the commands registered inside commander by some alias', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommanderBySomeAlias({ assert }: TestContext) {
+    CommanderHandler.getCommander()
+      .command('configure <libraries>')
+      .description('Configure one or more libraries inside your application.')
+
+    CommanderHandler.getCommander().command('make:command <name>').description('Make a new command file.')
+    CommanderHandler.getCommander().command('make:controller <name>').description('Make a new controller file.')
+
     const commands = CommanderHandler.getCommands('make')
 
     assert.deepEqual(commands, {
       'make:command <name>': 'Make a new command file.',
+      'make:controller <name>': 'Make a new controller file.',
     })
-  })
+  }
 
-  test('should be able to set the oficial Athenna version if none is used', async ({ assert }) => {
-    Config.delete('app.version')
+  @Test()
+  public async shouldBeAbleToSetTheCliVersion({ assert }: TestContext) {
+    CommanderHandler.setVersion('v3.0.0')
 
-    const { stdout } = await Artisan.callInChild('--version', artisan)
+    assert.equal(CommanderHandler.getCommander<any>()._version, 'v3.0.0')
+  }
 
-    assert.isTrue(stdout.includes('Athenna Framework 3.0.0'))
-  })
-})
+  @Test()
+  public async shouldBeAbleToSetTheOficialAthennaVersionIfNoneIsVersionIsSed({ assert }: TestContext) {
+    CommanderHandler.setVersion()
+
+    assert.equal(CommanderHandler.getCommander<any>()._version, 'Athenna Framework v3.0.0')
+  }
+
+  @Test()
+  public async shouldBeAbleToGetTheExecMethodBindedWithoutExceptionHandler({ assert }: TestContext) {
+    CommanderHandler.setExceptionHandler(undefined)
+
+    const exec = CommanderHandler.bindHandler(new ListCommand())
+
+    assert.isDefined(exec)
+  }
+}

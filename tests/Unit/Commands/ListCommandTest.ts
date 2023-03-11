@@ -7,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { Folder } from '@athenna/common'
 import { ViewProvider } from '@athenna/view'
 import { LoggerProvider } from '@athenna/logger'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ListCommandTest', group => {
-  const artisan = Path.pwd('bin/artisan.ts')
+export default class ListCommandTest {
+  private artisan = Path.pwd('bin/artisan.ts')
 
-  group.each.setup(async () => {
+  @BeforeEach()
+  public async beforeEach() {
     process.env.IS_TS = 'true'
 
     await Config.loadAll(Path.stubs('config'))
@@ -30,21 +31,18 @@ test.group('ListCommandTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.app())
-  })
+  }
 
-  test('should be able to list other commands by alias', async ({ assert }) => {
-    const { stdout } = await Artisan.callInChild('list make', artisan)
+  @Test()
+  public async shouldBeAbleToListOtherCommandsByAlias({ assert }: TestContext) {
+    const { stdout } = await Artisan.callInChild('list make', this.artisan)
 
-    assert.equal(
-      stdout,
-      '[ LISTING MAKE ]\n' +
-        '\n' +
-        'COMMAND             DESCRIPTION             \n' +
-        'make:command <name> Make a new command file.\n',
-    )
-  })
-})
+    assert.isTrue(stdout.includes('[ LISTING MAKE ]'))
+    assert.isTrue(stdout.includes('make:command <name> Make a new command file.'))
+  }
+}

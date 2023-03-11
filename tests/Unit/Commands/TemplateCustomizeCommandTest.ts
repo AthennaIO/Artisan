@@ -7,16 +7,19 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
 import { Config } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker } from '#tests/Helpers/ExitFaker'
 import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
+import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('TemplateCustomizeCommandTest', group => {
-  group.each.setup(async () => {
+export default class TemplateCustomizeCommandTest {
+  private originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
+
+  @BeforeEach()
+  public async beforeEach() {
     ExitFaker.fake()
 
     process.env.IS_TS = 'true'
@@ -31,28 +34,36 @@ test.group('TemplateCustomizeCommandTest', group => {
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
-  })
+  }
 
-  group.each.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     ExitFaker.release()
 
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.resources())
-  })
 
-  test('should be able to publish the athenna templates to do custom customizations', async ({ assert }) => {
+    await new File(Path.pwd('package.json')).setContent(this.originalPJson)
+  }
+
+  @Test()
+  public async shouldBeAbleToPublishTheAthennaTemplatesToDoCustomCustomizations({ assert }: TestContext) {
     await Artisan.call('template:customize')
 
     const path = Path.resources()
 
+    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
+
     assert.isTrue(await Folder.exists(path))
     assert.isTrue(ExitFaker.faker.calledOnceWith(0))
     assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
-  })
+    assert.equal(athenna.view.templates.command, './resources/templates/command.edge')
+  }
 
-  test('should not export templates that are already inside resources/templates path', async ({ assert }) => {
+  @Test()
+  public async shouldNotExportTemplatesThatAreAlreadyInsideResourcesTemplatesPath({ assert }: TestContext) {
     const templatePath = Path.resources('templates/test.edge')
-    await new File(templatePath, Buffer.from('')).load()
+    await new File(templatePath, '').load()
 
     Config.set('view.templates.paths.test', templatePath)
 
@@ -64,5 +75,5 @@ test.group('TemplateCustomizeCommandTest', group => {
     assert.isTrue(await File.exists(templatePath))
     assert.isTrue(ExitFaker.faker.calledOnceWith(0))
     assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
-  })
-})
+  }
+}

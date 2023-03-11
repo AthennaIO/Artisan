@@ -7,59 +7,133 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
-import { Config } from '@athenna/config'
-import { ViewProvider } from '@athenna/view'
-import { Exec, Folder } from '@athenna/common'
-import { LoggerProvider } from '@athenna/logger'
-import { ArtisanProvider, ConsoleKernel } from '#src'
+import { fake } from 'sinon'
+import { Exception } from '@athenna/common'
+import { ConsoleExceptionHandler } from '#src'
+import { ExitFaker } from '#tests/Helpers/ExitFaker'
+import { Log, LoggerProvider } from '@athenna/logger'
+import { BeforeEach, Test, TestContext } from '@athenna/test'
 
-test.group('ConsoleExceptionHandlerTest', group => {
-  group.each.setup(async () => {
-    process.env.IS_TS = 'true'
+export default class ConsoleExceptionHandlerTest {
+  @BeforeEach()
+  public async beforeEach() {
+    ExitFaker.fake()
+    Config.set('app.debug', true)
 
-    await Config.loadAll(Path.stubs('config'))
-
-    new ViewProvider().register()
     new LoggerProvider().register()
-    new ArtisanProvider().register()
+  }
 
-    const kernel = new ConsoleKernel()
+  @Test()
+  public async shouldBeAbleToLogThePrettyExceptionFromErrorInstances({ assert }: TestContext) {
+    const mock = Log.getMock()
+    mock
+      .expects('channelOrVanilla')
+      .exactly(1)
+      .withArgs('exception')
+      .returns({ error: () => {} })
 
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  })
+    await new ConsoleExceptionHandler().handle(new Error())
 
-  group.each.teardown(async () => {
-    await Folder.safeRemove(Path.app())
-  })
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
 
-  test('should be able to log the pretty exception from Error instances', async ({ assert }) => {
-    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error`, {
-      ignoreErrors: true,
+  @Test()
+  public async shouldBeAbleToLogThePrettyExceptionFromExceptionInstances({ assert }: TestContext) {
+    const mock = Log.getMock()
+    mock
+      .expects('channelOrVanilla')
+      .exactly(1)
+      .withArgs('exception')
+      .returns({ error: () => {} })
+
+    await new ConsoleExceptionHandler().handle(new Exception())
+
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
+
+  @Test()
+  public async shouldBeAbleToLogInTheConsoleChannelIfTheExceptionCodeIsE_SIMPLE_CLI({ assert }: TestContext) {
+    const mock = Log.getMock()
+    mock
+      .expects('channelOrVanilla')
+      .exactly(1)
+      .withArgs('console')
+      .returns({ error: () => {} })
+
+    await new ConsoleExceptionHandler().handle(new Exception({ code: 'E_SIMPLE_CLI' }))
+
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
+
+  @Test()
+  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalError({ assert }: TestContext) {
+    Config.set('app.debug', false)
+
+    const mockedError = fake()
+    const mock = Log.getMock()
+    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+
+    await new ConsoleExceptionHandler().handle(new Error('hello'))
+
+    const exception = new Exception({
+      message: 'An internal server exception has occurred.',
+      code: 'E_INTERNAL_SERVER_ERROR',
+      status: 500,
     })
 
-    assert.isTrue(stderr.includes('hello'))
-    assert.isTrue(stderr.includes('ERROR'))
-  })
+    delete exception.stack
 
-  test('should be able to log the pretty exception from Exception instances', async ({ assert }) => {
-    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- exception`, {
-      ignoreErrors: true,
+    assert.isTrue(mockedError.calledWith(await exception.prettify()))
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
+
+  @Test()
+  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalTypeError({ assert }: TestContext) {
+    Config.set('app.debug', false)
+
+    const mockedError = fake()
+    const mock = Log.getMock()
+    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+
+    await new ConsoleExceptionHandler().handle(new TypeError('hello'))
+
+    const exception = new Exception({
+      message: 'An internal server exception has occurred.',
+      code: 'E_INTERNAL_SERVER_ERROR',
+      status: 500,
     })
 
-    assert.isTrue(stderr.includes('hello'))
-    assert.isTrue(stderr.includes('world'))
-    assert.isTrue(stderr.includes('HELP'))
-    assert.isTrue(stderr.includes('EXCEPTION'))
-  })
+    delete exception.stack
 
-  test('should be able to hide errors if debug mode is not activated', async ({ assert }) => {
-    const { stderr } = await Exec.command(`npm run node ${Path.stubs('exceptionHandler.ts')} -- error --no-debug`, {
-      ignoreErrors: true,
+    assert.isTrue(mockedError.calledWith(await exception.prettify()))
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
+
+  @Test()
+  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalSyntaxError({ assert }: TestContext) {
+    Config.set('app.debug', false)
+
+    const mockedError = fake()
+    const mock = Log.getMock()
+    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+
+    await new ConsoleExceptionHandler().handle(new SyntaxError('hello'))
+
+    const exception = new Exception({
+      message: 'An internal server exception has occurred.',
+      code: 'E_INTERNAL_SERVER_ERROR',
+      status: 500,
     })
 
-    assert.isTrue(stderr.includes('ERROR'))
-    assert.isTrue(stderr.includes('An\ninternal\nserver\nexception\nhas\noccurred.'))
-  })
-})
+    delete exception.stack
+
+    assert.isTrue(mockedError.calledWith(await exception.prettify()))
+    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
+    mock.verify()
+  }
+}
