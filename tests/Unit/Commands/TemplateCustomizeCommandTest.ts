@@ -7,45 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import { Artisan } from '#src'
 import { Config } from '@athenna/config'
-import { ViewProvider } from '@athenna/view'
 import { File, Folder } from '@athenna/common'
-import { LoggerProvider } from '@athenna/logger'
-import { ExitFaker } from '#tests/Helpers/ExitFaker'
-import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import { Test, ExitFaker, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 
-export default class TemplateCustomizeCommandTest {
-  private originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
-
-  @BeforeEach()
-  public async beforeEach() {
-    ExitFaker.fake()
-
-    process.env.IS_TS = 'true'
-
-    await Config.loadAll(Path.stubs('config'))
-
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-
-    const kernel = new ConsoleKernel()
-
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    ExitFaker.release()
-
-    await Folder.safeRemove(Path.app())
-    await Folder.safeRemove(Path.resources())
-
-    await new File(Path.pwd('package.json')).setContent(this.originalPJson)
-  }
-
+export default class TemplateCustomizeCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToPublishTheAthennaTemplatesToDoCustomCustomizations({ assert }: TestContext) {
     await Artisan.call('template:customize')

@@ -8,21 +8,13 @@
  */
 
 import { fake } from 'sinon'
+import { Log } from '@athenna/logger'
 import { Exception } from '@athenna/common'
 import { ConsoleExceptionHandler } from '#src'
-import { ExitFaker } from '#tests/Helpers/ExitFaker'
-import { Log, LoggerProvider } from '@athenna/logger'
-import { BeforeEach, Test, TestContext } from '@athenna/test'
+import { Test, ExitFaker, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 
-export default class ConsoleExceptionHandlerTest {
-  @BeforeEach()
-  public async beforeEach() {
-    ExitFaker.fake()
-    Config.set('app.debug', true)
-
-    new LoggerProvider().register()
-  }
-
+export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToLogThePrettyExceptionFromErrorInstances({ assert }: TestContext) {
     const mock = Log.getMock()

@@ -8,19 +8,15 @@
  */
 
 import { CommanderHandler } from '#src'
+import { Test, TestContext } from '@athenna/test'
 import { ListCommand } from '#src/Commands/ListCommand'
-import { BeforeEach, Test, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 
-export default class CommanderHandlerTest {
-  @BeforeEach()
-  public async beforeEach() {
-    CommanderHandler.getCommander<any>()._events = {}
-    CommanderHandler.getCommander<any>().commands = []
-    CommanderHandler.getCommander<any>()._version = undefined
-  }
-
+export default class CommanderHandlerTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommander({ assert }: TestContext) {
+    CommanderHandler.getCommander<any>().commands = []
+
     CommanderHandler.getCommander()
       .command('configure <libraries>')
       .description('Configure one or more libraries inside your application.')
@@ -34,6 +30,8 @@ export default class CommanderHandlerTest {
 
   @Test()
   public async shouldBeAbleToGetAllTheCommandsRegisteredInsideCommanderBySomeAlias({ assert }: TestContext) {
+    // CommanderHandler.getCommander<any>().commands = []
+
     CommanderHandler.getCommander()
       .command('configure <libraries>')
       .description('Configure one or more libraries inside your application.')
