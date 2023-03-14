@@ -7,37 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '@athenna/config'
-import { Folder } from '@athenna/common'
-import { ViewProvider } from '@athenna/view'
-import { LoggerProvider } from '@athenna/logger'
-import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import { Artisan } from '#src'
+import { Test, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 
-export default class ListCommandTest {
-  private artisan = Path.pwd('bin/artisan.ts')
-
-  @BeforeEach()
-  public async beforeEach() {
-    process.env.IS_TS = 'true'
-
-    await Config.loadAll(Path.stubs('config'))
-
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-
-    const kernel = new ConsoleKernel()
-
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    await Folder.safeRemove(Path.app())
-  }
-
+export default class ListCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToListOtherCommandsByAlias({ assert }: TestContext) {
     const { stdout } = await Artisan.callInChild('list make', this.artisan)

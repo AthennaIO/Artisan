@@ -10,39 +10,11 @@
 import figlet from 'figlet'
 
 import { fake } from 'sinon'
-import { Config } from '@athenna/config'
-import { Folder } from '@athenna/common'
-import { ViewProvider } from '@athenna/view'
-import { LoggerProvider } from '@athenna/logger'
-import { ExitFaker } from '#tests/Helpers/ExitFaker'
-import { Artisan, ArtisanProvider, ConsoleKernel } from '#src'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
+import { Artisan } from '#src'
+import { Test, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 
-export default class ArtisanTest {
-  private artisan = Path.pwd('bin/artisan.ts')
-
-  @BeforeEach()
-  public async beforeEach() {
-    ExitFaker.fake()
-    process.env.IS_TS = 'true'
-
-    await Config.loadAll(Path.stubs('config'))
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-
-    const kernel = new ConsoleKernel()
-
-    await kernel.registerExceptionHandler()
-    await kernel.registerCommands()
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    ExitFaker.release()
-    await Folder.safeRemove(Path.app())
-  }
-
+export default class ArtisanTest extends BaseCommandTest {
   @Test()
   public async shouldThrowAnErrorWhenTryingToExecuteACommandThatDoesNotExist({ assert }: TestContext) {
     const { stderr } = await Artisan.callInChild('not-found', this.artisan)

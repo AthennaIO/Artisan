@@ -9,36 +9,17 @@
 
 import 'reflect-metadata'
 
-import { Config } from '@athenna/config'
-import { ViewProvider } from '@athenna/view'
-import { LoggerProvider } from '@athenna/logger'
-import { ExitFaker } from '#tests/Helpers/ExitFaker'
+import { Test, ExitFaker, TestContext } from '@athenna/test'
+import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 import { ThrowCommand } from '#tests/Stubs/commands/ThrowCommand'
-import { AfterAll, BeforeEach, Test, TestContext } from '@athenna/test'
-import { ArtisanProvider, CommanderHandler, COMMANDS_SETTINGS, ConsoleKernel } from '#src'
+import { CommanderHandler, COMMANDS_SETTINGS, ConsoleKernel } from '#src'
 
-export default class ConsoleKernelTest {
-  @BeforeEach()
-  public async beforeEach() {
-    ExitFaker.fake()
-
-    await Config.loadAll(Path.stubs('config'))
-
-    COMMANDS_SETTINGS.clear()
-    CommanderHandler.getCommander().commands = []
-
-    new ViewProvider().register()
-    new LoggerProvider().register()
-    new ArtisanProvider().register()
-  }
-
-  @AfterAll()
-  public async afterAll() {
-    ExitFaker.release()
-  }
-
+export default class ConsoleKernelTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToRegisterCommandsUsingConsoleKernel({ assert }: TestContext) {
+    COMMANDS_SETTINGS.clear()
+    CommanderHandler.getCommander<any>().commands = []
+
     await new ConsoleKernel().registerCommands()
 
     assert.isDefined(COMMANDS_SETTINGS.get('make:command'))
@@ -47,6 +28,9 @@ export default class ConsoleKernelTest {
 
   @Test()
   public async shouldBeAbleToRegisterCommandsByArgvUsingConsoleKernel({ assert }: TestContext) {
+    COMMANDS_SETTINGS.clear()
+    CommanderHandler.getCommander<any>().commands = []
+
     await new ConsoleKernel().registerCommands(['node', 'artisan', 'make:command'])
 
     assert.equal(COMMANDS_SETTINGS.size, 1)
@@ -56,6 +40,9 @@ export default class ConsoleKernelTest {
 
   @Test()
   public async shouldBeAbleToRegisterRouteFilesUsingConsoleKernel({ assert }: TestContext) {
+    COMMANDS_SETTINGS.clear()
+    CommanderHandler.getCommander<any>().commands = []
+
     await new ConsoleKernel().registerRouteCommands('./bin/console.ts')
 
     assert.isDefined(CommanderHandler.getCommands()['hello <hello>'])
@@ -63,6 +50,9 @@ export default class ConsoleKernelTest {
 
   @Test()
   public async shouldBeAbleToRegisterRouteFilesWithImportAliasUsingConsoleKernel({ assert }: TestContext) {
+    COMMANDS_SETTINGS.clear()
+    CommanderHandler.getCommander<any>().commands = []
+
     await new ConsoleKernel().registerRouteCommands('#tests/Stubs/routes/console')
 
     assert.isDefined(CommanderHandler.getCommands()['importalias'])
@@ -70,6 +60,8 @@ export default class ConsoleKernelTest {
 
   @Test()
   public async shouldBeAbleToSetCustomExceptionHandlerUsingConsoleKernel({ assert }: TestContext) {
+    CommanderHandler.setExceptionHandler(null)
+
     await new ConsoleKernel().registerExceptionHandler('#tests/Stubs/handlers/Handler')
 
     const exec = CommanderHandler.bindHandler(new ThrowCommand())
