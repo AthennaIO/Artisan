@@ -148,7 +148,7 @@ export class ArtisanImpl {
        * In CLI entrypoint we are going to log the
        * chalkRainbow with his application name.
        */
-      if (process.argv.length <= 2) {
+      if (argv.length <= 2) {
         const appNameFiglet = figlet.textSync(appName)
         const appNameFigletColorized = chalkRainbow(appNameFiglet)
 
