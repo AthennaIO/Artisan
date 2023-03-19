@@ -8,7 +8,7 @@
  */
 
 import { isAbsolute, resolve } from 'node:path'
-import { Exec, File, Module } from '@athenna/common'
+import { Exec, File, Is, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
 export class ConsoleKernel {
@@ -18,13 +18,15 @@ export class ConsoleKernel {
    */
   public async registerCommands(argv: string[] = []) {
     const commandName = argv[2]
-    const path = Config.get(`rc.commandsManifest.${commandName}`)
+    let path = Config.get(`rc.commandsManifest.${commandName}`)
 
     if (path) {
+      path = Is.String(path) ? path : path.path
+
       return this.registerCommandByPath(path)
     }
 
-    await Exec.concurrently(Config.get('rc.commands'), path =>
+    await Exec.concurrently(Config.get('rc.commands', []), path =>
       this.registerCommandByPath(path),
     )
   }
