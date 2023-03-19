@@ -10,6 +10,7 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
+import { platform } from 'node:os'
 import { Config } from '@athenna/config'
 import { Exec, Path } from '@athenna/common'
 import { Decorator } from '#src/Helpers/Decorator'
@@ -113,10 +114,11 @@ export class ArtisanImpl {
     command: string,
     path = Path.pwd(`artisan.${Path.ext()}`),
   ): Promise<{ stdout: string; stderr: string }> {
-    const executor = `cd ${Path.pwd()} && npm run node`
+    const separator = platform() === 'win32' ? '&' : '&&'
+    const executor = `cd ${Path.pwd()} ${separator} npm run node`
 
     if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} && ${executor} ${path} -- ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${path} -- ${command}`
     } else {
       command = `${executor} ${path} -- ${command}`
     }
