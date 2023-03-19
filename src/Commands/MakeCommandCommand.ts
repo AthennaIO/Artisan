@@ -9,7 +9,7 @@
 
 import { BaseCommand, Argument } from '#src'
 import { Path, String } from '@athenna/common'
-import { resolve, isAbsolute } from 'node:path'
+import { sep, resolve, isAbsolute } from 'node:path'
 
 export class MakeCommandCommand extends BaseCommand {
   @Argument({
@@ -58,7 +58,7 @@ export class MakeCommandCommand extends BaseCommand {
    * Get the file path where it will be generated.
    */
   private getFilePath(): string {
-    return this.getDestinationPath().concat(`/${this.name}.${Path.ext()}`)
+    return this.getDestinationPath().concat(`${sep}${this.name}.${Path.ext()}`)
   }
 
   /**
@@ -83,6 +83,9 @@ export class MakeCommandCommand extends BaseCommand {
   private getImportPath(fileName: string): string {
     const destination = this.getDestinationPath()
 
-    return `#${destination.replace(`${Path.pwd()}/`, '')}/${fileName}`
+    return `${destination
+      .replace(Path.pwd(), '')
+      .replace(/\\/g, '/')
+      .replace('/', '#')}/${fileName}`
   }
 }
