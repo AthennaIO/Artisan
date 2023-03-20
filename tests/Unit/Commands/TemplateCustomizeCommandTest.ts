@@ -29,11 +29,11 @@ export default class TemplateCustomizeCommandTest extends BaseCommandTest {
   }
 
   @Test()
-  public async shouldNotExportTemplatesThatAreAlreadyInsideResourcesTemplatesPath({ assert }: TestContext) {
+  public async shouldNotThrowErrorsIfTheTemplatePathAlreadyExistsInsideResourcesTemplates({ assert }: TestContext) {
     const templatePath = Path.resources('templates/test.edge')
     await new File(templatePath, '').load()
 
-    Config.set('view.templates.paths.test', templatePath)
+    Config.set('rc.view.templates.test', templatePath)
 
     await Artisan.call('template:customize')
 

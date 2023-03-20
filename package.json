@@ -62,7 +62,7 @@
     "ora": "^6.1.2"
   },
   "devDependencies": {
-    "@athenna/common": "^3.3.1",
+    "@athenna/common": "^3.3.4",
     "@athenna/config": "^3.2.0",
     "@athenna/ioc": "^3.1.5",
     "@athenna/logger": "^3.1.5",
