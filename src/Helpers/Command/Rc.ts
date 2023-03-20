@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { File } from '@athenna/common'
+import { File, ObjectBuilder } from '@athenna/common'
 
 export class Rc {
   public rcFile: File
+  public content: ObjectBuilder
 
   public constructor() {
     this.setRcFile(Path.pwd('.athennarc.json'), true)
@@ -20,13 +21,19 @@ export class Rc {
    * Set the RC file that the Rc class should work with.
    */
   public setRcFile(path = Path.pwd('.athennarc.json'), pjson = false): Rc {
+    this.content = new ObjectBuilder({ referencedValues: false })
+
     if (Config.is('rc.isInPackageJson', true) && pjson) {
-      this.rcFile = new File(Path.pwd('package.json'))
+      this.rcFile = new File(Path.pwd('package.json')).loadSync({
+        withContent: true,
+      })
+      this.content.set(this.rcFile.getContentAsJsonSync().athenna)
 
       return this
     }
 
-    this.rcFile = new File(path)
+    this.rcFile = new File(path).loadSync({ withContent: true })
+    this.content.set(this.rcFile.getContentAsJsonSync())
 
     return this
   }
@@ -47,13 +54,12 @@ export class Rc {
    */
   public setTo(rcKey: string, key: string | any, value?: any): Rc {
     if (value) {
-      value = {
-        ...Config.get(`rc.${rcKey}`, {}),
-        [key]: value,
-      }
+      value = { ...this.content.get(rcKey, {}), [key]: value }
     }
 
-    Config.set(`rc.${rcKey}`, value || key)
+    this.content.set(rcKey, value || key)
+
+    Config.set(`rc.${rcKey}`, this.content.get(rcKey))
 
     return this
   }
@@ -67,7 +73,9 @@ export class Rc {
    * ```
    */
   public pushTo(rcKey: string, value: any): Rc {
-    Config.set(`rc.${rcKey}`, [...Config.get(`rc.${rcKey}`, []), value])
+    this.content.set(rcKey, [...this.content.get(rcKey, []), value])
+
+    Config.set(`rc.${rcKey}`, this.content.get(rcKey))
 
     return this
   }
@@ -76,13 +84,27 @@ export class Rc {
    * Save the new content in the Rc file.
    */
   public async save(): Promise<void> {
-    const content = Config.is('rc.isInPackageJson', true)
-      ? {
-          ...(await this.rcFile.getContentAsJson()),
-          athenna: Config.get('rc'),
-        }
-      : Config.get('rc')
+    if (Config.is('rc.isInPackageJson', true)) {
+      const packageJson = this.rcFile.getContentAsJsonSync()
 
-    await this.rcFile.setContent(JSON.stringify(content, null, 2).concat('\n'))
+      packageJson.athenna = this.content.get()
+
+      await this.rcFile.setContent(this.toStringJson(packageJson))
+
+      return
+    }
+
+    let athennaRcJson = this.rcFile.getContentAsJsonSync()
+
+    athennaRcJson = this.content.get()
+
+    await this.rcFile.setContent(this.toStringJson(athennaRcJson))
+  }
+
+  /**
+   * Parse the object value to JSON string.
+   */
+  private toStringJson(value: any): string {
+    return JSON.stringify(value, null, 2).concat('\n')
   }
 }

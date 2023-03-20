@@ -25,6 +25,9 @@ export default class MakeCommandTest extends BaseCommandTest {
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
+    assert.equal(Config.get('rc.isInPackageJson', false), true)
+    assert.notContainsSubset(athenna.commands, { isInPackageJson: true })
+
     assert.containsSubset(Config.get('rc.commands'), ['#app/Console/Commands/TestCommand'])
     assert.containsSubset(athenna.commands, ['#app/Console/Commands/TestCommand'])
 
