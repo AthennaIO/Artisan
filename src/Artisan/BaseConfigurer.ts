@@ -23,7 +23,11 @@ export abstract class BaseConfigurer {
    * Path class will be referencing the path of your
    * application.
    */
-  public paths = {}
+  public paths: {
+    configurerClass?: string
+    configurer?: string
+    pwd?: string
+  } = {}
 
   /**
    * The Rc helper used to manage the .athennarc.json
