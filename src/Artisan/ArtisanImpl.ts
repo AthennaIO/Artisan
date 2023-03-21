@@ -112,15 +112,15 @@ export class ArtisanImpl {
    */
   public async callInChild(
     command: string,
-    path = Path.pwd(`artisan.${Path.ext()}`),
+    path = Path.bootstrap(`artisan.${Path.ext()}`),
   ): Promise<{ stdout: string; stderr: string }> {
     const separator = platform() === 'win32' ? '&' : '&&'
-    const executor = `cd ${Path.pwd()} ${separator} npm run node`
+    const executor = `cd ${Path.pwd()} ${separator} sh node`
 
     if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${path} -- ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${path} ${command}`
     } else {
-      command = `${executor} ${path} -- ${command}`
+      command = `${executor} ${path} ${command}`
     }
 
     return Exec.command(command, { ignoreErrors: true })
