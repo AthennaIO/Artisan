@@ -23,6 +23,7 @@ export class TemplateCustomizeCommand extends BaseCommand {
   public async handle(): Promise<void> {
     this.logger.simple('({bold,green} [ MOVING TEMPLATES ])\n')
 
+    const templates: any = {}
     const paths = Config.get('rc.view.templates')
 
     await Exec.concurrently(Object.keys(paths), async key => {
@@ -36,10 +37,18 @@ export class TemplateCustomizeCommand extends BaseCommand {
 
       await file.copy(Path.resources(`templates/${file.base}`))
 
-      await this.rc
-        .setTo(`view.templates.${key}`, `./resources/templates/${file.base}`)
-        .save()
+      templates[key] = `./resources/templates/${file.base}`
     })
+
+    await this.rc.setTo('view.templates', templates).save()
+
+    this.logger.success(
+      `Athenna RC updated: ({dim,yellow} { view.templates = ${JSON.stringify(
+        templates,
+        null,
+        2,
+      )} })`,
+    )
 
     this.logger.success(
       'Template files successfully moved to ({yellow} resources/templates) folder.',
