@@ -96,12 +96,14 @@ export class Logger extends AthennaLogger {
    * ```
    */
   public spinner(msgOrOpts?: string | Options): Ora {
-    const options: any = {
+    let options: any = {
       isSilent: Config.is('logging.channels.console.driver', 'null'),
     }
 
     if (Is.String(msgOrOpts)) {
       options.text = msgOrOpts
+    } else {
+      options = { ...options, ...msgOrOpts }
     }
 
     return ora(options)
@@ -137,12 +139,14 @@ export class Logger extends AthennaLogger {
     promise: any,
     msgOrOpts?: string | PromiseOptions<T>,
   ): Promise<T> {
-    const options: any = {
+    let options: any = {
       isSilent: Config.is('logging.channels.console.driver', 'null'),
     }
 
     if (Is.String(msgOrOpts)) {
       options.text = msgOrOpts
+    } else {
+      options = { ...options, ...msgOrOpts }
     }
 
     return oraPromise(promise, options)
