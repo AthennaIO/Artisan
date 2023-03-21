@@ -9,7 +9,7 @@
 
 import { resolve } from 'node:path'
 import { Argument, BaseCommand } from '#src'
-import { Exec, File, Module } from '@athenna/common'
+import { Color, Exec, File, Module } from '@athenna/common'
 import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
 
 export class ConfigureCommand extends BaseCommand {
@@ -53,9 +53,11 @@ export class ConfigureCommand extends BaseCommand {
 
     if (!isFile && !isInstalled) {
       await this.logger.promiseSpinner(Exec.command(`npm install ${library}`), {
-        text: `Installing ${library} library`,
-        failText: `Failed to install ${library} library`,
-        successText: `Library ${library} succesfully installed`,
+        text: `Installing ${Color.chalk.magenta(library)} library`,
+        failText: `Failed to install ${Color.chalk.magenta(library)} library`,
+        successText: `Library ${Color.chalk.magenta(
+          library,
+        )} succesfully installed`,
       })
     }
 
