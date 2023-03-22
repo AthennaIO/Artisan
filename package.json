@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.3.5",
+  "version": "3.3.6",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -16,33 +16,27 @@
     "athenna"
   ],
   "scripts": {
-    "build": "sh node bin/build.ts",
-    "artisan": "sh node bin/artisan.ts",
-    "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
+    "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
     "test": "npm run --silent lint:fix && sh node bin/test.ts",
     "test:debug": "cross-env DEBUG=api:* sh node --inspect bin/test.ts",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
-    "build/*.js",
-    "build/*.d.ts",
-    "build/**/*.js",
-    "build/**/*.d.ts",
-    "templates/*",
-    "templates/**/*"
+    "src/*.js",
+    "src/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "templates"
   ],
   "type": "module",
-  "main": "./build/index.js",
-  "types": "./build/index.d.ts",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./providers/ArtisanProvider": "./build/Providers/ArtisanProvider.js",
-    "./commands/ListCommand": "./build/Commands/ListCommand.js",
-    "./commands/ConfigureCommand": "./build/Commands/ConfigureCommand.js",
-    "./commands/MakeCommandCommand": "./build/Commands/MakeCommandCommand.js",
-    "./commands/TemplateCustomizeCommand": "./build/Commands/TemplateCustomizeCommand.js"
+    ".": "./src/index.js"
   },
   "imports": {
+    "#bin/*": "./bin/*.js",
+    "#bin": "./bin/index.js",
     "#src/*": "./src/*.js",
     "#src": "./src/index.js",
     "#tests/*": "./tests/*.js",
@@ -61,12 +55,12 @@
     "ora": "^6.1.2"
   },
   "devDependencies": {
-    "@athenna/common": "^3.4.2",
-    "@athenna/config": "^3.2.1",
-    "@athenna/ioc": "^3.1.6",
-    "@athenna/logger": "^3.1.6",
-    "@athenna/test": "^3.2.2",
-    "@athenna/view": "^3.0.5",
+    "@athenna/common": "^3.4.4",
+    "@athenna/config": "^3.2.3",
+    "@athenna/ioc": "^3.1.8",
+    "@athenna/logger": "^3.1.7",
+    "@athenna/test": "^3.2.3",
+    "@athenna/view": "^3.0.6",
     "@japa/assert": "^1.3.6",
     "@japa/run-failed-tests": "^1.1.0",
     "@japa/runner": "^2.2.2",
