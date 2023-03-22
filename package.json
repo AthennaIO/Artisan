@@ -32,7 +32,12 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js",
+    "./commands/ListCommand": "./src/Commands/ListCommand.js",
+    "./commands/ConfigureCommand": "./src/Commands/ConfigureCommand.js",
+    "./commands/MakeCommandCommand": "./src/Commands/MakeCommandCommand.js",
+    "./commands/TemplateCustomizeCommand": "./src/Commands/TemplateCustomizeCommand.js"
   },
   "imports": {
     "#bin/*": "./bin/*.js",
