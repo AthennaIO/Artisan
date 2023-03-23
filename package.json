@@ -33,6 +33,8 @@
   "types": "./src/index.d.ts",
   "exports": {
     ".": "./src/index.js",
+    "./kernels/ConsoleKernel": "./src/Kernels/ConsoleKernel.js",
+    "./handlers/ConsoleExceptionHandler": "./src/Handlers/ConsoleExceptionHandler.js",
     "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js",
     "./commands/ListCommand": "./src/Commands/ListCommand.js",
     "./commands/ConfigureCommand": "./src/Commands/ConfigureCommand.js",
@@ -65,7 +67,7 @@
     "@athenna/ioc": "^3.1.8",
     "@athenna/logger": "^3.1.7",
     "@athenna/test": "^3.2.3",
-    "@athenna/view": "^3.0.6",
+    "@athenna/view": "^3.0.7",
     "@japa/assert": "^1.3.6",
     "@japa/run-failed-tests": "^1.1.0",
     "@japa/runner": "^2.2.2",
@@ -211,11 +213,8 @@
     }
   },
   "athenna": {
-    "view": {
-      "disks": {},
-      "templates": {
-        "command": "./templates/command.edge"
-      }
+    "templates": {
+      "command": "./templates/command.edge"
     },
     "commands": [
       "./tests/Stubs/Test.js",

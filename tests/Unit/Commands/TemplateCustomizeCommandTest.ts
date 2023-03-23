@@ -33,7 +33,7 @@ export default class TemplateCustomizeCommandTest extends BaseCommandTest {
     const templatePath = Path.resources('templates/test.edge')
     await new File(templatePath, '').load()
 
-    Config.set('rc.view.templates.test', templatePath)
+    Config.set('rc.templates.test', templatePath)
 
     await Artisan.call('template:customize')
 
