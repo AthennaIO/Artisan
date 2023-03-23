@@ -9,6 +9,7 @@
 
 import 'reflect-metadata'
 
+import { String } from '@athenna/common'
 import { Commander } from '#src/Artisan/Commander'
 import { ArgumentOptions, OptionOptions } from '#src'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
@@ -42,18 +43,20 @@ export class Decorator {
   ): typeof Decorator {
     let signatureOption = ''
 
-    if (options.signature.includes('--no-')) {
-      signatureOption = options.signature.split('--no-')[1]
-    }
-
     if (options.signature.includes('--')) {
       signatureOption = options.signature.split('--')[1]
+    }
+
+    if (signatureOption.startsWith('no-')) {
+      signatureOption = signatureOption.split('no-')[1]
     }
 
     signatureOption = signatureOption
       .replace(/<([^)]+)>/g, '')
       .replace(/\[([^)]+)]/g, '')
       .replace(/ /g, '')
+
+    signatureOption = String.toCamelCase(signatureOption)
 
     if (!Reflect.hasMetadata(this.OPTIONS_KEY, target)) {
       Reflect.defineMetadata(
