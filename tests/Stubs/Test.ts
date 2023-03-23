@@ -34,6 +34,25 @@ export class Test extends BaseCommand {
   })
   public notRequiredArg: string
 
+  @Option({
+    signature: '--no-clean',
+  })
+  public any___VALLLUE: boolean
+
+  @Option({
+    signature: '--ignore-on-clean [folders]',
+    description: 'Ignore the given folders when cleaning the application.',
+    default: 'tests|node_modules',
+  })
+  public ignoreOnClean: string
+
+  @Option({
+    signature: '--ignore-on-clean-array [folders...]',
+    description: 'Ignore the given folders when cleaning the application.',
+    default: ['tests', 'node_modules'],
+  })
+  public ignoreOnCleanArray: string[]
+
   public static signature(): string {
     return 'test'
   }
@@ -44,5 +63,6 @@ export class Test extends BaseCommand {
 
   public async handle(): Promise<void> {
     console.log(this.requiredArg, this.notRequiredArg, this.option, this.notRequiredOption)
+    console.log(this.any___VALLLUE, this.ignoreOnClean, this.ignoreOnCleanArray)
   }
 }

@@ -46,7 +46,10 @@ export default class ArtisanTest extends BaseCommandTest {
   public async shouldBeAbleToSetArgumentsAndOptionsUsingArgumentAndOptionDecorators({ assert }: TestContext) {
     const { stdout } = await Artisan.callInChild('test test --other', this.artisan)
 
-    assert.equal(stdout, 'test notRequiredArg true notRequiredOption\n')
+    assert.equal(
+      stdout,
+      "test notRequiredArg true notRequiredOption\ntrue tests|node_modules [ 'tests', 'node_modules' ]\n",
+    )
   }
 
   @Test()
