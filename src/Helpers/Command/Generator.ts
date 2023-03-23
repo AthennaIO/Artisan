@@ -135,7 +135,7 @@ export class Generator {
       return file.setContent(content)
     }
 
-    let templatePath = Config.get(`rc.view.templates.${this._template}`)
+    let templatePath = Config.get(`rc.templates.${this._template}`)
 
     if (!isAbsolute(templatePath)) {
       templatePath = resolve(templatePath)

@@ -17,14 +17,14 @@ export class TemplateCustomizeCommand extends BaseCommand {
   }
 
   public static description(): string {
-    return 'Export all the templates files registered in "rc.view.templates" to the "resources/templates" path.'
+    return 'Export all the templates files registered in "rc.templates" to the "resources/templates" path.'
   }
 
   public async handle(): Promise<void> {
     this.logger.simple('({bold,green} [ MOVING TEMPLATES ])\n')
 
     const templates: any = {}
-    const paths = Config.get('rc.view.templates')
+    const paths = Config.get('rc.templates')
 
     await Exec.concurrently(Object.keys(paths), async key => {
       let path = paths[key]
