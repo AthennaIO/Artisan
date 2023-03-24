@@ -11,7 +11,7 @@ import yaml from 'js-yaml'
 
 import { Env } from '@athenna/config'
 import { File, Exec, Path } from '@athenna/common'
-import { BaseConfigurer } from '../../../../../src/Artisan/BaseConfigurer.js'
+import { BaseConfigurer } from '../../../../src/Artisan/BaseConfigurer.js'
 
 export default class LibraryConfigurer extends BaseConfigurer {
   prompt = Env('ARTISAN_TESTING', false)
@@ -65,9 +65,9 @@ export default class LibraryConfigurer extends BaseConfigurer {
 
   async taskTwo(db) {
     const paths = {
-      MongoDB: this.paths.configurer.concat(`/config/mongo/database.${Path.ext()}`),
-      PostgreSQL: this.paths.configurer.concat(`/config/postgres/database.${Path.ext()}`),
-      'MySQL / MariaDB': this.paths.configurer.concat(`/config/mysql/database.${Path.ext()}`),
+      MongoDB: this.paths.lib.concat(`/configurer/config/mongo/database.${Path.ext()}`),
+      PostgreSQL: this.paths.lib.concat(`/configurer/config/postgres/database.${Path.ext()}`),
+      'MySQL / MariaDB': this.paths.lib.concat(`/configurer/config/mysql/database.${Path.ext()}`),
     }
 
     return new File(paths[db]).copy(Path.config(`database.${Path.ext()}`))
@@ -75,9 +75,9 @@ export default class LibraryConfigurer extends BaseConfigurer {
 
   async taskThree() {
     return this.rc
-      .pushTo('providers', './tests/Stubs/library/build/Providers/DatabaseProvider.js')
-      .pushTo('commands', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
-      .setTo('commandsManifest', 'make:model', './tests/Stubs/library/build/Commands/MakeModelCommand.js')
+      .pushTo('providers', './tests/Stubs/library/Providers/DatabaseProvider.js')
+      .pushTo('commands', './tests/Stubs/library/Commands/MakeModelCommand.js')
+      .setTo('commandsManifest', 'make:model', './tests/Stubs/library/Commands/MakeModelCommand.js')
       .save()
   }
 
@@ -144,7 +144,7 @@ export default class LibraryConfigurer extends BaseConfigurer {
       },
     }
 
-    const baseDockerCompose = await new File(this.paths.configurer.concat('/docker-compose.yml')).getContent()
+    const baseDockerCompose = await new File(this.paths.lib.concat('/configurer/docker-compose.yml')).getContent()
     const file = await new File(Path.pwd('docker-compose.yml'), baseDockerCompose).load()
     const dockerCompose = yaml.load(file.content)
 

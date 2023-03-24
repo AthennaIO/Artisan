@@ -24,9 +24,8 @@ export abstract class BaseConfigurer {
    * application.
    */
   public paths: {
-    configurerClass?: string
+    lib?: string
     configurer?: string
-    pwd?: string
   } = {}
 
   /**
@@ -72,9 +71,8 @@ export abstract class BaseConfigurer {
    */
   public setPath(path: string): BaseConfigurer {
     this.paths = {
-      configurerClass: path,
-      configurer: parse(path).dir,
-      pwd: resolve(path, '..', '..', '..'),
+      lib: resolve(parse(path).dir, '..'),
+      configurer: path,
     }
 
     return this
