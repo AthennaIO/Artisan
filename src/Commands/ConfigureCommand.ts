@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { resolve } from 'node:path'
+import { extname, resolve } from 'node:path'
 import { Argument, BaseCommand } from '#src'
 import { Color, Exec, File, Module } from '@athenna/common'
 import { NotFoundConfigurerException } from '#src/Exceptions/NotFoundConfigurerException'
@@ -34,21 +34,8 @@ export class ConfigureCommand extends BaseCommand {
     }
   }
 
-  private async isInstalled(library: string): Promise<boolean> {
-    const buffer = await new File(Path.pwd('package.json')).getContent()
-    const packageJson: any = JSON.parse(buffer.toString())
-
-    if (packageJson.dependencies[library]) {
-      return true
-    }
-
-    return !!packageJson.devDependencies[library]
-  }
-
   private async configure(library: string) {
-    const isFile =
-      (await File.exists(resolve(library))) &&
-      (await File.isFile(resolve(library)))
+    const isFile = this.isFile(library)
     const isInstalled = await this.isInstalled(library)
 
     if (!isFile && !isInstalled) {
@@ -63,7 +50,7 @@ export class ConfigureCommand extends BaseCommand {
 
     const path = isFile
       ? resolve(library)
-      : Path.nodeModules(`${library}/build/Configurer/index.js`)
+      : Path.originalPwd(`node_modules/${library}/configurer/index.js`)
 
     if (!(await File.exists(path))) {
       throw new NotFoundConfigurerException(path, library)
@@ -72,5 +59,19 @@ export class ConfigureCommand extends BaseCommand {
     const Configurer = await Module.getFrom(path)
 
     await new Configurer().setPath(path).configure()
+  }
+
+  private isFile(library: string): boolean {
+    return !!extname(library)
+  }
+
+  private async isInstalled(library: string): Promise<boolean> {
+    const json = await new File(Path.pwd('package.json')).getContentAsJson()
+
+    if (json.dependencies[library]) {
+      return true
+    }
+
+    return !!json.devDependencies[library]
   }
 }

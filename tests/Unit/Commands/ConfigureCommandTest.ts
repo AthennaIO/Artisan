@@ -17,24 +17,24 @@ import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 export default class ConfigureCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToConfigurePathsInsideTheApplication({ assert }: TestContext) {
-    await Artisan.call('configure ./tests/Stubs/library/build/Configurer/index.js')
+    await Artisan.call('configure ./tests/Stubs/library/configurer/index.js')
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.equal(Config.get('rc.isInPackageJson', false), true)
     assert.notContainsSubset(athenna.commands, { isInPackageJson: true })
 
-    assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
-    assert.containsSubset(athenna.commands, ['./tests/Stubs/library/build/Commands/MakeModelCommand.js'])
+    assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/Commands/MakeModelCommand.js'])
+    assert.containsSubset(athenna.commands, ['./tests/Stubs/library/Commands/MakeModelCommand.js'])
 
-    assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
-    assert.containsSubset(athenna.providers, ['./tests/Stubs/library/build/Providers/DatabaseProvider.js'])
+    assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
+    assert.containsSubset(athenna.providers, ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
 
     assert.containsSubset(athenna.commandsManifest, {
-      'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
+      'make:model': './tests/Stubs/library/Commands/MakeModelCommand.js',
     })
     assert.containsSubset(Config.get('rc.commandsManifest'), {
-      'make:model': './tests/Stubs/library/build/Commands/MakeModelCommand.js',
+      'make:model': './tests/Stubs/library/Commands/MakeModelCommand.js',
     })
   }
 
