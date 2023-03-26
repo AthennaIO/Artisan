@@ -50,14 +50,14 @@ export default class RcTest {
 
     await this.rc
       .setRcFile(path)
-      .setTo('commandsManifest', 'one', 'value')
-      .setTo('commandsManifest', 'two', 'value')
-      .setTo('commandsManifest', 'three', 'value')
-      .setTo('commandsManifest', 'test', 'value')
+      .setTo('commands', 'one', 'value')
+      .setTo('commands', 'two', 'value')
+      .setTo('commands', 'three', 'value')
+      .setTo('commands', 'test', 'value')
       .save()
 
     assert.containsSubset(await new File(path).getContentAsJson(), {
-      commandsManifest: {
+      commands: {
         one: 'value',
         two: 'value',
         test: 'value',
@@ -73,7 +73,7 @@ export default class RcTest {
 
     await this.rc
       .setRcFile(path)
-      .setTo('commandsManifest', {
+      .setTo('commands', {
         one: 'value',
         two: 'value',
         test: 'value',
@@ -81,7 +81,7 @@ export default class RcTest {
       })
       .save()
 
-    assert.deepEqual((await new File(path).getContentAsJson()).commandsManifest, {
+    assert.deepEqual((await new File(path).getContentAsJson()).commands, {
       one: 'value',
       two: 'value',
       test: 'value',

@@ -41,16 +41,10 @@ export class MakeCommandCommand extends BaseCommand {
     const signature = String.toCamelCase(file.name)
     const importPath = this.getImportPath(file.name)
 
-    await this.rc
-      .pushTo('commands', importPath)
-      .setTo('commandsManifest', signature, importPath)
-      .save()
+    await this.rc.setTo('commands', signature, importPath).save()
 
     this.logger.success(
-      `Athenna RC updated: ({dim,yellow} [ commands += "${importPath}" ])`,
-    )
-    this.logger.success(
-      `Athenna RC updated: ({dim,yellow} { commandsManifest += "${signature}": "${importPath}" })`,
+      `Athenna RC updated: ({dim,yellow} { commands += "${signature}": "${importPath}" })`,
     )
   }
 
@@ -66,7 +60,7 @@ export class MakeCommandCommand extends BaseCommand {
    */
   private getDestinationPath(): string {
     let destination = Config.get(
-      'rc.commandsManifest.make:command.destination',
+      'rc.commands.make:command.destination',
       Path.console('Commands'),
     )
 

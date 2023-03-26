@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.5.1",
+  "version": "3.6.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -216,23 +216,18 @@
     "templates": {
       "command": "./templates/command.edge"
     },
-    "commands": [
-      "./tests/Stubs/Test.js",
-      "#src/Commands/ListCommand",
-      "#src/Commands/ConfigureCommand",
-      "#src/Commands/MakeCommandCommand",
-      "#tests/Stubs/commands/LoadAppCommand",
-      "#src/Commands/TemplateCustomizeCommand"
-    ],
-    "commandsManifest": {
+    "commands": {
       "test": {
-        "path": "#tests/Stubs/Test"
+        "path": "./tests/Stubs/Test.js"
+      },
+      "list": {
+        "path": "#src/Commands/ListCommand",
+        "loadAllCommands": true
       },
       "configure": "#src/Commands/ConfigureCommand",
       "loadapp": "#tests/Stubs/commands/LoadAppCommand",
-      "decorated": "#tests/Stubs/commands/DecoratedCommand",
       "make:command": "#src/Commands/MakeCommandCommand",
-      "template:customize": "#src/Commands/TemplateCustomize"
+      "template:customize": "#src/Commands/TemplateCustomizeCommand"
     },
     "providers": []
   }
