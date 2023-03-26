@@ -17,6 +17,22 @@ export * from './Types/OptionOptions.js'
 export * from './Types/ArgumentOptions.js'
 export * from './Types/CommandSettings.js'
 
+export * from './Helpers/Task.js'
+export * from './Helpers/Table.js'
+export * from './Helpers/Action.js'
+export * from './Helpers/Sticker.js'
+export * from './Helpers/Decorator.js'
+export * from './Helpers/Instruction.js'
+export * from './Helpers/Command/Rc.js'
+export * from './Helpers/Command/Prompt.js'
+export * from './Helpers/Command/Logger.js'
+export * from './Helpers/Command/Generator.js'
+
+export * from './Types/TaskCallback.js'
+export * from './Types/OptionOptions.js'
+export * from './Types/ArgumentOptions.js'
+export * from './Types/CommandSettings.js'
+
 export * from './Decorators/Option.js'
 export * from './Decorators/Argument.js'
 
