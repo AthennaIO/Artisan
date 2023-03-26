@@ -24,16 +24,13 @@ export default class ConfigureCommandTest extends BaseCommandTest {
     assert.equal(Config.get('rc.isInPackageJson', false), true)
     assert.notContainsSubset(athenna.commands, { isInPackageJson: true })
 
-    assert.containsSubset(Config.get('rc.commands'), ['./tests/Stubs/library/Commands/MakeModelCommand.js'])
-    assert.containsSubset(athenna.commands, ['./tests/Stubs/library/Commands/MakeModelCommand.js'])
-
     assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
     assert.containsSubset(athenna.providers, ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
 
-    assert.containsSubset(athenna.commandsManifest, {
+    assert.containsSubset(athenna.commands, {
       'make:model': './tests/Stubs/library/Commands/MakeModelCommand.js',
     })
-    assert.containsSubset(Config.get('rc.commandsManifest'), {
+    assert.containsSubset(Config.get('rc.commands'), {
       'make:model': './tests/Stubs/library/Commands/MakeModelCommand.js',
     })
   }

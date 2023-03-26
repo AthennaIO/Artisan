@@ -18,17 +18,28 @@ export class ConsoleKernel {
    */
   public async registerCommands(argv: string[] = []) {
     const commandName = argv[2]
-    let path = Config.get(`rc.commandsManifest.${commandName}`)
 
-    if (path) {
-      path = Is.String(path) ? path : path.path
-
-      return this.registerCommandByPath(path)
+    if (commandName === undefined) {
+      return this.registerAllCommands()
     }
 
-    await Exec.concurrently(Config.get('rc.commands', []), path =>
-      this.registerCommandByPath(path),
-    )
+    const command = Config.get(`rc.commands.${commandName}`)
+
+    /**
+     * If the command is not inside "rc.commands", then it
+     * means that is registered using route file.
+     */
+    if (!command) {
+      return
+    }
+
+    const path = command.path || command
+
+    if (command.loadAllCommands) {
+      return this.registerAllCommands()
+    }
+
+    return this.registerCommandByPath(path)
   }
 
   /**
@@ -91,5 +102,22 @@ export class ConsoleKernel {
       `${path}?version=${Math.random()}`,
       Config.get('rc.meta'),
     )
+  }
+
+  /**
+   * Register all commands inside "rc.commands" object.
+   */
+  private async registerAllCommands() {
+    const keys = Object.keys(Config.get('rc.commands', {}))
+
+    return Exec.concurrently(keys, key => {
+      const path = Config.get(`rc.commands.${key}`)
+
+      if (Is.String(path)) {
+        return this.registerCommandByPath(path)
+      }
+
+      return this.registerCommandByPath(path.path)
+    })
   }
 }

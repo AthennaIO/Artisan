@@ -35,8 +35,9 @@ export default class ArtisanTest extends BaseCommandTest {
   public async shouldBeAbleToRegisterCommandsAsRoutes({ assert }: TestContext) {
     process.env.NODE_ENV = 'test'
 
-    const { stdout } = await Artisan.callInChild('hello world', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('hello world', this.artisan)
 
+    assert.equal(stderr, '')
     assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
 
     process.env.NODE_ENV = undefined
@@ -44,8 +45,9 @@ export default class ArtisanTest extends BaseCommandTest {
 
   @Test()
   public async shouldBeAbleToSetArgumentsAndOptionsUsingArgumentAndOptionDecorators({ assert }: TestContext) {
-    const { stdout } = await Artisan.callInChild('test test --other', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('test test --other', this.artisan)
 
+    assert.equal(stderr, '')
     assert.equal(
       stdout,
       "test notRequiredArg true notRequiredOption\ntrue tests|node_modules [ 'tests', 'node_modules' ]\n",

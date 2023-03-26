@@ -44,12 +44,12 @@ export class Rc {
    *
    * @example
    * ```ts
-   * this.rc.setTo('commandsManifest', 'test', '#app/Console/Commands/TestCommand')
+   * this.rc.setTo('commands', 'test', '#app/Console/Commands/TestCommand')
    * ```
    * Or:
    * @example
    * ```ts
-   * this.rc.setTo('commandsManifest', { test: '#app/Console/Commands/TestCommand' })
+   * this.rc.setTo('commands', { test: '#app/Console/Commands/TestCommand' })
    * ```
    */
   public setTo(rcKey: string, key: string | any, value?: any): Rc {
@@ -69,7 +69,7 @@ export class Rc {
    *
    * @example
    * ```ts
-   * this.rc.pushTo('commands', '#app/Console/Commands/TestCommand')
+   * this.rc.pushTo('providers', '#providers/TestProvider')
    * ```
    */
   public pushTo(rcKey: string, value: any): Rc {

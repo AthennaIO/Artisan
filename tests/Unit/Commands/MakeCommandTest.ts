@@ -28,21 +28,18 @@ export default class MakeCommandTest extends BaseCommandTest {
     assert.equal(Config.get('rc.isInPackageJson', false), true)
     assert.notContainsSubset(athenna.commands, { isInPackageJson: true })
 
-    assert.containsSubset(Config.get('rc.commands'), ['#app/Console/Commands/TestCommand'])
-    assert.containsSubset(athenna.commands, ['#app/Console/Commands/TestCommand'])
-
-    assert.containsSubset(Config.get('rc.commandsManifest'), {
+    assert.containsSubset(Config.get('rc.commands'), {
       testCommand: '#app/Console/Commands/TestCommand',
     })
-    assert.containsSubset(athenna.commandsManifest, {
+    assert.containsSubset(athenna.commands, {
       testCommand: '#app/Console/Commands/TestCommand',
     })
   }
 
   @Test()
   public async shouldBeAbleToCreateACommandFileWithADifferentDestPathAndImportPath({ assert }: TestContext) {
-    Config.set('rc.commandsManifest.make:command.path', Config.get('rc.commandsManifest.make:command'))
-    Config.set('rc.commandsManifest.make:command.destination', './tests/Stubs/storage/commands')
+    Config.set('rc.commands.make:command.path', Config.get('rc.commands.make:command'))
+    Config.set('rc.commands.make:command.destination', './tests/Stubs/storage/commands')
 
     await Artisan.call('make:command TestCommand')
 
@@ -53,13 +50,10 @@ export default class MakeCommandTest extends BaseCommandTest {
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.containsSubset(Config.get('rc.commands'), ['#tests/Stubs/storage/commands/TestCommand'])
-    assert.containsSubset(athenna.commands, ['#tests/Stubs/storage/commands/TestCommand'])
-
-    assert.containsSubset(Config.get('rc.commandsManifest'), {
+    assert.containsSubset(Config.get('rc.commands'), {
       testCommand: '#tests/Stubs/storage/commands/TestCommand',
     })
-    assert.containsSubset(athenna.commandsManifest, {
+    assert.containsSubset(athenna.commands, {
       testCommand: '#tests/Stubs/storage/commands/TestCommand',
     })
   }
