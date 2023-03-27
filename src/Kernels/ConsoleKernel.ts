@@ -27,7 +27,7 @@ export class ConsoleKernel {
 
     /**
      * If the command is not inside "rc.commands", then it
-     * means that is registered using route file.
+     * means that is registered using route file or does not exist.
      */
     if (!command) {
       return

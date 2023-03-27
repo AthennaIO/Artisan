@@ -12,7 +12,7 @@ import { ViewProvider } from '@athenna/view'
 import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker, AfterEach, BeforeEach } from '@athenna/test'
-import { ConsoleKernel, ArtisanProvider, CommanderHandler, COMMANDS_SETTINGS } from '#src'
+import { ConsoleKernel, ArtisanProvider, CommanderHandler } from '#src'
 
 export class BaseCommandTest {
   public artisan = Path.pwd('bin/artisan.ts')
@@ -41,7 +41,6 @@ export class BaseCommandTest {
     Config.clear()
     ioc.reconstruct()
     ExitFaker.release()
-    COMMANDS_SETTINGS.clear()
 
     delete process.env.ARTISAN_TESTING
 

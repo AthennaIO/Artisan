@@ -8,7 +8,7 @@
  */
 
 import { Exec } from '@athenna/common'
-import { Artisan, COMMANDS_SETTINGS } from '#src'
+import { Artisan } from '#src'
 
 Artisan.route('error', async function () {
   throw new Error('error happened!')
@@ -16,7 +16,7 @@ Artisan.route('error', async function () {
 
 Artisan.route('hello', async function (hello: string) {
   console.log(hello)
-  console.log(COMMANDS_SETTINGS.get('hello'))
+  console.log(Config.get('rc.commands.hello'))
 })
   .argument('<hello>')
   .settings({ loadApp: false, stayAlive: false, environments: ['hello'] })

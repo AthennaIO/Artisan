@@ -16,7 +16,7 @@ import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 export default class TemplateCustomizeCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToPublishTheAthennaTemplatesToDoCustomCustomizations({ assert }: TestContext) {
-    await Artisan.call('template:customize')
+    await Artisan.call('template:customize', false)
 
     const path = Path.resources()
 
@@ -35,7 +35,7 @@ export default class TemplateCustomizeCommandTest extends BaseCommandTest {
 
     Config.set('rc.templates.test', templatePath)
 
-    await Artisan.call('template:customize')
+    await Artisan.call('template:customize', false)
 
     const path = Path.resources()
 

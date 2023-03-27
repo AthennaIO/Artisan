@@ -13,7 +13,6 @@ import { Decorator } from '#src/Helpers/Decorator'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
-import { CommandSettings } from '#src/Types/CommandSettings'
 
 export abstract class BaseCommand {
   /**
@@ -31,24 +30,6 @@ export abstract class BaseCommand {
    */
   public static description(): string {
     return ''
-  }
-
-  /**
-   * Set the command settings.
-   *
-   * @default
-   *  {
-   *    loadApp: false,
-   *    stayAlive: false,
-   *    environments: ['console']
-   *  }
-   */
-  public static settings(): CommandSettings {
-    return {
-      loadApp: false,
-      stayAlive: false,
-      environments: ['console'],
-    }
   }
 
   /**

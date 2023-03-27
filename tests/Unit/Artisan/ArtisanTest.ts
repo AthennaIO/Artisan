@@ -28,7 +28,7 @@ export default class ArtisanTest extends BaseCommandTest {
 
     const appNameFiglet = figlet.textSync('Artisan')
 
-    assert.equal(stdout, appNameFiglet.concat('\n\n'))
+    assert.equal(stdout, appNameFiglet.concat('\n'))
   }
 
   @Test()
@@ -59,7 +59,7 @@ export default class ArtisanTest extends BaseCommandTest {
     const fakeIgniteFire = fake()
     ioc.instance('Athenna/Core/Ignite', { fire: fakeIgniteFire })
 
-    await Artisan.call('loadapp')
+    await Artisan.call('loadapp', false)
 
     assert.isTrue(fakeIgniteFire.calledWith(['worker', 'console']))
   }

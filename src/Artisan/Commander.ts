@@ -7,12 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { CommandSettings } from '#src'
 import { Command as Commander } from 'commander'
 
 declare module 'commander' {
   interface Command {
-    settings(settings: CommandSettings): void
+    settings(settings: any): void
   }
 }
 
