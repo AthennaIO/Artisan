@@ -7,17 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { BaseCommand, CommandSettings } from '#src'
+import { BaseCommand } from '#src'
 
 export class LoadAppCommand extends BaseCommand {
-  public static settings(): CommandSettings {
-    return {
-      loadApp: true,
-      stayAlive: false,
-      environments: ['worker', 'console'],
-    }
-  }
-
   public static signature(): string {
     return 'loadapp'
   }

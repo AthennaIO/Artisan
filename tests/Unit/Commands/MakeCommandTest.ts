@@ -16,7 +16,7 @@ import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 export default class MakeCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToCreateACommandFile({ assert }: TestContext) {
-    await Artisan.call('make:command TestCommand')
+    await Artisan.call('make:command TestCommand', false)
 
     const path = Path.console('Commands/TestCommand.ts')
 
@@ -41,7 +41,7 @@ export default class MakeCommandTest extends BaseCommandTest {
     Config.set('rc.commands.make:command.path', Config.get('rc.commands.make:command'))
     Config.set('rc.commands.make:command.destination', './tests/Stubs/storage/commands')
 
-    await Artisan.call('make:command TestCommand')
+    await Artisan.call('make:command TestCommand', false)
 
     const path = Path.stubs('storage/commands/TestCommand.ts')
 

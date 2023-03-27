@@ -9,48 +9,46 @@
 
 import 'reflect-metadata'
 
+import { CommanderHandler, ConsoleKernel } from '#src'
 import { Test, ExitFaker, TestContext } from '@athenna/test'
 import { BaseCommandTest } from '#tests/Helpers/BaseCommandTest'
 import { ThrowCommand } from '#tests/Stubs/commands/ThrowCommand'
-import { CommanderHandler, COMMANDS_SETTINGS, ConsoleKernel } from '#src'
 
 export default class ConsoleKernelTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToRegisterCommandsUsingConsoleKernel({ assert }: TestContext) {
-    COMMANDS_SETTINGS.clear()
     CommanderHandler.getCommander<any>().commands = []
 
     await new ConsoleKernel().registerCommands()
 
-    assert.isDefined(COMMANDS_SETTINGS.get('make:command'))
     assert.isDefined(CommanderHandler.getCommands()['make:command <name>'])
   }
 
   @Test()
   public async shouldBeAbleToRegisterCommandsByArgvUsingConsoleKernel({ assert }: TestContext) {
-    COMMANDS_SETTINGS.clear()
     CommanderHandler.getCommander<any>().commands = []
 
     await new ConsoleKernel().registerCommands(['node', 'artisan', 'make:command'])
 
-    assert.equal(COMMANDS_SETTINGS.size, 1)
-    assert.isDefined(COMMANDS_SETTINGS.get('make:command'))
     assert.isDefined(CommanderHandler.getCommands()['make:command <name>'])
   }
 
   @Test()
   public async shouldBeAbleToRegisterRouteFilesUsingConsoleKernel({ assert }: TestContext) {
-    COMMANDS_SETTINGS.clear()
     CommanderHandler.getCommander<any>().commands = []
 
     await new ConsoleKernel().registerRouteCommands('./bin/console.ts')
 
+    assert.deepEqual(Config.get('rc.commands.hello'), {
+      loadApp: false,
+      stayAlive: false,
+      environments: ['hello'],
+    })
     assert.isDefined(CommanderHandler.getCommands()['hello <hello>'])
   }
 
   @Test()
   public async shouldBeAbleToRegisterRouteFilesWithImportAliasUsingConsoleKernel({ assert }: TestContext) {
-    COMMANDS_SETTINGS.clear()
     CommanderHandler.getCommander<any>().commands = []
 
     await new ConsoleKernel().registerRouteCommands('#tests/Stubs/routes/console')

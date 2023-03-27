@@ -44,7 +44,7 @@ export default class ConfigureCommandTest extends BaseCommandTest {
 
     Exec.command = (...args: any[]) => Promise.resolve(commandFake(...args))
 
-    await Artisan.call('configure some-lib-name')
+    await Artisan.call('configure some-lib-name', false)
 
     Exec.command = originalCommand
 

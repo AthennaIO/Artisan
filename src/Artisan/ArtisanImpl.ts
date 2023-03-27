@@ -12,28 +12,25 @@ import chalkRainbow from 'chalk-rainbow'
 
 import { platform } from 'node:os'
 import { Config } from '@athenna/config'
-import { Exec, Path } from '@athenna/common'
 import { Decorator } from '#src/Helpers/Decorator'
 import { Commander } from '#src/Artisan/Commander'
 import { BaseCommand } from '#src/Artisan/BaseCommand'
-import { CommandSettings } from '#src/Types/CommandSettings'
+import { Exec, Is, Options, Path } from '@athenna/common'
 import { CommanderHandler } from '#src/Handlers/CommanderHandler'
-import { COMMANDS_SETTINGS } from '#src/Constants/CommandsSettings'
 
 export class ArtisanImpl {
   /**
    * Register the command if it is not registered yet.
    */
   public register(command: any): Commander {
-    const Command = command.constructor
+    const commander = Decorator.getCommander(command)
 
-    if (COMMANDS_SETTINGS.has(Command.signature())) {
-      return Decorator.getCommander(command)
-    }
-
-    COMMANDS_SETTINGS.set(Command.signature(), Command.settings())
-
-    return Decorator.getCommander(command)
+    /**
+     * We are not going to register the command in the Decorator
+     * helper because "Option" and "Argument" decorators will
+     * register the command without instantiating the class correctly.
+     */
+    return commander
       .action(CommanderHandler.bindHandler(command))
       .showHelpAfterError()
   }
@@ -76,10 +73,8 @@ export class ArtisanImpl {
 
     const commander = this.register(new HandleCommand())
 
-    commander.constructor.prototype.settings = function (
-      settings: CommandSettings,
-    ) {
-      COMMANDS_SETTINGS.set(this.name(), settings)
+    commander.constructor.prototype.settings = function (settings: any) {
+      Config.set(`rc.commands.${this.name()}`, settings)
     }
 
     return commander
@@ -90,11 +85,23 @@ export class ArtisanImpl {
    *
    * @example
    * ```ts
+   * // Call command ignoring settings, loadApp, stayAlive and environments.
    * Artisan.call('serve --watch')
+   *
+   * // Call command and handle settings.
+   * Artisan.call('serve --watch', false)
    * ```
    */
-  public async call(command: string): Promise<void> {
-    return this.parse(['node', 'artisan', ...command.split(' ')])
+  public async call(command: string, ignoreSettings = true): Promise<void> {
+    const argv = ['./node', 'artisan', ...command.split(' ')]
+
+    if (ignoreSettings) {
+      await CommanderHandler.setVersion(Config.get('app.version')).parse(argv)
+
+      return
+    }
+
+    await this.parseWithSettings(argv)
   }
 
   /**
@@ -131,21 +138,13 @@ export class ArtisanImpl {
    * "argv" to execute the command.
    */
   public async parse(argv: string[], appName?: string): Promise<void> {
-    const { loadApp, stayAlive, environments } = COMMANDS_SETTINGS.get(
-      argv[2],
-    ) || {
-      loadApp: false,
-      stayAlive: false,
-      environments: ['console'],
-    }
-
     if (appName) {
       /**
        * If argv is less or equal two, means that
        * the command that are being run is just
        * the CLI entrypoint. Example:
        *
-       * - ts-node artisan
+       * - node artisan
        *
        * In CLI entrypoint we are going to log the
        * chalkRainbow with his application name.
@@ -154,9 +153,28 @@ export class ArtisanImpl {
         const appNameFiglet = figlet.textSync(appName)
         const appNameFigletColorized = chalkRainbow(appNameFiglet)
 
-        process.stdout.write(appNameFigletColorized + '\n' + '\n')
+        process.stdout.write(appNameFigletColorized + '\n')
       }
     }
+
+    await this.parseWithSettings(argv)
+  }
+
+  /**
+   * Parse the command with the settings.
+   */
+  private async parseWithSettings(argv: string[]) {
+    let command = Config.get(`rc.commands.${argv[2]}`)
+
+    if (!command || Is.String(command)) {
+      command = {}
+    }
+
+    const { loadApp, stayAlive, environments } = Options.create(command, {
+      loadApp: false,
+      stayAlive: false,
+      environments: ['console'],
+    })
 
     if (loadApp) {
       const ignite = ioc.safeUse('Athenna/Core/Ignite')
