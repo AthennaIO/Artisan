@@ -28,9 +28,15 @@ export class ConsoleKernel {
     /**
      * If the command is not inside "rc.commands", then it
      * means that is registered using route file or does not exist.
+     *
+     * Commander does not throw errors when a command does not exist
+     * and there are any command registered in the application. To
+     * avoid this behavior we are going to register all commands of
+     * "rc.commands" when the command is using route file or does not
+     * exist.
      */
     if (!command) {
-      return
+      return this.registerAllCommands()
     }
 
     const path = command.path || command
