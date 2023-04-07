@@ -76,6 +76,7 @@
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "c8": "^7.12.0",
+    "cls-rtracer": "^2.6.2",
     "commitizen": "^4.2.6",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",

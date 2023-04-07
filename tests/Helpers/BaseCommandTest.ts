@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '@athenna/config'
+import { Config, Rc } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
@@ -31,6 +31,8 @@ export class BaseCommandTest {
     new ArtisanProvider().register()
 
     const kernel = new ConsoleKernel()
+
+    await Rc.setFile(Path.pwd('.athennarc.json'), true)
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
