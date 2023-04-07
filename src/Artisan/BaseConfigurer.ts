@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import { Rc } from '@athenna/config'
 import { Color } from '@athenna/common'
 import { parse, resolve } from 'node:path'
-import { Rc } from '#src/Helpers/Command/Rc'
 import { Prompt } from '#src/Helpers/Command/Prompt'
 import { Logger } from '#src/Helpers/Command/Logger'
 import { Generator } from '#src/Helpers/Command/Generator'
@@ -33,7 +33,7 @@ export abstract class BaseConfigurer {
    * file. Very useful to add commands, providers and
    * preloads properties in the file.
    */
-  public rc = new Rc()
+  public rc = Rc
 
   /**
    * The Athenna colors ui kit. This methods uses the
