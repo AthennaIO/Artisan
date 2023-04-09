@@ -58,7 +58,7 @@
     "figlet": "^1.5.2",
     "inquirer": "^9.1.4",
     "log-update": "^5.0.1",
-    "ora": "^6.1.2"
+    "ora": "^6.2.0"
   },
   "devDependencies": {
     "@athenna/common": "^3.5.1",
