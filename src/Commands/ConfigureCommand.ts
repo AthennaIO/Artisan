@@ -50,7 +50,7 @@ export class ConfigureCommand extends BaseCommand {
 
     const path = isFile
       ? resolve(library)
-      : Path.originalPwd(`node_modules/${library}/configurer/index.js`)
+      : Path.nodeModules(`${library}/configurer/index.js`)
 
     if (!(await File.exists(path))) {
       throw new NotFoundConfigurerException(path, library)

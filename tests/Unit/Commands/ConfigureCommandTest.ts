@@ -21,9 +21,6 @@ export default class ConfigureCommandTest extends BaseCommandTest {
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.equal(Config.get('rc.isInPackageJson', false), true)
-    assert.notContainsSubset(athenna.commands, { isInPackageJson: true })
-
     assert.containsSubset(Config.get('rc.providers'), ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
     assert.containsSubset(athenna.providers, ['./tests/Stubs/library/Providers/DatabaseProvider.js'])
 

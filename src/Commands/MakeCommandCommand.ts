@@ -61,7 +61,7 @@ export class MakeCommandCommand extends BaseCommand {
   private getDestinationPath(): string {
     let destination = Config.get(
       'rc.commands.make:command.destination',
-      Path.console('Commands'),
+      Path.commands(),
     )
 
     if (!isAbsolute(destination)) {

@@ -32,7 +32,7 @@ export class BaseCommandTest {
 
     const kernel = new ConsoleKernel()
 
-    await Rc.setFile(Path.pwd('.athennarc.json'), true)
+    await Rc.setFile(Path.pwd('package.json'))
 
     await kernel.registerExceptionHandler()
     await kernel.registerCommands()
