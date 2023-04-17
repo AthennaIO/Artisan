@@ -14,7 +14,6 @@ const athennaRc = new File(Path.pwd('package.json')).getContentAsJsonSync().athe
 
 Config.set('meta', Config.get('meta', import.meta.url))
 
-athennaRc.isInPackageJson = true
 athennaRc.meta = Config.get('meta', import.meta.url)
 
 export default athennaRc
