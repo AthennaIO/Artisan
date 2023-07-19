@@ -56,9 +56,9 @@
     "columnify": "^1.6.0",
     "commander": "^9.5.0",
     "figlet": "^1.6.0",
-    "inquirer": "^9.1.5",
+    "inquirer": "^9.2.0",
     "log-update": "^5.0.1",
-    "ora": "^6.2.0"
+    "ora": "^6.3.0"
   },
   "devDependencies": {
     "@athenna/common": "^3.6.0",
