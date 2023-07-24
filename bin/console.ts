@@ -52,7 +52,7 @@ Artisan.route('logger', async function () {
 
   const action = this.logger.action('create')
 
-  action.succeeded('app/Services/Service.ts')
-  action.skipped('app/Services/Service.ts', 'File already exists')
-  action.failed('app/Services/Service.ts', 'Something went wrong')
+  action.succeeded('app/services/Service.ts')
+  action.skipped('app/services/Service.ts', 'File already exists')
+  action.failed('app/services/Service.ts', 'Something went wrong')
 })
