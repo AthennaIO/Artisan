@@ -52,7 +52,7 @@ export default class ConsoleKernelTest extends BaseCommandTest {
   public async shouldBeAbleToRegisterRouteFilesWithImportAliasUsingConsoleKernel({ assert }: Context) {
     CommanderHandler.getCommander<any>().commands = []
 
-    await new ConsoleKernel().registerRouteCommands('#tests/Stubs/routes/console')
+    await new ConsoleKernel().registerRouteCommands('#tests/stubs/routes/console')
 
     assert.isDefined(CommanderHandler.getCommands()['importalias'])
   }
@@ -61,7 +61,7 @@ export default class ConsoleKernelTest extends BaseCommandTest {
   public async shouldBeAbleToSetCustomExceptionHandlerUsingConsoleKernel({ assert }: Context) {
     CommanderHandler.setExceptionHandler(null)
 
-    await new ConsoleKernel().registerExceptionHandler('#tests/Stubs/handlers/Handler')
+    await new ConsoleKernel().registerExceptionHandler('#tests/stubs/handlers/Handler')
 
     const exec = CommanderHandler.bindHandler(new ThrowCommand())
 
