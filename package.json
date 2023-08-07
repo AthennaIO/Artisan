@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "3.9.0",
+  "version": "4.0.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -16,9 +16,10 @@
     "athenna"
   ],
   "scripts": {
+    "build": "rimraf build && tsc --project bin/tsconfig.build.json",
     "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
     "test": "npm run --silent lint:fix && sh node bin/test.ts",
-    "test:debug": "cross-env DEBUG=api:* sh node --inspect bin/test.ts",
+    "test:debug": "cross-env NODE_DEBUG=athenna:* sh node --inspect bin/test.ts",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
@@ -33,13 +34,15 @@
   "types": "./src/index.d.ts",
   "exports": {
     ".": "./src/index.js",
-    "./kernels/ConsoleKernel": "./src/Kernels/ConsoleKernel.js",
-    "./handlers/ConsoleExceptionHandler": "./src/Handlers/ConsoleExceptionHandler.js",
-    "./providers/ArtisanProvider": "./src/Providers/ArtisanProvider.js",
-    "./commands/ListCommand": "./src/Commands/ListCommand.js",
-    "./commands/ConfigureCommand": "./src/Commands/ConfigureCommand.js",
-    "./commands/MakeCommandCommand": "./src/Commands/MakeCommandCommand.js",
-    "./commands/TemplateCustomizeCommand": "./src/Commands/TemplateCustomizeCommand.js"
+    "./types": "./src/types/index.js",
+    "./package.json": "./package.json",
+    "./kernels/ConsoleKernel": "./src/kernels/ConsoleKernel.js",
+    "./handlers/ConsoleExceptionHandler": "./src/handlers/ConsoleExceptionHandler.js",
+    "./providers/ArtisanProvider": "./src/providers/ArtisanProvider.js",
+    "./commands/ListCommand": "./src/commands/ListCommand.js",
+    "./commands/ConfigureCommand": "./src/commands/ConfigureCommand.js",
+    "./commands/MakeCommandCommand": "./src/commands/MakeCommandCommand.js",
+    "./commands/TemplateCustomizeCommand": "./src/commands/TemplateCustomizeCommand.js"
   },
   "imports": {
     "#bin/*": "./bin/*.js",
@@ -55,28 +58,22 @@
     "cli-table3": "^0.6.3",
     "columnify": "^1.6.0",
     "commander": "^9.5.0",
-    "figlet": "^1.5.2",
-    "inquirer": "^9.1.5",
+    "figlet": "^1.6.0",
+    "inquirer": "^9.2.8",
     "log-update": "^5.0.1",
-    "ora": "^6.2.0"
+    "ora": "^6.3.1"
   },
   "devDependencies": {
-    "@athenna/common": "^3.6.0",
-    "@athenna/config": "^3.6.0",
-    "@athenna/ioc": "^3.4.0",
-    "@athenna/logger": "^3.4.0",
-    "@athenna/test": "^3.6.0",
-    "@athenna/view": "^3.3.0",
-    "@swc/core": "^1.3.27",
-    "@types/callsite": "^1.0.31",
-    "@types/columnify": "^1.5.1",
-    "@types/figlet": "^1.5.5",
-    "@types/inquirer": "^9.0.3",
+    "@athenna/common": "^4.2.0",
+    "@athenna/config": "^4.2.0",
+    "@athenna/ioc": "^4.0.0",
+    "@athenna/logger": "^4.0.0",
+    "@athenna/test": "^4.2.0",
+    "@athenna/view": "^4.0.0",
     "@types/sinon": "^10.0.13",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "c8": "^7.12.0",
-    "cls-rtracer": "^2.6.2",
     "commitizen": "^4.2.6",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
@@ -101,21 +98,21 @@
       "src/**/*.ts"
     ],
     "exclude": [
-      "src/Artisan/Command.ts",
-      "src/Artisan/Commander.ts",
-      "src/Artisan/Configurer.ts",
-      "src/Commands/*",
-      "src/Types/*",
-      "src/Helpers/Table.ts",
-      "src/Helpers/Sticker.ts",
-      "src/Helpers/Instruction.ts",
-      "src/Helpers/Command/Logger.ts"
+      "src/artisan/Command.ts",
+      "src/artisan/Commander.ts",
+      "src/artisan/Configurer.ts",
+      "src/commands/*",
+      "src/types/*",
+      "src/helpers/Table.ts",
+      "src/helpers/Sticker.ts",
+      "src/helpers/Instruction.ts",
+      "src/helpers/command/Logger.ts"
     ],
     "reporter": [
       "text-summary",
       "html"
     ],
-    "report-dir": "./tests/Coverage",
+    "report-dir": "./tests/coverage",
     "check-coverage": true
   },
   "husky": {
@@ -201,23 +198,23 @@
     },
     "commands": {
       "test": {
-        "path": "./tests/Stubs/Test.js"
+        "path": "./tests/stubs/Test.js"
       },
       "list": {
-        "path": "#src/Commands/ListCommand",
+        "path": "#src/commands/ListCommand",
         "loadAllCommands": true
       },
-      "configure": "#src/Commands/ConfigureCommand",
+      "configure": "#src/commands/ConfigureCommand",
       "loadapp": {
-        "path": "#tests/Stubs/commands/LoadAppCommand",
+        "path": "#tests/stubs/commands/LoadAppCommand",
         "loadApp": true,
         "environments": [
           "worker",
           "console"
         ]
       },
-      "make:command": "#src/Commands/MakeCommandCommand",
-      "template:customize": "#src/Commands/TemplateCustomizeCommand"
+      "make:command": "#src/commands/MakeCommandCommand",
+      "template:customize": "#src/commands/TemplateCustomizeCommand"
     },
     "providers": []
   }
