@@ -7,10 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { Test } from '@athenna/test'
 import { Color } from '@athenna/common'
 import { Sticker } from '#src/helpers/Sticker'
-import type { Context } from '@athenna/test/types'
+import { Test, type Context } from '@athenna/test'
 
 export default class StickerTest {
   @Test()

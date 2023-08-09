@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Test } from '@athenna/test'
 import { CommanderHandler } from '#src'
-import type { Context } from '@athenna/test/types'
+import { Test, type Context } from '@athenna/test'
 import { ListCommand } from '#src/commands/ListCommand'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 

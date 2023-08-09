@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+export * from './types/index.js'
+
 export * from '#src/artisan/ArtisanImpl'
 export * from '#src/artisan/BaseCommand'
 export * from '#src/artisan/BaseConfigurer'

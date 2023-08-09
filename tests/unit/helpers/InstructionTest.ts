@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Test } from '@athenna/test'
 import { Color } from '@athenna/common'
-import type { Context } from '@athenna/test/types'
+import { Test, type Context } from '@athenna/test'
 import { Instruction } from '#src/helpers/Instruction'
 
 export default class InstructionTest {

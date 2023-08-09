@@ -8,8 +8,7 @@
  */
 
 import { Task } from '#src/helpers/Task'
-import { BeforeEach, Test } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
+import { Test, BeforeEach, type Context } from '@athenna/test'
 import { RunningTaskException } from '#src/exceptions/RunningTaskException'
 
 export default class TaskTest {

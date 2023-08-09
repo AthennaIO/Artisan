@@ -10,9 +10,8 @@
 import { fake } from 'sinon'
 import { Color } from '@athenna/common'
 import { Action } from '#src/helpers/Action'
-import { BeforeEach, Test } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
 import { Log, LoggerProvider } from '@athenna/logger'
+import { Test, BeforeEach, type Context } from '@athenna/test'
 
 export default class ActionTest {
   private action: Action = null

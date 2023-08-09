@@ -8,8 +8,7 @@
  */
 
 import { Artisan } from '#src'
-import { Test } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
+import { Test, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class ListCommandTest extends BaseCommandTest {
