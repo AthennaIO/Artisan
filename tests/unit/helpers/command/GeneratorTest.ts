@@ -9,10 +9,9 @@
 
 import { Config } from '@athenna/config'
 import { View, ViewProvider } from '@athenna/view'
-import type { Context } from '@athenna/test/types'
 import { File, Folder, Path } from '@athenna/common'
 import { Generator } from '#src/helpers/command/Generator'
-import { AfterEach, BeforeEach, Test } from '@athenna/test'
+import { Test, AfterEach, BeforeEach, type Context } from '@athenna/test'
 
 export default class GeneratorTest {
   private generator = new Generator()

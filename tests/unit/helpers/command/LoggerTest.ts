@@ -16,10 +16,9 @@ import { Task } from '#src/helpers/Task'
 import { Table } from '#src/helpers/Table'
 import { Action } from '#src/helpers/Action'
 import { Sticker } from '#src/helpers/Sticker'
-import { BeforeEach, Test } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
 import { Logger } from '#src/helpers/command/Logger'
 import { Instruction } from '#src/helpers/Instruction'
+import { Test, BeforeEach, type Context } from '@athenna/test'
 
 export default class LoggerTest {
   private logger = new Logger()

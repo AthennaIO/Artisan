@@ -11,8 +11,7 @@ import { fake } from 'sinon'
 import { Log } from '@athenna/logger'
 import { Exception } from '@athenna/common'
 import { ConsoleExceptionHandler } from '#src'
-import { Test, ExitFaker } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
+import { Test, ExitFaker, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class ConsoleExceptionHandlerTest extends BaseCommandTest {

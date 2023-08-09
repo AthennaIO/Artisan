@@ -9,9 +9,8 @@
 
 import 'reflect-metadata'
 
-import { Test, ExitFaker } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
 import { CommanderHandler, ConsoleKernel } from '#src'
+import { Test, ExitFaker, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 import { ThrowCommand } from '#tests/stubs/commands/ThrowCommand'
 

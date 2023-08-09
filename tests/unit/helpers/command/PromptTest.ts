@@ -9,9 +9,8 @@
 
 import inquirer from 'inquirer'
 
-import type { Context } from '@athenna/test/types'
 import { Prompt } from '#src/helpers/command/Prompt'
-import { AfterAll, BeforeEach, Test } from '@athenna/test'
+import { Test, AfterAll, BeforeEach, type Context } from '@athenna/test'
 import { InquirerPromptException } from '#src/exceptions/InquirerPromptException'
 
 export default class PromptTest {

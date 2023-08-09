@@ -10,8 +10,7 @@
 import { Artisan } from '#src'
 import { Config } from '@athenna/config'
 import { File, Folder } from '@athenna/common'
-import { Test, ExitFaker } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
+import { Test, ExitFaker, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class TemplateCustomizeCommandTest extends BaseCommandTest {
