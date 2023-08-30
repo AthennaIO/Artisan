@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -41,6 +41,7 @@
     "./handlers/ConsoleExceptionHandler": "./src/handlers/ConsoleExceptionHandler.js",
     "./providers/ArtisanProvider": "./src/providers/ArtisanProvider.js",
     "./commands/ListCommand": "./src/commands/ListCommand.js",
+    "./commands/BuildCommand": "./src/commands/BuildCommand.js",
     "./commands/ConfigureCommand": "./src/commands/ConfigureCommand.js",
     "./commands/MakeCommandCommand": "./src/commands/MakeCommandCommand.js",
     "./commands/TemplateCustomizeCommand": "./src/commands/TemplateCustomizeCommand.js"
@@ -65,7 +66,7 @@
     "ora": "^6.3.1"
   },
   "devDependencies": {
-    "@athenna/common": "^4.4.0",
+    "@athenna/common": "^4.9.1",
     "@athenna/config": "^4.3.0",
     "@athenna/ioc": "^4.1.0",
     "@athenna/logger": "^4.1.0",
@@ -76,6 +77,7 @@
     "@typescript-eslint/parser": "^5.56.0",
     "c8": "^7.12.0",
     "commitizen": "^4.2.6",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.36.0",
@@ -90,6 +92,7 @@
     "lint-staged": "^12.5.0",
     "prettier": "^2.8.7",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   },
@@ -206,6 +209,7 @@
         "loadAllCommands": true
       },
       "configure": "#src/commands/ConfigureCommand",
+      "build": "#src/commands/BuildCommand",
       "loadapp": {
         "path": "#tests/stubs/commands/LoadAppCommand",
         "loadApp": true,
