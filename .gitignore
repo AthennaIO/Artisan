@@ -120,6 +120,7 @@ build
 *.js
 *.d.ts
 *.js.map
+!tests/stubs/.env
 !tests/stubs/**/*.js
 !tests/stubs/**/*.d.ts
 !tests/stubs/**/*.js.map

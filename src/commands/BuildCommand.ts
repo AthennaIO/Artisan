@@ -23,16 +23,20 @@ export class BuildCommand extends BaseCommand {
   public async handle(): Promise<void> {
     this.logger.simple('({bold,green} [ BUILD APPLICATION ])\n')
 
-    let tsConfigPath = Config.get('rc.build.tsconfig')
+    let tsConfigPath = Config.get('rc.commands.build.tsconfig')
 
     if (!isAbsolute(tsConfigPath)) {
       tsConfigPath = join(Path.pwd(), tsConfigPath)
     }
 
     const tsConfig = await new File(tsConfigPath).getContentAsJson()
-    const metaFiles = Config.get('rc.build.metaFiles', []).join(' ')
+    const metaFiles = Config.get('rc.commands.build.metaFiles', []).join(' ')
     const buildDir =
       parse(tsConfigPath).dir + sep + tsConfig.compilerOptions.outDir
+
+    if (metaFiles.includes(' .env ')) {
+      metaFiles.replace(' .env ', '')
+    }
 
     const tasks = this.logger.task()
 

@@ -19,6 +19,7 @@ export default class BuildCommandTest extends BaseCommandTest {
 
     assert.isTrue(stdout.includes('Application successfully compiled'))
     assert.isTrue(Folder.existsSync(Path.stubs('build')))
+    assert.isFalse(File.existsSync(Path.stubs('build/.env')))
     assert.isTrue(File.existsSync(Path.stubs('build/LICENSE.md')))
     assert.isTrue(File.existsSync(Path.stubs('build/app/index.js')))
     assert.isTrue(File.existsSync(Path.stubs('build/app/index.d.ts')))
