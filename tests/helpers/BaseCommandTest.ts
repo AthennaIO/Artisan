@@ -54,6 +54,7 @@ export class BaseCommandTest {
     await Folder.safeRemove(Path.config())
     await Folder.safeRemove(Path.resources())
     await Folder.safeRemove(Path.stubs('storage'))
+    await Folder.safeRemove(Path.stubs('build'))
 
     await File.safeRemove(Path.pwd('.env'))
     await File.safeRemove(Path.pwd('.env.test'))
