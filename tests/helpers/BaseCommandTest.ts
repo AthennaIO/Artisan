@@ -13,6 +13,7 @@ import { File, Folder } from '@athenna/common'
 import { LoggerProvider } from '@athenna/logger'
 import { ExitFaker, AfterEach, BeforeEach } from '@athenna/test'
 import { ConsoleKernel, ArtisanProvider, CommanderHandler } from '#src'
+import { TestCommand } from '#src/testing/plugins/index'
 
 export class BaseCommandTest {
   public artisan = Path.pwd('bin/artisan.ts')
@@ -21,6 +22,8 @@ export class BaseCommandTest {
   @BeforeEach()
   public async beforeEach() {
     ExitFaker.fake()
+
+    TestCommand.setArtisanPath(this.artisan)
 
     process.env.ARTISAN_TESTING = 'true'
 

@@ -15,8 +15,8 @@ import { Config } from '@athenna/config'
 import { Decorator } from '#src/helpers/Decorator'
 import { Commander } from '#src/artisan/Commander'
 import { BaseCommand } from '#src/artisan/BaseCommand'
-import { Exec, Is, Options, Path } from '@athenna/common'
 import { CommanderHandler } from '#src/handlers/CommanderHandler'
+import { Exec, Is, Options, Path, type CommandOutput } from '@athenna/common'
 
 export class ArtisanImpl {
   /**
@@ -107,7 +107,7 @@ export class ArtisanImpl {
   /**
    * Call an Artisan command inside a child process.
    * This method needs to execute a file to bootstrap
-   * under the hood, by default the "Path.pwd(`artisan.${Path.ext()}`)"
+   * under the hood, by default the "Path.bootstrap(`artisan.${Path.ext()}`)"
    * is used.
    *
    * @example
@@ -120,7 +120,7 @@ export class ArtisanImpl {
   public async callInChild(
     command: string,
     path = Path.bootstrap(`artisan.${Path.ext()}`),
-  ): Promise<{ stdout: string; stderr: string }> {
+  ): Promise<CommandOutput> {
     const separator = platform() === 'win32' ? '&' : '&&'
     const executor = `cd ${Path.pwd()} ${separator} sh node`
 

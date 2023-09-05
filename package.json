@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -37,13 +37,13 @@
     ".": "./src/index.js",
     "./types": "./src/types/index.js",
     "./package.json": "./package.json",
+    "./testing/plugins": "./src/testing/plugins/index.js",
     "./kernels/ConsoleKernel": "./src/kernels/ConsoleKernel.js",
     "./handlers/ConsoleExceptionHandler": "./src/handlers/ConsoleExceptionHandler.js",
     "./providers/ArtisanProvider": "./src/providers/ArtisanProvider.js",
     "./commands/ListCommand": "./src/commands/ListCommand.js",
     "./commands/ConfigureCommand": "./src/commands/ConfigureCommand.js",
-    "./commands/MakeCommandCommand": "./src/commands/MakeCommandCommand.js",
-    "./commands/TemplateCustomizeCommand": "./src/commands/TemplateCustomizeCommand.js"
+    "./commands/MakeCommandCommand": "./src/commands/MakeCommandCommand.js"
   },
   "imports": {
     "#bin/*": "./bin/*.js",
@@ -65,7 +65,7 @@
     "ora": "^6.3.1"
   },
   "devDependencies": {
-    "@athenna/common": "^4.9.1",
+    "@athenna/common": "^4.9.2",
     "@athenna/config": "^4.3.0",
     "@athenna/ioc": "^4.1.0",
     "@athenna/logger": "^4.1.0",
