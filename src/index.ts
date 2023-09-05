@@ -12,6 +12,7 @@ export * from './types/index.js'
 export * from '#src/artisan/ArtisanImpl'
 export * from '#src/artisan/BaseCommand'
 export * from '#src/artisan/BaseConfigurer'
+export * from '#src/artisan/Commander'
 
 export * from '#src/helpers/Task'
 export * from '#src/helpers/Table'
