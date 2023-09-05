@@ -12,6 +12,7 @@ import { Color } from '@athenna/common'
 import { Decorator } from '#src/helpers/Decorator'
 import { Prompt } from '#src/helpers/command/Prompt'
 import { Logger } from '#src/helpers/command/Logger'
+import type { Commander } from '#src/artisan/Commander'
 import { Generator } from '#src/helpers/command/Generator'
 
 export abstract class BaseCommand {
@@ -30,6 +31,13 @@ export abstract class BaseCommand {
    */
   public static description(): string {
     return ''
+  }
+
+  /**
+   * Define custom options for commander.
+   */
+  public static commander(commander: Commander): Commander {
+    return commander
   }
 
   /**

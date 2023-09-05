@@ -31,7 +31,11 @@ export class Decorator {
       .command(Target.signature())
       .description(Target.description())
 
-    Reflect.defineMetadata(this.COMMANDER_KEY, command, target)
+    Reflect.defineMetadata(
+      this.COMMANDER_KEY,
+      Target.commander(command),
+      target,
+    )
 
     return Reflect.getMetadata(this.COMMANDER_KEY, target)
   }
