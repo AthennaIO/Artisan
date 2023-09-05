@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -216,6 +216,7 @@
           "console"
         ]
       },
+      "unknown": "#tests/stubs/commands/UnknownArgsCommand",
       "make:command": "#src/commands/MakeCommandCommand",
       "template:customize": "#src/commands/TemplateCustomizeCommand"
     },

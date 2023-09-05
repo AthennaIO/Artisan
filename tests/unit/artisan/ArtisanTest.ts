@@ -63,4 +63,15 @@ export default class ArtisanTest extends BaseCommandTest {
 
     assert.isTrue(fakeIgniteFire.calledWith(['worker', 'console']))
   }
+
+  @Test()
+  public async shouldBeAbleToSetCustomCommanderOptionsInCommands({ assert }: Context) {
+    const { stderr, stdout } = await Artisan.callInChild('unknown --unk', this.artisan)
+
+    console.log(stdout)
+    console.log(stderr)
+
+    assert.isDefined(stdout)
+    assert.isEmpty(stderr)
+  }
 }
