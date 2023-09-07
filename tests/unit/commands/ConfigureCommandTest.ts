@@ -17,24 +17,24 @@ import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 export default class ConfigureCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToConfigurePathsInsideTheApplication({ assert }: Context) {
-    await Artisan.call('configure ./tests/stubs/library/configurer/index.js')
+    await Artisan.call('configure ./tests/fixtures/library/configurer/index.js')
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.containsSubset(Config.get('rc.providers'), ['./tests/stubs/library/providers/DatabaseProvider.js'])
-    assert.containsSubset(athenna.providers, ['./tests/stubs/library/providers/DatabaseProvider.js'])
+    assert.containsSubset(Config.get('rc.providers'), ['./tests/fixtures/library/providers/DatabaseProvider.js'])
+    assert.containsSubset(athenna.providers, ['./tests/fixtures/library/providers/DatabaseProvider.js'])
 
     assert.containsSubset(athenna.commands, {
-      'make:model': './tests/stubs/library/commands/MakeModelCommand.js',
+      'make:model': './tests/fixtures/library/commands/MakeModelCommand.js'
     })
     assert.containsSubset(Config.get('rc.commands'), {
-      'make:model': './tests/stubs/library/commands/MakeModelCommand.js',
+      'make:model': './tests/fixtures/library/commands/MakeModelCommand.js'
     })
   }
 
   @Test()
   public async shouldBeAbleToConfigureLibrariesInsideTheApplicationAndThrowErrorWhenConfigureDoesNotExist({
-    assert,
+    assert
   }: Context) {
     const originalCommand = Exec.command
     const commandFake = fake()

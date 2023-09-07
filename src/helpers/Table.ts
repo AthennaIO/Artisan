@@ -45,7 +45,7 @@ export class Table {
     const cliTable = new CliTable({
       head: this.state.head,
       style: { head: [], border: ['dim'] },
-      ...opts,
+      ...opts
     })
 
     this.state.rows.forEach(row => cliTable.push(row))

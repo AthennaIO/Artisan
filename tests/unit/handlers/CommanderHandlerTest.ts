@@ -24,7 +24,7 @@ export default class CommanderHandlerTest extends BaseCommandTest {
     const commands = CommanderHandler.getCommands()
 
     assert.deepEqual(commands, {
-      'configure <libraries>': 'Configure one or more libraries inside your application.',
+      'configure <libraries>': 'Configure one or more libraries inside your application.'
     })
   }
 
@@ -43,7 +43,7 @@ export default class CommanderHandlerTest extends BaseCommandTest {
 
     assert.deepEqual(commands, {
       'make:command <name>': 'Make a new command file.',
-      'make:controller <name>': 'Make a new controller file.',
+      'make:controller <name>': 'Make a new controller file.'
     })
   }
 

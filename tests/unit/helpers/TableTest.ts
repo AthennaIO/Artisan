@@ -22,7 +22,7 @@ export default class TableTest {
         `│ hello │ world │\n` +
         '├───────┼───────┤\n' +
         '│ hello │ world │\n' +
-        '└───────┴───────┘',
+        '└───────┴───────┘'
     )
   }
 }

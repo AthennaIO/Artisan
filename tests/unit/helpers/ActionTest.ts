@@ -52,7 +52,7 @@ export default class ActionTest {
       .exactly(1)
       .withArgs({ level: 'trace', driver: 'null' })
       .returns({
-        success: _args => successFake(Color.removeColors(_args)),
+        success: _args => successFake(Color.removeColors(_args))
       })
 
     this.action.skipped('app/Services/Service.ts')
@@ -71,7 +71,7 @@ export default class ActionTest {
       .exactly(1)
       .withArgs({ level: 'trace', driver: 'null' })
       .returns({
-        success: _args => successFake(Color.removeColors(_args)),
+        success: _args => successFake(Color.removeColors(_args))
       })
 
     this.action.skipped('app/Services/Service.ts', 'Some reason')
@@ -90,7 +90,7 @@ export default class ActionTest {
       .exactly(1)
       .withArgs({ level: 'trace', driver: 'null' })
       .returns({
-        success: _args => successFake(Color.removeColors(_args)),
+        success: _args => successFake(Color.removeColors(_args))
       })
 
     this.action.failed('app/Services/Service.ts')
@@ -109,7 +109,7 @@ export default class ActionTest {
       .exactly(1)
       .withArgs({ level: 'trace', driver: 'null' })
       .returns({
-        success: _args => successFake(Color.removeColors(_args)),
+        success: _args => successFake(Color.removeColors(_args))
       })
 
     this.action.failed('app/Services/Service.ts', 'Some reason')
@@ -129,7 +129,7 @@ export default class ActionTest {
       .exactly(1)
       .withArgs({ level: 'trace', driver: 'null' })
       .returns({
-        success: _args => successFake(Color.removeColors(_args)),
+        success: _args => successFake(Color.removeColors(_args))
       })
 
     action.succeeded('app/Services/Service.ts')

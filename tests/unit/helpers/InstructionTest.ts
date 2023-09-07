@@ -24,7 +24,7 @@ export default class InstructionTest {
         '│                          │\n' +
         '│     ❯ cd hello-world     │\n' +
         '│                          │\n' +
-        '╰──────────────────────────╯',
+        '╰──────────────────────────╯'
     )
   }
 
@@ -47,7 +47,7 @@ export default class InstructionTest {
         '│                          │\n' +
         '│     ❯ npm run start      │\n' +
         '│                          │\n' +
-        '╰──────────────────────────╯',
+        '╰──────────────────────────╯'
     )
   }
 }

@@ -76,13 +76,13 @@ export class TestOutput {
 
     if (stream === 'stdout' && existsInStderr) {
       return this.assert.fail(
-        `Expected message "${message}" to be logged in "stdout" but it was logged in "stderr"`,
+        `Expected message "${message}" to be logged in "stdout" but it was logged in "stderr"`
       )
     }
 
     if (stream === 'stderr' && existsInStdout) {
       return this.assert.fail(
-        `Expected message "${message}" to be logged in "stderr" but it was logged in "stdout"`,
+        `Expected message "${message}" to be logged in "stderr" but it was logged in "stdout"`
       )
     }
   }
@@ -99,16 +99,16 @@ export class TestOutput {
     if (stream === 'stdout' && existsInStderr) {
       return this.assert.fail(
         `Expected message to be matched in ${inspect(
-          'stdout',
-        )} but it was found in ${inspect('stderr')}`,
+          'stdout'
+        )} but it was found in ${inspect('stderr')}`
       )
     }
 
     if (stream === 'stderr' && existsInStdout) {
       return this.assert.fail(
         `Expected message to be matched in ${inspect(
-          'stderr',
-        )} but it was found in ${inspect('stdout')}`,
+          'stderr'
+        )} but it was found in ${inspect('stdout')}`
       )
     }
   }

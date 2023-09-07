@@ -125,7 +125,7 @@ export class Generator {
         namePascalTimestamp: `${namePascal}${timestamp}`,
         namePluralCamelTimestamp: `${namePluralCamel}${timestamp}`,
         namePluralPascalTimestamp: `${namePluralPascal}${timestamp}`,
-        ...this._properties,
+        ...this._properties
       })
     }
 

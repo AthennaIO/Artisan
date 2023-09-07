@@ -50,7 +50,7 @@ export class ArtisanImpl {
    */
   public route(
     signature: string,
-    handler: (this: BaseCommand, ...args: any[]) => Promise<void>,
+    handler: (this: BaseCommand, ...args: any[]) => Promise<void>
   ): Commander {
     class HandleCommand extends BaseCommand {
       public static signature() {
@@ -64,7 +64,7 @@ export class ArtisanImpl {
 
         const commander: Commander = Reflect.getMetadata(
           'artisan:commander',
-          this,
+          this
         )
 
         return fn(...[...args, commander.opts()])
@@ -119,7 +119,7 @@ export class ArtisanImpl {
    */
   public async callInChild(
     command: string,
-    path = Path.bootstrap(`artisan.${Path.ext()}`),
+    path = Path.bootstrap(`artisan.${Path.ext()}`)
   ): Promise<CommandOutput> {
     const separator = platform() === 'win32' ? '&' : '&&'
     const executor = `cd ${Path.pwd()} ${separator} sh node`
@@ -173,7 +173,7 @@ export class ArtisanImpl {
     const { loadApp, stayAlive, environments } = Options.create(command, {
       loadApp: false,
       stayAlive: false,
-      environments: ['console'],
+      environments: ['console']
     })
 
     if (loadApp) {

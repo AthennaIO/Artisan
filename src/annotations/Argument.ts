@@ -20,7 +20,7 @@ export function Argument(options?: ArgumentOptions): PropertyDecorator {
   return (target: any, key: string | symbol) => {
     options = Options.create(options, {
       signature: String(key),
-      required: true,
+      required: true
     })
 
     if (!options.required) {

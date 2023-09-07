@@ -14,7 +14,7 @@ import { RunningTaskException } from '#src/exceptions/RunningTaskException'
 export default class TaskTest {
   @BeforeEach()
   public async beforeEach() {
-    await Config.loadAll(Path.stubs('config'))
+    await Config.loadAll(Path.fixtures('config'))
   }
 
   @Test()
@@ -54,7 +54,7 @@ export default class TaskTest {
             assert.equal(task.status, 'running')
           })
           .run(),
-      RunningTaskException,
+      RunningTaskException
     )
   }
 }

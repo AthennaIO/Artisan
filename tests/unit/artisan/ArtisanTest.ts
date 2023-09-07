@@ -50,7 +50,7 @@ export default class ArtisanTest extends BaseCommandTest {
     assert.equal(stderr, '')
     assert.equal(
       stdout,
-      "test notRequiredArg true notRequiredOption\ntrue tests|node_modules [ 'tests', 'node_modules' ]\n",
+      "test notRequiredArg true notRequiredOption\ntrue tests|node_modules [ 'tests', 'node_modules' ]\n"
     )
   }
 
@@ -67,9 +67,6 @@ export default class ArtisanTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToSetCustomCommanderOptionsInCommands({ assert }: Context) {
     const { stderr, stdout } = await Artisan.callInChild('unknown --unk', this.artisan)
-
-    console.log(stdout)
-    console.log(stderr)
 
     assert.isDefined(stdout)
     assert.isEmpty(stderr)

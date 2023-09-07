@@ -9,7 +9,7 @@ export default {
   | you may use many connections at once using the Database library.
   |
   */
-  default: Env('DB_CONNECTION', 'mysql'),
+  default: Env('DB_CONNECTION', 'postgres'),
 
   /*
   |--------------------------------------------------------------------------
@@ -25,15 +25,15 @@ export default {
   */
 
   connections: {
-    mysql: {
-      driver: 'mysql',
+    postgres: {
+      driver: 'postgres',
       host: Env('DB_HOST', '127.0.0.1'),
-      port: Env('DB_PORT', 3306),
+      port: Env('DB_PORT', 5432),
       debug: Env('DB_DEBUG', false),
       user: Env('DB_USERNAME', 'root'),
       password: Env('DB_PASSWORD', 'root'),
-      database: Env('DB_DATABASE', 'database'),
-    },
+      database: Env('DB_DATABASE', 'database')
+    }
   },
 
   /*
@@ -47,5 +47,5 @@ export default {
   |
   */
 
-  migrations: Env('DB_MIGRATIONS', 'migrations'),
+  migrations: Env('DB_MIGRATIONS', 'migrations')
 }

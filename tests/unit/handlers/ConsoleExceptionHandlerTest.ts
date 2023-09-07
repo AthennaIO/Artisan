@@ -73,7 +73,7 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
     const exception = new Exception({
       message: 'An internal server exception has occurred.',
       code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500,
+      status: 500
     })
 
     delete exception.stack
@@ -96,7 +96,7 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
     const exception = new Exception({
       message: 'An internal server exception has occurred.',
       code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500,
+      status: 500
     })
 
     delete exception.stack
@@ -119,7 +119,7 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
     const exception = new Exception({
       message: 'An internal server exception has occurred.',
       code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500,
+      status: 500
     })
 
     delete exception.stack

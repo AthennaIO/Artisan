@@ -15,7 +15,7 @@ export class InquirerPromptException extends Exception {
       status: 500,
       code: 'E_INQUIRER_PROMPT',
       message: `An error have occurred while trying to parse your question or read your answer.`,
-      help: err,
+      help: err
     })
   }
 }

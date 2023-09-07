@@ -16,7 +16,7 @@ import type {
   ExpandChoiceOptions,
   ExpandQuestionOptions,
   CheckboxChoiceOptions,
-  CheckboxQuestionOptions,
+  CheckboxQuestionOptions
 } from 'inquirer'
 
 import { Options } from '@athenna/common'
@@ -115,7 +115,7 @@ export class Prompt {
   public async list(
     msg: string,
     choices: string[] | ListChoiceOptions[],
-    opts: ListQuestionOptions = {},
+    opts: ListQuestionOptions = {}
   ): Promise<string> {
     return this.raw(msg, Options.create(opts, { type: 'list', choices }))
   }
@@ -145,7 +145,7 @@ export class Prompt {
   public async expand(
     msg: string,
     choices: ExpandChoiceOptions[],
-    opts?: ExpandQuestionOptions,
+    opts?: ExpandQuestionOptions
   ): Promise<string> {
     return this.raw(msg, Options.create(opts, { type: 'expand', choices }))
   }
@@ -168,7 +168,7 @@ export class Prompt {
   public async checkbox(
     msg: string,
     choices: string[] | CheckboxChoiceOptions[],
-    opts?: CheckboxQuestionOptions,
+    opts?: CheckboxQuestionOptions
   ): Promise<string[]> {
     return this.raw(msg, Options.create(opts, { type: 'checkbox', choices }))
   }

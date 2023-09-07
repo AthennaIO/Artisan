@@ -27,7 +27,7 @@ export default class StickerTest {
         '│                         │\n' +
         '│     cd hello-world      │\n' +
         '│                         │\n' +
-        '╰─────────────────────────╯',
+        '╰─────────────────────────╯'
     )
   }
 
@@ -50,7 +50,7 @@ export default class StickerTest {
         '│                         │\n' +
         '│     npm run start       │\n' +
         '│                         │\n' +
-        '╰─────────────────────────╯',
+        '╰─────────────────────────╯'
     )
   }
 }

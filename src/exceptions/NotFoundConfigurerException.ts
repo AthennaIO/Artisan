@@ -15,7 +15,7 @@ export class NotFoundConfigurerException extends Exception {
       status: 500,
       code: 'E_NOT_FOUND',
       message: `The configurer file of ({magenta} "${library}") library cannot be found.`,
-      help: `Remember that ({magenta} "${library}") needs to implement the Configurer class of Artisan and export it in ({yellow} "${path}").`,
+      help: `Remember that ({magenta} "${library}") needs to implement the Configurer class of Artisan and export it in ({yellow} "${path}").`
     })
   }
 }

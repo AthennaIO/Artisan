@@ -23,13 +23,13 @@ export class ListCommand extends BaseCommand {
 
   public async handle(): Promise<void> {
     this.logger.simple(
-      `({bold,green} [ LISTING ${this.alias.toUpperCase()} ])\n`,
+      `({bold,green} [ LISTING ${this.alias.toUpperCase()} ])\n`
     )
 
     const commands = CommanderHandler.getCommands(this.alias)
 
     this.logger.column(commands, {
-      columns: ['COMMAND', 'DESCRIPTION'],
+      columns: ['COMMAND', 'DESCRIPTION']
     })
   }
 }

@@ -19,18 +19,18 @@ export default class GeneratorTest {
   @BeforeEach()
   public async beforeEach() {
     new ViewProvider().register()
-    await Config.load(Path.stubs('config/rc.ts'))
+    await Config.load(Path.fixtures('config/rc.ts'))
     this.generator = new Generator()
   }
 
   @AfterEach()
   public async afterEach() {
-    await Folder.safeRemove(Path.stubs('tmp'))
+    await Folder.safeRemove(Path.fixtures('tmp'))
   }
 
   @Test()
   public async shouldBeAbleToGenerateFilesFromTemplates({ assert }: Context) {
-    const path = Path.stubs('tmp/GeneratorTestCommand.ts')
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
     await this.generator.path(path).template('command').make()
 
@@ -39,7 +39,7 @@ export default class GeneratorTest {
 
   @Test()
   public async shouldBeAbleToGenerateFilesFromTemplatesWithoutNameProperties({ assert }: Context) {
-    const path = Path.stubs('tmp/GeneratorTestCommand.ts')
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
     await this.generator.path(path).setNameProperties(false).template('command').make()
 
@@ -49,7 +49,7 @@ export default class GeneratorTest {
 
   @Test()
   public async shouldBeAbleToGenerateFilesFromTemplatesWithCustomizedProperties({ assert }: Context) {
-    const path = Path.stubs('tmp/GeneratorTestCommand.ts')
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
     await this.generator.path(path).properties({ hello: true }).template('command').make()
 
@@ -58,7 +58,7 @@ export default class GeneratorTest {
 
   @Test()
   public async shouldBeAbleToGenerateFilesFromTemplatesAndReplaceNamedProperties({ assert }: Context) {
-    const path = Path.stubs('tmp/GeneratorTestCommand.ts')
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
     await this.generator
       .path(path)
@@ -73,7 +73,7 @@ export default class GeneratorTest {
 
   @Test()
   public async shouldBeAbleToGenerateFilesFromTemplatesThatAreAlreadyRegisteredInView({ assert }: Context) {
-    const path = Path.stubs('tmp/GeneratorTestCommand.ts')
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
     View.createTemplate('command', await new File('../../../../templates/command.edge').getContentAsString())
 

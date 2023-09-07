@@ -106,7 +106,7 @@ export class ConsoleKernel {
   private async resolvePath(path: string) {
     return Module.resolve(
       `${path}?version=${Math.random()}`,
-      Config.get('rc.meta'),
+      Config.get('rc.meta')
     )
   }
 

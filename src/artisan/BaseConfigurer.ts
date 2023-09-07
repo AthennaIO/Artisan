@@ -72,7 +72,7 @@ export abstract class BaseConfigurer {
   public setPath(path: string): BaseConfigurer {
     this.paths = {
       lib: resolve(parse(path).dir, '..'),
-      configurer: path,
+      configurer: path
     }
 
     return this

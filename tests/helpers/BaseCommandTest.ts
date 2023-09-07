@@ -27,7 +27,7 @@ export class BaseCommandTest {
 
     process.env.ARTISAN_TESTING = 'true'
 
-    await Config.loadAll(Path.stubs('config'))
+    await Config.loadAll(Path.fixtures('config'))
 
     new ViewProvider().register()
     new LoggerProvider().register()
@@ -56,8 +56,8 @@ export class BaseCommandTest {
     await Folder.safeRemove(Path.app())
     await Folder.safeRemove(Path.config())
     await Folder.safeRemove(Path.resources())
-    await Folder.safeRemove(Path.stubs('storage'))
-    await Folder.safeRemove(Path.stubs('build'))
+    await Folder.safeRemove(Path.fixtures('storage'))
+    await Folder.safeRemove(Path.fixtures('build'))
 
     await File.safeRemove(Path.pwd('.env'))
     await File.safeRemove(Path.pwd('.env.test'))
