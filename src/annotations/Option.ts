@@ -19,7 +19,7 @@ import type { OptionOptions } from '#src/types/OptionOptions'
 export function Option(options?: OptionOptions): PropertyDecorator {
   return (target: any, key: string | symbol) => {
     options = Options.create(options, {
-      signature: `--${String(key)}`,
+      signature: `--${String(key)}`
     })
 
     Decorator.setOption(target, String(key), options)

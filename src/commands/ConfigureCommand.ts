@@ -16,7 +16,7 @@ export class ConfigureCommand extends BaseCommand {
   @Argument({
     signature: '<libraries...>',
     description:
-      'One or more libraries to be configured. (Example: artisan configure @athenna/mail @athenna/database)',
+      'One or more libraries to be configured. (Example: artisan configure @athenna/mail @athenna/database)'
   })
   public libraries: string[]
 
@@ -43,8 +43,8 @@ export class ConfigureCommand extends BaseCommand {
         text: `Installing ${Color.chalk.magenta(library)} library`,
         failText: `Failed to install ${Color.chalk.magenta(library)} library`,
         successText: `Library ${Color.chalk.magenta(
-          library,
-        )} succesfully installed`,
+          library
+        )} succesfully installed`
       })
     }
 

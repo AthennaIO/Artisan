@@ -34,7 +34,7 @@ export class Decorator {
     Reflect.defineMetadata(
       this.COMMANDER_KEY,
       Target.commander(command),
-      target,
+      target
     )
 
     return Reflect.getMetadata(this.COMMANDER_KEY, target)
@@ -43,7 +43,7 @@ export class Decorator {
   public static setOption(
     target: any,
     key: string,
-    options: OptionOptions,
+    options: OptionOptions
   ): typeof Decorator {
     let signatureOption = ''
 
@@ -66,7 +66,7 @@ export class Decorator {
       Reflect.defineMetadata(
         this.OPTIONS_KEY,
         { [signatureOption]: key },
-        target,
+        target
       )
     }
 
@@ -83,7 +83,7 @@ export class Decorator {
     this.getCommander(target).option(
       options.signature,
       options.description,
-      options.default,
+      options.default
     )
 
     return this
@@ -92,7 +92,7 @@ export class Decorator {
   public static setArgument(
     target: any,
     argument: string,
-    options: ArgumentOptions,
+    options: ArgumentOptions
   ): typeof Decorator {
     if (!Reflect.hasMetadata(this.ARGUMENTS_KEY, target)) {
       Reflect.defineMetadata(this.ARGUMENTS_KEY, [], target)
@@ -111,7 +111,7 @@ export class Decorator {
     this.getCommander(target).argument(
       options.signature,
       options.description,
-      options.default,
+      options.default
     )
 
     return this

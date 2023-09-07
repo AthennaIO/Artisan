@@ -13,7 +13,7 @@ import { sep, resolve, isAbsolute } from 'node:path'
 
 export class MakeCommandCommand extends BaseCommand {
   @Argument({
-    description: 'The command name.',
+    description: 'The command name.'
   })
   public name: string
 
@@ -35,7 +35,7 @@ export class MakeCommandCommand extends BaseCommand {
       .make()
 
     this.logger.success(
-      `Command ({yellow} "${file.name}") successfully created.`,
+      `Command ({yellow} "${file.name}") successfully created.`
     )
 
     const signature = String.toCamelCase(file.name)
@@ -44,7 +44,7 @@ export class MakeCommandCommand extends BaseCommand {
     await this.rc.setTo('commands', signature, importPath).save()
 
     this.logger.success(
-      `Athenna RC updated: ({dim,yellow} { commands += "${signature}": "${importPath}" })`,
+      `Athenna RC updated: ({dim,yellow} { commands += "${signature}": "${importPath}" })`
     )
   }
 
@@ -61,7 +61,7 @@ export class MakeCommandCommand extends BaseCommand {
   private getDestinationPath(): string {
     let destination = Config.get(
       'rc.commands.make:command.destination',
-      Path.commands(),
+      Path.commands()
     )
 
     if (!isAbsolute(destination)) {

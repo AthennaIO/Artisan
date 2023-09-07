@@ -16,40 +16,40 @@ export class Test extends BaseCommand {
 
   @Option({
     signature: '-o, --other',
-    description: 'Option.',
+    description: 'Option.'
   })
   public option: string
 
   @Option({
     signature: '-oo, --otherOption',
     default: 'notRequiredOption',
-    description: 'Other option.',
+    description: 'Other option.'
   })
   public notRequiredOption: string
 
   @Argument({
     required: false,
     default: 'notRequiredArg',
-    description: 'Not required arg.',
+    description: 'Not required arg.'
   })
   public notRequiredArg: string
 
   @Option({
-    signature: '--no-clean',
+    signature: '--no-clean'
   })
   public any___VALLLUE: boolean
 
   @Option({
     signature: '--ignore-on-clean [folders]',
     description: 'Ignore the given folders when cleaning the application.',
-    default: 'tests|node_modules',
+    default: 'tests|node_modules'
   })
   public ignoreOnClean: string
 
   @Option({
     signature: '--ignore-on-clean-array [folders...]',
     description: 'Ignore the given folders when cleaning the application.',
-    default: ['tests', 'node_modules'],
+    default: ['tests', 'node_modules']
   })
   public ignoreOnCleanArray: string[]
 

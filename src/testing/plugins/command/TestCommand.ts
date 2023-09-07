@@ -45,7 +45,7 @@ export class TestCommand {
    */
   public async run(command: string): Promise<TestOutput> {
     return Artisan.callInChild(command, TestCommand.artisanPath).then(output =>
-      this.createOutput(output),
+      this.createOutput(output)
     )
   }
 }

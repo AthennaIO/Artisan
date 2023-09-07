@@ -120,7 +120,7 @@ export class TaskManager {
     this.time = Date.now()
     this.spinner = ora({
       spinner: 'arrow',
-      isSilent: Config.is('logging.channels.console.driver', 'null'),
+      isSilent: Config.is('logging.channels.console.driver', 'null')
     })
     this.nextTasksTitle = nextTasksTitle
       .map(nextTaskTitle => Color.dim(`→ ${nextTaskTitle}`))
@@ -160,7 +160,7 @@ export class TaskManager {
 
     this.spinner.stopAndPersist({
       symbol: icon,
-      text: `${this.task.title} ${ms} ${msg}\n${this.nextTasksTitle}`,
+      text: `${this.task.title} ${ms} ${msg}\n${this.nextTasksTitle}`
     })
 
     this.status = 'fail'
@@ -182,7 +182,7 @@ export class TaskManager {
 
     this.spinner.stopAndPersist({
       symbol: icon,
-      text: `${this.task.title} ${ms}${msg}`,
+      text: `${this.task.title} ${ms}${msg}`
     })
 
     this.status = 'complete'

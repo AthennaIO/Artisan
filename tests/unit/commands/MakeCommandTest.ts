@@ -26,21 +26,21 @@ export default class MakeCommandTest extends BaseCommandTest {
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.containsSubset(Config.get('rc.commands'), {
-      testCommand: '#app/console/commands/TestCommand',
+      testCommand: '#app/console/commands/TestCommand'
     })
     assert.containsSubset(athenna.commands, {
-      testCommand: '#app/console/commands/TestCommand',
+      testCommand: '#app/console/commands/TestCommand'
     })
   }
 
   @Test()
   public async shouldBeAbleToCreateACommandFileWithADifferentDestPathAndImportPath({ assert }: Context) {
     Config.set('rc.commands.make:command.path', Config.get('rc.commands.make:command'))
-    Config.set('rc.commands.make:command.destination', './tests/stubs/storage/commands')
+    Config.set('rc.commands.make:command.destination', './tests/fixtures/storage/commands')
 
     await Artisan.call('make:command TestCommand', false)
 
-    const path = Path.stubs('storage/commands/TestCommand.ts')
+    const path = Path.fixtures('storage/commands/TestCommand.ts')
 
     assert.isTrue(await File.exists(path))
     assert.isTrue(ExitFaker.faker.calledOnceWith(0))
@@ -48,10 +48,10 @@ export default class MakeCommandTest extends BaseCommandTest {
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.containsSubset(Config.get('rc.commands'), {
-      testCommand: '#tests/stubs/storage/commands/TestCommand',
+      testCommand: '#tests/fixtures/storage/commands/TestCommand'
     })
     assert.containsSubset(athenna.commands, {
-      testCommand: '#tests/stubs/storage/commands/TestCommand',
+      testCommand: '#tests/fixtures/storage/commands/TestCommand'
     })
   }
 

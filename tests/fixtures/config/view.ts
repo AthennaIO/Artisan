@@ -58,7 +58,7 @@ export default {
     */
 
     paths: {
-      command: Path.pwd('templates/command.edge'),
+      command: Path.pwd('templates/command.edge')
     },
 
     /*
@@ -89,7 +89,7 @@ export default {
     |
     */
 
-    customTemplatesPath: Path.resources('templates'),
+    customTemplatesPath: Path.resources('templates')
   },
 
   /*
@@ -116,6 +116,6 @@ export default {
     |
     */
 
-    cache: false,
-  },
+    cache: false
+  }
 }

@@ -46,12 +46,12 @@ export class TemplateCustomizeCommand extends BaseCommand {
       `Athenna RC updated: ({dim,yellow} { view.templates = ${JSON.stringify(
         templates,
         null,
-        2,
-      )} })`,
+        2
+      )} })`
     )
 
     this.logger.success(
-      'Template files successfully moved to ({yellow} resources/templates) folder.',
+      'Template files successfully moved to ({yellow} resources/templates) folder.'
     )
   }
 }

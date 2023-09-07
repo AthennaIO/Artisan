@@ -15,7 +15,7 @@ export class RunningTaskException extends Exception {
       status: 500,
       code: 'E_RUNNING_TASK',
       message: `Task "${title}" with "running" status.`,
-      help: `The task "${title}" has runned and returned a "running" status, this means that "task.fail" or "task.complete" method havent been called inside the task callback. A task must end with one of this two status to be completed and interpreted by Artisan.`,
+      help: `The task "${title}" has runned and returned a "running" status, this means that "task.fail" or "task.complete" method havent been called inside the task callback. A task must end with one of this two status to be completed and interpreted by Artisan.`
     })
   }
 }

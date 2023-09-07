@@ -34,7 +34,7 @@ Artisan.route('logger', async function () {
     .succeed('hello end spinner')
   await this.logger.promiseSpinner(() => Exec.sleep(10), {
     successText: 'hello success',
-    failText: 'hello fail',
+    failText: 'hello fail'
   })
   await this.logger
     .task()
@@ -45,9 +45,9 @@ Artisan.route('logger', async function () {
   this.logger.instruction().add('').render()
   this.logger.column(
     {
-      hello: 'world',
+      hello: 'world'
     },
-    { columns: ['KEY', 'VALUE'] },
+    { columns: ['KEY', 'VALUE'] }
   )
 
   const action = this.logger.action('create')

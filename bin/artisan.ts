@@ -22,7 +22,7 @@ import { Artisan, ConsoleKernel, ArtisanProvider } from '#src'
 
 process.env.IS_TS = 'true'
 
-await Config.loadAll(Path.stubs('config'))
+await Config.loadAll(Path.fixtures('config'))
 
 Config.delete('app.version')
 Config.set('rc.meta', import.meta.url)

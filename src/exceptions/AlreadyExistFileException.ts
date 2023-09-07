@@ -14,7 +14,7 @@ export class AlreadyExistFileException extends Exception {
     super({
       status: 500,
       code: 'E_SIMPLE_CLI',
-      message: `The file ({yellow} "${path}") already exists. Try using another name or delete the file.`,
+      message: `The file ({yellow} "${path}") already exists. Try using another name or delete the file.`
     })
   }
 }

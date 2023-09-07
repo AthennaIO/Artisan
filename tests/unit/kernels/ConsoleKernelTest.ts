@@ -12,7 +12,7 @@ import 'reflect-metadata'
 import { CommanderHandler, ConsoleKernel } from '#src'
 import { Test, ExitFaker, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
-import { ThrowCommand } from '#tests/stubs/commands/ThrowCommand'
+import { ThrowCommand } from '#tests/fixtures/commands/ThrowCommand'
 
 export default class ConsoleKernelTest extends BaseCommandTest {
   @Test()
@@ -42,7 +42,7 @@ export default class ConsoleKernelTest extends BaseCommandTest {
     assert.deepEqual(Config.get('rc.commands.hello'), {
       loadApp: false,
       stayAlive: false,
-      environments: ['hello'],
+      environments: ['hello']
     })
     assert.isDefined(CommanderHandler.getCommands()['hello <hello>'])
   }
@@ -51,7 +51,7 @@ export default class ConsoleKernelTest extends BaseCommandTest {
   public async shouldBeAbleToRegisterRouteFilesWithImportAliasUsingConsoleKernel({ assert }: Context) {
     CommanderHandler.getCommander<any>().commands = []
 
-    await new ConsoleKernel().registerRouteCommands('#tests/stubs/routes/console')
+    await new ConsoleKernel().registerRouteCommands('#tests/fixtures/routes/console')
 
     assert.isDefined(CommanderHandler.getCommands()['importalias'])
   }
@@ -60,7 +60,7 @@ export default class ConsoleKernelTest extends BaseCommandTest {
   public async shouldBeAbleToSetCustomExceptionHandlerUsingConsoleKernel({ assert }: Context) {
     CommanderHandler.setExceptionHandler(null)
 
-    await new ConsoleKernel().registerExceptionHandler('#tests/stubs/handlers/Handler')
+    await new ConsoleKernel().registerExceptionHandler('#tests/fixtures/handlers/Handler')
 
     const exec = CommanderHandler.bindHandler(new ThrowCommand())
 

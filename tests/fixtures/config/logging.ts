@@ -14,14 +14,14 @@ export default {
     console: {
       driver: 'null',
       level: 'trace',
-      formatter: 'cli',
+      formatter: 'cli'
     },
 
     exception: {
       driver: 'null',
       level: 'trace',
       streamType: 'stderr',
-      formatter: 'none',
-    },
-  },
+      formatter: 'none'
+    }
+  }
 }

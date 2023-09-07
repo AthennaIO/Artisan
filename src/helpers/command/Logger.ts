@@ -15,7 +15,7 @@ import ora, {
   oraPromise,
   type Ora,
   type Options,
-  type PromiseOptions,
+  type PromiseOptions
 } from 'ora'
 
 import { Is } from '@athenna/common'
@@ -102,7 +102,7 @@ export class Logger extends AthennaLogger {
    */
   public spinner(msgOrOpts?: string | Options): Ora {
     let options: any = {
-      isSilent: Config.is('logging.channels.console.driver', 'null'),
+      isSilent: Config.is('logging.channels.console.driver', 'null')
     }
 
     if (Is.String(msgOrOpts)) {
@@ -142,10 +142,10 @@ export class Logger extends AthennaLogger {
    */
   public async promiseSpinner<T = any>(
     promise: any,
-    msgOrOpts?: string | PromiseOptions<T>,
+    msgOrOpts?: string | PromiseOptions<T>
   ): Promise<T> {
     let options: any = {
-      isSilent: Config.is('logging.channels.console.driver', 'null'),
+      isSilent: Config.is('logging.channels.console.driver', 'null')
     }
 
     if (Is.String(msgOrOpts)) {
@@ -211,7 +211,7 @@ export class Logger extends AthennaLogger {
    */
   public column(
     data: any[] | Record<string, any>,
-    opts?: columnify.GlobalOptions,
+    opts?: columnify.GlobalOptions
   ): void {
     this.simple(columnify(data, opts))
   }

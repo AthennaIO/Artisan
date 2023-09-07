@@ -100,7 +100,7 @@ export class Instruction {
 
     return table.row([this._rows]).toString({
       chars: boxes.round,
-      ...opts,
+      ...opts
     })
   }
 
@@ -133,7 +133,7 @@ export class Instruction {
 
     return table.row([this._rows]).render({
       chars: boxes.round,
-      ...opts,
+      ...opts
     })
   }
 }

@@ -16,21 +16,21 @@ import { BaseConfigurer } from '../../../../src/artisan/BaseConfigurer.js'
 export default class LibraryConfigurer extends BaseConfigurer {
   prompt = Env('ARTISAN_TESTING', false)
     ? {
-        list: (_, __) => Promise.resolve('PostgreSQL'),
-      }
+      list: (_, __) => Promise.resolve('PostgreSQL')
+    }
     : super.prompt
 
   async configure() {
     const db = await this.prompt.list('Select the database driver you want to use', [
       'PostgreSQL',
       'MySQL / MariaDB',
-      'MongoDB',
+      'MongoDB'
     ])
 
     const libTitles = {
       MongoDB: 'Install mongoose library',
       PostgreSQL: 'Install knex and pg libraries',
-      'MySQL / MariaDB': 'Install knex and mysql2 libraries',
+      'MySQL / MariaDB': 'Install knex and mysql2 libraries'
     }
 
     await this.logger
@@ -67,7 +67,7 @@ export default class LibraryConfigurer extends BaseConfigurer {
     const paths = {
       MongoDB: this.paths.lib.concat(`/configurer/config/mongo/database.${Path.ext()}`),
       PostgreSQL: this.paths.lib.concat(`/configurer/config/postgres/database.${Path.ext()}`),
-      'MySQL / MariaDB': this.paths.lib.concat(`/configurer/config/mysql/database.${Path.ext()}`),
+      'MySQL / MariaDB': this.paths.lib.concat(`/configurer/config/mysql/database.${Path.ext()}`)
     }
 
     return new File(paths[db]).copy(Path.config(`database.${Path.ext()}`))
@@ -75,8 +75,8 @@ export default class LibraryConfigurer extends BaseConfigurer {
 
   async taskThree() {
     return this.rc
-      .pushTo('providers', './tests/stubs/library/providers/DatabaseProvider.js')
-      .setTo('commands', 'make:model', './tests/stubs/library/commands/MakeModelCommand.js')
+      .pushTo('providers', './tests/fixtures/library/providers/DatabaseProvider.js')
+      .setTo('commands', 'make:model', './tests/fixtures/library/commands/MakeModelCommand.js')
       .save()
   }
 
@@ -98,7 +98,7 @@ export default class LibraryConfigurer extends BaseConfigurer {
         'DB_DATABASE=database\n' +
         'DB_DEBUG=false\n' +
         'DB_USERNAME=root\n' +
-        'DB_PASSWORD=root\n',
+        'DB_PASSWORD=root\n'
     }
 
     return new File(Path.pwd('.env'), Buffer.from(''))
@@ -113,8 +113,8 @@ export default class LibraryConfigurer extends BaseConfigurer {
         mongo: {
           container_name: 'athenna_mongo',
           image: 'mongo',
-          ports: ['27017:27017'],
-        },
+          ports: ['27017:27017']
+        }
       },
       PostgreSQL: {
         postgres: {
@@ -125,9 +125,9 @@ export default class LibraryConfigurer extends BaseConfigurer {
             POSTGRES_DB: 'postgres',
             POSTGRES_USER: 'postgres',
             POSTGRES_PASSWORD: 12345,
-            POSTGRES_ROOT_PASSWORD: 12345,
-          },
-        },
+            POSTGRES_ROOT_PASSWORD: 12345
+          }
+        }
       },
       'MySQL / MariaDB': {
         mysql: {
@@ -137,10 +137,10 @@ export default class LibraryConfigurer extends BaseConfigurer {
           environment: {
             MYSQL_DATABASE: 'athenna',
             MYSQL_ROOT_PASSWORD: '12345',
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes',
-          },
-        },
-      },
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          }
+        }
+      }
     }
 
     const baseDockerCompose = await new File(this.paths.lib.concat('/configurer/docker-compose.yml')).getContent()
