@@ -7,66 +7,49 @@
  * file that was distributed with this source code.
  */
 
-import { fake } from 'sinon'
 import { Log } from '@athenna/logger'
 import { Exception } from '@athenna/common'
 import { ConsoleExceptionHandler } from '#src'
-import { Test, ExitFaker, type Context } from '@athenna/test'
+import { Test, type Context, Mock } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToLogThePrettyExceptionFromErrorInstances({ assert }: Context) {
-    const mock = Log.getMock()
-    mock
-      .expects('channelOrVanilla')
-      .exactly(1)
-      .withArgs('exception')
-      .returns({ error: () => {} })
+    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
 
     await new ConsoleExceptionHandler().handle(new Error())
 
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'exception')
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 
   @Test()
   public async shouldBeAbleToLogThePrettyExceptionFromExceptionInstances({ assert }: Context) {
-    const mock = Log.getMock()
-    mock
-      .expects('channelOrVanilla')
-      .exactly(1)
-      .withArgs('exception')
-      .returns({ error: () => {} })
+    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
 
     await new ConsoleExceptionHandler().handle(new Exception())
 
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'exception')
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 
   @Test()
   public async shouldBeAbleToLogInTheConsoleChannelIfTheExceptionCodeIsE_SIMPLE_CLI({ assert }: Context) {
-    const mock = Log.getMock()
-    mock
-      .expects('channelOrVanilla')
-      .exactly(1)
-      .withArgs('console')
-      .returns({ error: () => {} })
+    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
 
     await new ConsoleExceptionHandler().handle(new Exception({ code: 'E_SIMPLE_CLI' }))
 
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'console')
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 
   @Test()
   public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalError({ assert }: Context) {
     Config.set('app.debug', false)
 
-    const mockedError = fake()
-    const mock = Log.getMock()
-    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+    const fake = Mock.sandbox.fake()
+    const stub = Log.when('channelOrVanilla').return({ error: fake })
 
     await new ConsoleExceptionHandler().handle(new Error('hello'))
 
@@ -78,18 +61,17 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
 
     delete exception.stack
 
-    assert.isTrue(mockedError.calledWith(await exception.prettify()))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'exception')
+    assert.isTrue(fake.calledWith(await exception.prettify()))
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 
   @Test()
   public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalTypeError({ assert }: Context) {
     Config.set('app.debug', false)
 
-    const mockedError = fake()
-    const mock = Log.getMock()
-    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+    const fake = Mock.sandbox.fake()
+    const stub = Log.when('channelOrVanilla').return({ error: fake })
 
     await new ConsoleExceptionHandler().handle(new TypeError('hello'))
 
@@ -101,18 +83,17 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
 
     delete exception.stack
 
-    assert.isTrue(mockedError.calledWith(await exception.prettify()))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'exception')
+    assert.isTrue(fake.calledWith(await exception.prettify()))
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 
   @Test()
   public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalSyntaxError({ assert }: Context) {
     Config.set('app.debug', false)
 
-    const mockedError = fake()
-    const mock = Log.getMock()
-    mock.expects('channelOrVanilla').exactly(1).withArgs('exception').returns({ error: mockedError })
+    const fake = Mock.sandbox.fake()
+    const stub = Log.when('channelOrVanilla').return({ error: fake })
 
     await new ConsoleExceptionHandler().handle(new SyntaxError('hello'))
 
@@ -124,8 +105,8 @@ export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
 
     delete exception.stack
 
-    assert.isTrue(mockedError.calledWith(await exception.prettify()))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(1))
-    mock.verify()
+    assert.calledWith(stub, 'exception')
+    assert.isTrue(fake.calledWith(await exception.prettify()))
+    assert.isTrue(this.processExit.calledOnceWith(1))
   }
 }

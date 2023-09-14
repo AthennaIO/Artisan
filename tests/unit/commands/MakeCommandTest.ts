@@ -10,7 +10,7 @@
 import { Artisan } from '#src'
 import { File } from '@athenna/common'
 import { Config } from '@athenna/config'
-import { Test, ExitFaker, type Context } from '@athenna/test'
+import { Test, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class MakeCommandTest extends BaseCommandTest {
@@ -21,7 +21,7 @@ export default class MakeCommandTest extends BaseCommandTest {
     const path = Path.console('commands/TestCommand.ts')
 
     assert.isTrue(await File.exists(path))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(0))
+    assert.isTrue(this.processExit.calledOnceWith(0))
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
@@ -43,7 +43,7 @@ export default class MakeCommandTest extends BaseCommandTest {
     const path = Path.fixtures('storage/commands/TestCommand.ts')
 
     assert.isTrue(await File.exists(path))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(0))
+    assert.isTrue(this.processExit.calledOnceWith(0))
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
@@ -60,6 +60,6 @@ export default class MakeCommandTest extends BaseCommandTest {
     await Artisan.call('make:command TestCommand')
     await Artisan.call('make:command TestCommand')
 
-    assert.isTrue(ExitFaker.faker.calledWith(1))
+    assert.isTrue(this.processExit.calledWith(1))
   }
 }

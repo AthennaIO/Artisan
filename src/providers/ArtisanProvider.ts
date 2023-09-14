@@ -12,6 +12,6 @@ import { ArtisanImpl } from '#src/artisan/ArtisanImpl'
 
 export class ArtisanProvider extends ServiceProvider {
   public register() {
-    this.container.instance('Athenna/Core/Artisan', new ArtisanImpl(), false)
+    this.container.singleton('Athenna/Core/Artisan', ArtisanImpl)
   }
 }

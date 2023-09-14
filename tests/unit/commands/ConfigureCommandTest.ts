@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { fake } from 'sinon'
 import { Artisan } from '#src'
 import { Config } from '@athenna/config'
 import { Exec, File } from '@athenna/common'
-import { Test, ExitFaker, type Context } from '@athenna/test'
+import { Test, type Context, Mock } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class ConfigureCommandTest extends BaseCommandTest {
@@ -37,7 +36,7 @@ export default class ConfigureCommandTest extends BaseCommandTest {
     assert
   }: Context) {
     const originalCommand = Exec.command
-    const commandFake = fake()
+    const commandFake = Mock.sandbox.fake()
 
     Exec.command = (...args: any[]) => Promise.resolve(commandFake(...args))
 
@@ -46,6 +45,6 @@ export default class ConfigureCommandTest extends BaseCommandTest {
     Exec.command = originalCommand
 
     assert.isTrue(commandFake.calledOnceWith('npm install some-lib-name'))
-    assert.isTrue(ExitFaker.faker.calledWith(1)) // <- Means that some error happened
+    assert.isTrue(this.processExit.calledWith(1)) // <- Means that some error happened
   }
 }

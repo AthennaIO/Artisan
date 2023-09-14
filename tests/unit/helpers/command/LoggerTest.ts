@@ -11,14 +11,13 @@ import figlet from 'figlet'
 import columnify from 'columnify'
 import chalkRainbow from 'chalk-rainbow'
 
-import { fake } from 'sinon'
 import { Task } from '#src/helpers/Task'
 import { Table } from '#src/helpers/Table'
 import { Action } from '#src/helpers/Action'
 import { Sticker } from '#src/helpers/Sticker'
 import { Logger } from '#src/helpers/command/Logger'
 import { Instruction } from '#src/helpers/Instruction'
-import { Test, BeforeEach, type Context } from '@athenna/test'
+import { Test, BeforeEach, type Context, Mock } from '@athenna/test'
 
 export default class LoggerTest {
   private logger = new Logger()
@@ -33,24 +32,24 @@ export default class LoggerTest {
 
   @Test()
   public async shouldBeAbleToLogSimpleValuesWithoutAnyFormatInStdout({ assert }: Context) {
-    const successFake = fake()
-    const standaloneFake = fake(_configs => ({ success: successFake }))
+    const successFake = Mock.sandbox.fake()
+    const standaloneFake = Mock.sandbox.fake(_configs => ({ success: successFake }))
     this.logger.standalone = standaloneFake as any
 
     this.logger.simple('hello')
 
-    assert.isTrue(successFake.calledWith('hello'))
-    assert.isTrue(standaloneFake.calledWith({ level: 'trace', driver: 'null' }))
+    assert.calledWith(successFake, 'hello')
+    assert.calledWith(standaloneFake, { level: 'trace', driver: 'null' })
   }
 
   @Test()
   public async shouldBeAbleToLogRainbowMessagesInStdout({ assert }: Context) {
-    const simpleMock = fake()
+    const simpleMock = Mock.sandbox.fake()
     this.logger.simple = simpleMock
 
     this.logger.rainbow('hello')
 
-    assert.isTrue(simpleMock.calledWith(chalkRainbow(figlet.textSync('hello')).concat('\n')))
+    assert.calledWith(simpleMock, chalkRainbow(figlet.textSync('hello')).concat('\n'))
   }
 
   @Test()
@@ -62,12 +61,12 @@ export default class LoggerTest {
 
   @Test()
   public async shouldBeAbleToLogColumnifiedMessagesInStdout({ assert }: Context) {
-    const simpleMock = fake()
+    const simpleMock = Mock.sandbox.fake()
     this.logger.simple = simpleMock
 
     this.logger.column({ hello: 'world' })
 
-    assert.isTrue(simpleMock.calledWith(columnify({ hello: 'world' })))
+    assert.calledWith(simpleMock, columnify({ hello: 'world' }))
   }
 
   @Test()

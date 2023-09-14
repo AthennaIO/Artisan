@@ -9,9 +9,8 @@
 
 import figlet from 'figlet'
 
-import { fake } from 'sinon'
 import { Artisan } from '#src'
-import { Test, type Context } from '@athenna/test'
+import { Test, type Context, Mock } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class ArtisanTest extends BaseCommandTest {
@@ -56,7 +55,7 @@ export default class ArtisanTest extends BaseCommandTest {
 
   @Test()
   public async shouldBeAbleToLoadTheApplicationIfTheLoadAppOptionsIsTrue({ assert }: Context) {
-    const fakeIgniteFire = fake()
+    const fakeIgniteFire = Mock.sandbox.fake()
     ioc.instance('Athenna/Core/Ignite', { fire: fakeIgniteFire })
 
     await Artisan.call('loadapp', false)

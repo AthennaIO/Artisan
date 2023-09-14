@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { fake } from 'sinon'
 import { Color } from '@athenna/common'
 import { Action } from '#src/helpers/Action'
 import { Log, LoggerProvider } from '@athenna/logger'
-import { Test, BeforeEach, type Context } from '@athenna/test'
+import { Test, BeforeEach, type Context, Mock } from '@athenna/test'
 
 export default class ActionTest {
   private action: Action = null
@@ -26,115 +25,69 @@ export default class ActionTest {
   }
 
   @Test()
-  public async shouldBeAbleToLogASuccededActionInTheStdout({ assert }: Context) {
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({ success: _args => successFake(Color.removeColors(_args)) })
+  public async shouldBeAbleToLogASucceededActionInTheStdout({ assert }: Context) {
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.succeeded('app/Services/Service.ts')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('CREATE: app/Services/Service.ts'))
-    mock.verify()
   }
 
   @Test()
   public async shouldBeAbleToLogASkipedActionInTheStdout({ assert }: Context) {
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({
-        success: _args => successFake(Color.removeColors(_args))
-      })
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.skipped('app/Services/Service.ts')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('SKIP:   app/Services/Service.ts'))
-    mock.verify()
   }
 
   @Test()
   public async shouldBeAbleToLogASkipedActionWithReasonInTheStdout({ assert }: Context) {
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({
-        success: _args => successFake(Color.removeColors(_args))
-      })
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.skipped('app/Services/Service.ts', 'Some reason')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('SKIP:   app/Services/Service.ts (Some reason)'))
-    mock.verify()
   }
 
   @Test()
   public async shouldBeAbleToLogAFailedActionInTheStdout({ assert }: Context) {
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({
-        success: _args => successFake(Color.removeColors(_args))
-      })
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.failed('app/Services/Service.ts')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('ERROR:  app/Services/Service.ts'))
-    mock.verify()
   }
 
   @Test()
   public async shouldBeAbleToLogAFailedActionWithReasonInTheStdout({ assert }: Context) {
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({
-        success: _args => successFake(Color.removeColors(_args))
-      })
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.failed('app/Services/Service.ts', 'Some reason')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('ERROR:  app/Services/Service.ts (Some reason)'))
-    mock.verify()
   }
 
   @Test()
   public async shouldBeAbleToCreateAnActionInstanceWhereTheErrorActionIsTheBiggest({ assert }: Context) {
     const action = new Action('OK')
-    const mock = Log.getMock()
-    const successFake = fake()
-
-    mock
-      .expects('standalone')
-      .exactly(1)
-      .withArgs({ level: 'trace', driver: 'null' })
-      .returns({
-        success: _args => successFake(Color.removeColors(_args))
-      })
+    const successFake = Mock.sandbox.fake()
+    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     action.succeeded('app/Services/Service.ts')
 
+    assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
     assert.isTrue(successFake.calledWith('OK:    app/Services/Service.ts'))
-    mock.verify()
   }
 }
