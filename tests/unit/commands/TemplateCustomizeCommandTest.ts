@@ -10,7 +10,7 @@
 import { Artisan } from '#src'
 import { Config } from '@athenna/config'
 import { File, Folder } from '@athenna/common'
-import { Test, ExitFaker, type Context } from '@athenna/test'
+import { Test, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
 export default class TemplateCustomizeCommandTest extends BaseCommandTest {
@@ -23,7 +23,7 @@ export default class TemplateCustomizeCommandTest extends BaseCommandTest {
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.isTrue(await Folder.exists(path))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(0))
+    assert.isTrue(this.processExit.calledOnceWith(0))
     assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
     assert.equal(athenna.view.templates.command, './resources/templates/command.edge')
   }
@@ -41,7 +41,7 @@ export default class TemplateCustomizeCommandTest extends BaseCommandTest {
 
     assert.isTrue(await Folder.exists(path))
     assert.isTrue(await File.exists(templatePath))
-    assert.isTrue(ExitFaker.faker.calledOnceWith(0))
+    assert.isTrue(this.processExit.calledOnceWith(0))
     assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
   }
 }

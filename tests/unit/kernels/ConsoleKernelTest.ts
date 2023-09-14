@@ -9,8 +9,8 @@
 
 import 'reflect-metadata'
 
+import { Test, type Context } from '@athenna/test'
 import { CommanderHandler, ConsoleKernel } from '#src'
-import { Test, ExitFaker, type Context } from '@athenna/test'
 import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 import { ThrowCommand } from '#tests/fixtures/commands/ThrowCommand'
 
@@ -66,6 +66,6 @@ export default class ConsoleKernelTest extends BaseCommandTest {
 
     await exec()
 
-    assert.isTrue(ExitFaker.faker.calledWith(1))
+    assert.isTrue(this.processExit.calledWith(1))
   }
 }
