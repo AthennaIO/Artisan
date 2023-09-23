@@ -119,10 +119,20 @@ export class ArtisanImpl {
    */
   public async callInChild(
     command: string,
-    path = Path.bootstrap(`artisan.${Path.ext()}`)
+    path?: string
   ): Promise<CommandOutput> {
     const separator = platform() === 'win32' ? '&' : '&&'
-    const executor = `cd ${Path.pwd()} ${separator} sh node`
+    const executor = `cd ${Path.pwd()} ${separator} ${Config.get(
+      'rc.artisan.child.executor',
+      'sh node'
+    )}`
+
+    if (!path) {
+      path = Config.get(
+        'rc.artisan.child.path',
+        Path.bootstrap(`artisan.${Path.ext()}`)
+      )
+    }
 
     if (Env('NODE_ENV')) {
       command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${path} ${command}`
