@@ -108,26 +108,39 @@ export class ArtisanImpl {
    * Call an Artisan command inside a child process.
    * This method needs to execute a file to bootstrap
    * under the hood, by default the "Path.bootstrap(`artisan.${Path.ext()}`)"
-   * is used.
+   * is used and the executor is "sh node".
    *
    * @example
    * ```ts
    * Artisan.callInChild('serve --watch')
    * // or
-   * Artisan.callInChild('serve --watch', Path.pwd('other-artisan.ts'))
+   * Artisan.callInChild('serve --watch', {
+   *   executor: 'node --inspect',
+   *   path: Path.pwd('other-artisan.ts')
+   * })
    * ```
    */
   public async callInChild(
     command: string,
-    path = Path.bootstrap(`artisan.${Path.ext()}`)
+    options?: { path?: string; executor?: string }
   ): Promise<CommandOutput> {
+    options = Options.create(options, {
+      executor: Config.get('rc.artisan.child.executor', 'sh node'),
+      path: Config.get(
+        'rc.artisan.child.path',
+        Path.bootstrap(`artisan.${Path.ext()}`)
+      )
+    })
+
+    options.path = Path.parseExt(options.path)
+
     const separator = platform() === 'win32' ? '&' : '&&'
-    const executor = `cd ${Path.pwd()} ${separator} sh node`
+    const executor = `cd ${Path.pwd()} ${separator} ${options.executor}`
 
     if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${path} ${command}`
+      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${options.path} ${command}`
     } else {
-      command = `${executor} ${path} ${command}`
+      command = `${executor} ${options.path} ${command}`
     }
 
     return Exec.command(command, { ignoreErrors: true })

@@ -14,7 +14,9 @@ import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 export default class ListCommandTest extends BaseCommandTest {
   @Test()
   public async shouldBeAbleToListOtherCommandsByAlias({ assert }: Context) {
-    const { stderr, stdout } = await Artisan.callInChild('list make', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('list make', {
+      path: this.artisan
+    })
 
     assert.equal(stderr, '')
     assert.isTrue(stdout.includes('[ LISTING MAKE ]'))

@@ -15,8 +15,17 @@ import { TestOutput } from '#src/testing/plugins/command/TestOutput'
 export class TestCommand {
   /**
    * The Artisan file path that will be used to run commands.
+   *
+   * @default 'Path.bootstrap(`artisan.${Path.ext()}`)'
    */
-  public static artisanPath = undefined
+  public static artisanPath = Path.bootstrap(`artisan.${Path.ext()}`)
+
+  /**
+   * The Artisan executor that will be used to run commands.
+   *
+   * @default 'sh node'
+   */
+  public static artisanExecutor = 'sh node'
 
   /**
    * Set the artisan file path.
@@ -44,8 +53,9 @@ export class TestCommand {
    * to make assertions.
    */
   public async run(command: string): Promise<TestOutput> {
-    return Artisan.callInChild(command, TestCommand.artisanPath).then(output =>
-      this.createOutput(output)
-    )
+    return Artisan.callInChild(command, {
+      path: TestCommand.artisanPath,
+      executor: TestCommand.artisanExecutor
+    }).then(output => this.createOutput(output))
   }
 }

@@ -16,14 +16,18 @@ import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 export default class ArtisanTest extends BaseCommandTest {
   @Test()
   public async shouldThrowAnErrorWhenTryingToExecuteACommandThatDoesNotExist({ assert }: Context) {
-    const { stderr } = await Artisan.callInChild('not-found', this.artisan)
+    const { stderr } = await Artisan.callInChild('not-found', {
+      path: this.artisan
+    })
 
     assert.equal(stderr, "error: unknown command 'not-found'\n")
   }
 
   @Test()
   public async shouldBeAbleToLogTheApplicationNameInEntrypointCommands({ assert }: Context) {
-    const { stdout } = await Artisan.callInChild('', this.artisan)
+    const { stdout } = await Artisan.callInChild('', {
+      path: this.artisan
+    })
 
     const appNameFiglet = figlet.textSync('Artisan')
 
@@ -34,7 +38,9 @@ export default class ArtisanTest extends BaseCommandTest {
   public async shouldBeAbleToRegisterCommandsAsRoutes({ assert }: Context) {
     process.env.NODE_ENV = 'test'
 
-    const { stderr, stdout } = await Artisan.callInChild('hello world', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('hello world', {
+      path: this.artisan
+    })
 
     assert.equal(stderr, '')
     assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
@@ -44,7 +50,9 @@ export default class ArtisanTest extends BaseCommandTest {
 
   @Test()
   public async shouldBeAbleToSetArgumentsAndOptionsUsingArgumentAndOptionDecorators({ assert }: Context) {
-    const { stderr, stdout } = await Artisan.callInChild('test test --other', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('test test --other', {
+      path: this.artisan
+    })
 
     assert.equal(stderr, '')
     assert.equal(
@@ -65,7 +73,9 @@ export default class ArtisanTest extends BaseCommandTest {
 
   @Test()
   public async shouldBeAbleToSetCustomCommanderOptionsInCommands({ assert }: Context) {
-    const { stderr, stdout } = await Artisan.callInChild('unknown --unk', this.artisan)
+    const { stderr, stdout } = await Artisan.callInChild('unknown --unk', {
+      path: this.artisan
+    })
 
     assert.isDefined(stdout)
     assert.isEmpty(stderr)
