@@ -88,7 +88,29 @@ export class TestOutput {
   }
 
   /**
-   * Assert command to log the expected message.
+   * Assert command to have not log the message.
+   */
+  public assertNotLogged(message: string, stream?: 'stdout' | 'stderr') {
+    const existsInStdout = this.output.stdout.includes(message)
+    const existsInStderr = this.output.stdout.includes(message)
+
+    switch (stream) {
+      case 'stdout':
+        this.assert.isFalse(existsInStdout)
+
+        break
+      case 'stderr':
+        this.assert.isFalse(existsInStderr)
+
+        break
+      default:
+        this.assert.isFalse(existsInStdout)
+        this.assert.isFalse(existsInStderr)
+    }
+  }
+
+  /**
+   * Assert command to have a log that matches the regex.
    */
   public assertLogMatches(regex: RegExp, stream?: 'stdout' | 'stderr') {
     const existsInStdout = regex.test(this.output.stdout)
@@ -110,6 +132,28 @@ export class TestOutput {
           'stderr'
         )} but it was found in ${inspect('stdout')}`
       )
+    }
+  }
+
+  /**
+   * Assert command to not have a log that matches the regexp.
+   */
+  public assertLogNotMatches(regex: RegExp, stream?: 'stdout' | 'stderr') {
+    const existsInStdout = regex.test(this.output.stdout)
+    const existsInStderr = regex.test(this.output.stderr)
+
+    switch (stream) {
+      case 'stdout':
+        this.assert.isFalse(existsInStdout)
+
+        break
+      case 'stderr':
+        this.assert.isFalse(existsInStderr)
+
+        break
+      default:
+        this.assert.isFalse(existsInStdout)
+        this.assert.isFalse(existsInStderr)
     }
   }
 }

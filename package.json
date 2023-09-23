@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -67,11 +67,11 @@
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
-    "@athenna/common": "^4.10.1",
+    "@athenna/common": "^4.14.0",
     "@athenna/config": "^4.4.0",
-    "@athenna/ioc": "^4.3.0",
-    "@athenna/logger": "^4.3.0",
-    "@athenna/test": "^4.7.0",
+    "@athenna/ioc": "^4.4.2",
+    "@athenna/logger": "^4.5.0",
+    "@athenna/test": "^4.8.0",
     "@athenna/view": "^4.3.0",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
