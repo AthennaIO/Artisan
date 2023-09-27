@@ -7,41 +7,47 @@
  * file that was distributed with this source code.
  */
 
-import { Artisan } from '#src'
-import { Config } from '@athenna/config'
 import { File, Folder } from '@athenna/common'
+import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context } from '@athenna/test'
-import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
-export default class TemplateCustomizeCommandTest extends BaseCommandTest {
+export default class TemplateCustomizeCommandTest extends BaseTest {
   @Test()
-  public async shouldBeAbleToPublishTheAthennaTemplatesToDoCustomCustomizations({ assert }: Context) {
-    await Artisan.call('template:customize', false)
-
-    const path = Path.resources()
+  public async shouldBeAbleToPublishTheAthennaTemplatesToMakeCustomCustomizations({ assert, command }: Context) {
+    const output = await command.run('template:customize')
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.isTrue(await Folder.exists(path))
-    assert.isTrue(this.processExit.calledOnceWith(0))
-    assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
+    output.assertSucceeded()
+    output.assertLogged('[ MOVING TEMPLATES ]')
+    output.assertLogged('Athenna RC updated:')
+    output.assertLogged('"command": "./resources/templates/command.edge"')
+    output.assertLogged('[  success  ] Template files successfully moved to resources/templates folder.')
+    assert.isTrue(await Folder.exists(Path.resources()))
+    assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
     assert.equal(athenna.view.templates.command, './resources/templates/command.edge')
   }
 
   @Test()
-  public async shouldNotThrowErrorsIfTheTemplatePathAlreadyExistsInsideResourcesTemplates({ assert }: Context) {
-    const templatePath = Path.resources('templates/test.edge')
-    await new File(templatePath, '').load()
+  public async shouldNotThrowErrorsIfTheTemplatePathAlreadyExistsInsideResourcesTemplates({
+    assert,
+    command
+  }: Context) {
+    const output = await command.run('template:customize', {
+      path: Path.fixtures('consoles/console-mock-test-template.ts')
+    })
 
-    Config.set('rc.templates.test', templatePath)
+    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    await Artisan.call('template:customize', false)
-
-    const path = Path.resources()
-
-    assert.isTrue(await Folder.exists(path))
-    assert.isTrue(await File.exists(templatePath))
-    assert.isTrue(this.processExit.calledOnceWith(0))
-    assert.isTrue(await File.exists(path.concat('/templates/command.edge')))
+    output.assertSucceeded()
+    output.assertLogged('[ MOVING TEMPLATES ]')
+    output.assertLogged('Athenna RC updated:')
+    output.assertLogged('"command": "./resources/templates/command.edge"')
+    output.assertLogged('"test": "./resources/templates/test.edge"')
+    output.assertLogged('[  success  ] Template files successfully moved to resources/templates folder.')
+    assert.isTrue(await Folder.exists(Path.resources()))
+    assert.isTrue(await File.exists(Path.resources('templates/test.edge')))
+    assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
+    assert.equal(athenna.view.templates.command, './resources/templates/command.edge')
   }
 }

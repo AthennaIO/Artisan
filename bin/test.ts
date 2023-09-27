@@ -1,5 +1,5 @@
 /**
- * @athenna/common
+ * @athenna/artisan
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -7,11 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '@athenna/config'
 import { command } from '#src/testing/plugins/index'
 import { Runner, assert, specReporter } from '@athenna/test'
-
-Config.set('meta', import.meta.url)
 
 await Runner.setTsEnv()
   .addPlugin(assert())

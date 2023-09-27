@@ -8,76 +8,205 @@
  */
 
 import figlet from 'figlet'
+import chalkRainbow from 'chalk-rainbow'
 
-import { Artisan } from '#src'
+import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context, Mock } from '@athenna/test'
-import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
+import { Annotation, Artisan, CommanderHandler } from '#src'
+import { FixtureDatabase } from '#tests/fixtures/FixtureDatabase'
 
-export default class ArtisanTest extends BaseCommandTest {
+export default class ArtisanTest extends BaseTest {
   @Test()
-  public async shouldThrowAnErrorWhenTryingToExecuteACommandThatDoesNotExist({ assert }: Context) {
-    const { stderr } = await Artisan.callInChild('not-found', {
-      path: this.artisan
-    })
+  public async shouldBeAbleToRegisterAnArtisanCommand({ assert }: Context) {
+    const { SimpleCommand } = await this.import('#tests/fixtures/SimpleCommand')
 
-    assert.equal(stderr, "error: unknown command 'not-found'\n")
+    Artisan.register(SimpleCommand)
+
+    assert.isTrue(CommanderHandler.hasCommand(SimpleCommand.signature()))
   }
 
   @Test()
-  public async shouldBeAbleToLogTheApplicationNameInEntrypointCommands({ assert }: Context) {
-    const { stdout } = await Artisan.callInChild('', {
-      path: this.artisan
-    })
+  public async shouldBeAbleToRegisterAnArtisanCommandWithArguments({ assert }: Context) {
+    const { AnnotatedCommand, annotatedCommand } = await this.import('#tests/fixtures/AnnotatedCommand')
 
-    const appNameFiglet = figlet.textSync('Artisan')
+    Artisan.register(AnnotatedCommand)
 
-    assert.equal(stdout, appNameFiglet.concat('\n'))
-  }
+    const args = CommanderHandler.getCommandArgs(AnnotatedCommand.signature())
 
-  @Test()
-  public async shouldBeAbleToRegisterCommandsAsRoutes({ assert }: Context) {
-    process.env.NODE_ENV = 'test'
-
-    const { stderr, stdout } = await Artisan.callInChild('hello world', {
-      path: this.artisan
-    })
-
-    assert.equal(stderr, '')
-    assert.equal(stdout, "world\n{ loadApp: false, stayAlive: false, environments: [ 'hello' ] }\n")
-
-    process.env.NODE_ENV = undefined
-  }
-
-  @Test()
-  public async shouldBeAbleToSetArgumentsAndOptionsUsingArgumentAndOptionDecorators({ assert }: Context) {
-    const { stderr, stdout } = await Artisan.callInChild('test test --other', {
-      path: this.artisan
-    })
-
-    assert.equal(stderr, '')
-    assert.equal(
-      stdout,
-      "test notRequiredArg true notRequiredOption\ntrue tests|node_modules [ 'tests', 'node_modules' ]\n"
+    assert.deepEqual(
+      args.map(arg => arg.name()),
+      Annotation.getArguments(annotatedCommand).map(arg => arg.signatureName)
     )
   }
 
   @Test()
-  public async shouldBeAbleToLoadTheApplicationIfTheLoadAppOptionsIsTrue({ assert }: Context) {
-    const fakeIgniteFire = Mock.sandbox.fake()
-    ioc.instance('Athenna/Core/Ignite', { fire: fakeIgniteFire })
+  public async shouldBeAbleToRegisterAnArtisanCommandWithOptions({ assert }: Context) {
+    const { AnnotatedCommand, annotatedCommand } = await this.import('#tests/fixtures/AnnotatedCommand')
 
-    await Artisan.call('loadapp', false)
+    Artisan.register(AnnotatedCommand)
 
-    assert.isTrue(fakeIgniteFire.calledWith(['worker', 'console']))
+    const opts = CommanderHandler.getCommandOpts(AnnotatedCommand.signature())
+
+    assert.deepEqual(
+      opts.map(opt => opt.flags),
+      Annotation.getOptions(annotatedCommand).map(arg => arg.signature)
+    )
   }
 
   @Test()
-  public async shouldBeAbleToSetCustomCommanderOptionsInCommands({ assert }: Context) {
-    const { stderr, stdout } = await Artisan.callInChild('unknown --unk', {
-      path: this.artisan
+  public async shouldBeAbleToRegisterAnArtisanCommandAsARoute({ assert }: Context) {
+    assert.plan(2)
+
+    Artisan.route('hello', async function (hello: string, options: { hello: string }) {
+      assert.equal(hello, 'world')
+      assert.equal(options.hello, 'world')
+    })
+      .argument('<hello>', 'Description for hello arg.')
+      .option('--hello [hello]', 'Description for hello option.')
+
+    await CommanderHandler.parse(['node', 'artisan', 'hello', 'world', '--hello=world'])
+  }
+
+  @Test()
+  public async shouldBeAbleToRegisterAnArtisanCommandAsARouteWithSettings({ assert }: Context) {
+    const fakeFire = Mock.fake()
+    ioc.singleton('Athenna/Core/Ignite', { fire: fakeFire })
+
+    assert.plan(4)
+
+    Artisan.route('hello', async function (hello: string, options: { hello: string }) {
+      assert.equal(hello, 'world')
+      assert.equal(options.hello, 'world')
+    })
+      .argument('<hello>', 'Description for hello arg.')
+      .option('--hello [hello]', 'Description for hello option.')
+      .settings({ loadApp: true, stayAlive: false, environments: ['hello', 'world'] })
+
+    await Artisan.parse(['node', 'artisan', 'hello', 'world', '--hello=world'])
+
+    assert.calledWith(fakeFire, ['hello', 'world'])
+    assert.calledWith(this.processExitMock, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsInRuntime({ assert }: Context) {
+    const { SimpleCommand } = await this.import('#tests/fixtures/SimpleCommand')
+
+    Artisan.register(SimpleCommand)
+
+    await Artisan.call('simple')
+
+    assert.isTrue(FixtureDatabase.has('simple:command'))
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsWithArgumentsInRuntime({ assert }: Context) {
+    const { HelloCommand } = await this.import('#tests/fixtures/HelloCommand')
+
+    Artisan.register(HelloCommand)
+
+    await Artisan.call('hello Lenon')
+
+    assert.isTrue(FixtureDatabase.has('hello:command'))
+    assert.equal(FixtureDatabase.get('hello:command'), 'Lenon')
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsWithOptionsInRuntime({ assert }: Context) {
+    const { AnnotatedCommand } = await this.import('#tests/fixtures/AnnotatedCommand')
+
+    Artisan.register(AnnotatedCommand)
+
+    await Artisan.call('annotated Lenon 22 --with-name --with-age --add-email --no-foo')
+
+    assert.isTrue(FixtureDatabase.has('annotated:command'))
+    assert.deepEqual(FixtureDatabase.get('annotated:command'), {
+      age: '22',
+      email: 'lenon@athenna.io',
+      name: 'Lenon',
+      withName: true,
+      withAge: true,
+      withEmail: true,
+      withFoo: false
+    })
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsInRuntimeWithSettings({ assert }: Context) {
+    const { SimpleCommand } = await this.import('#tests/fixtures/SimpleCommand')
+
+    Artisan.register(SimpleCommand)
+
+    await Artisan.call('simple', { withSettings: true })
+
+    assert.isTrue(FixtureDatabase.has('simple:command'))
+    assert.calledWith(this.processExitMock, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsInChildProcess({ assert }: Context) {
+    const { stdout, stderr, exitCode } = await Artisan.callInChild('simple', {
+      path: Path.fixtures('consoles/artisan.ts')
     })
 
-    assert.isDefined(stdout)
-    assert.isEmpty(stderr)
+    assert.equal(stdout, '')
+    assert.equal(stderr, '')
+    assert.equal(exitCode, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsWithArgumentsInChildProcess({ assert }: Context) {
+    const { stdout, stderr, exitCode } = await Artisan.callInChild('hello Lenon', {
+      path: Path.fixtures('consoles/artisan.ts')
+    })
+
+    assert.equal(stdout, '')
+    assert.equal(stderr, '')
+    assert.equal(exitCode, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToCallArtisanCommandsWithOptionsInChildProcess({ assert }: Context) {
+    const { stdout, stderr, exitCode } = await Artisan.callInChild(
+      'annotated Lenon 22 --with-name --with-age --add-email --no-foo',
+      {
+        path: Path.fixtures('consoles/artisan.ts')
+      }
+    )
+
+    assert.equal(stdout, '')
+    assert.equal(stderr, '')
+    assert.equal(exitCode, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToAutomaticallyParseTheArtisanExtPathInCallInChildMethod({ assert }: Context) {
+    const { stdout, stderr, exitCode } = await Artisan.callInChild('simple', {
+      path: Path.fixtures('consoles/artisan.js')
+    })
+
+    assert.equal(stdout, '')
+    assert.equal(stderr, '')
+    assert.equal(exitCode, 0)
+  }
+
+  @Test()
+  public async shouldBeAbleToParseTheArgvToPickTheRightCommandToExecute({ assert }: Context) {
+    const { SimpleCommand } = await this.import('#tests/fixtures/SimpleCommand')
+
+    Artisan.register(SimpleCommand)
+
+    await Artisan.parse(['node', 'artisan', 'simple'])
+
+    assert.isTrue(FixtureDatabase.has('simple:command'))
+  }
+
+  @Test()
+  public async shouldBeAbleToLogTheAppNameWithFigletAndChalkRainbowWhenParsingArgvInCliEntrypoint({ assert }: Context) {
+    const stdoutWriteMock = Mock.when(process.stdout, 'write').return(undefined)
+
+    await Artisan.parse(['node', 'artisan'], 'Artisan')
+
+    assert.calledWith(stdoutWriteMock, chalkRainbow(figlet.textSync('Artisan')) + '\n')
   }
 }

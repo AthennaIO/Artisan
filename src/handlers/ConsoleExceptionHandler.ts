@@ -27,9 +27,9 @@ export class ConsoleExceptionHandler {
     }
 
     if (isInternalServerError && !isDebugMode) {
-      error.name = 'Internal server error'
-      error.code = 'E_INTERNAL_SERVER_ERROR'
-      error.message = 'An internal server exception has occurred.'
+      error.name = 'Internal error'
+      error.code = 'E_INTERNAL_ERROR'
+      error.message = 'An internal error has occurred.'
 
       delete error.stack
     }

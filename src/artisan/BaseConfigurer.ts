@@ -59,9 +59,9 @@ export abstract class BaseConfigurer {
   public prompt = new Prompt()
 
   /**
-   * The geneartor used to make files. The generator uses the
+   * The generator used to make files. The generator uses the
    * athenna/view package to generate files from templates. A
-   * briefly knowlodge about how to setup templates inside
+   * briefly knowledge about how to setup templates inside
    * athenna/view is very good to use this helper.
    */
   public generator = new Generator()

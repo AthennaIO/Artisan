@@ -70,9 +70,13 @@ export class TestOutput {
    */
   public assertLogged(message: string, stream?: 'stdout' | 'stderr') {
     const existsInStdout = this.output.stdout.includes(message)
-    const existsInStderr = this.output.stdout.includes(message)
+    const existsInStderr = this.output.stderr.includes(message)
 
-    this.assert.isTrue(existsInStdout || existsInStderr)
+    if (!existsInStdout && !existsInStderr) {
+      return this.assert.fail(
+        `Expected message "${message}" to be logged in "stdout" or "stderr" but it was not logged.`
+      )
+    }
 
     if (stream === 'stdout' && existsInStderr) {
       return this.assert.fail(
@@ -92,7 +96,7 @@ export class TestOutput {
    */
   public assertNotLogged(message: string, stream?: 'stdout' | 'stderr') {
     const existsInStdout = this.output.stdout.includes(message)
-    const existsInStderr = this.output.stdout.includes(message)
+    const existsInStderr = this.output.stderr.includes(message)
 
     switch (stream) {
       case 'stdout':
@@ -116,7 +120,11 @@ export class TestOutput {
     const existsInStdout = regex.test(this.output.stdout)
     const existsInStderr = regex.test(this.output.stderr)
 
-    this.assert.isTrue(existsInStdout || existsInStderr)
+    if (!existsInStdout && !existsInStderr) {
+      return this.assert.fail(
+        `Expected regex to match some message in "stdout" or "stderr" but none matched.`
+      )
+    }
 
     if (stream === 'stdout' && existsInStderr) {
       return this.assert.fail(

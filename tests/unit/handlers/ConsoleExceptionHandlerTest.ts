@@ -7,106 +7,90 @@
  * file that was distributed with this source code.
  */
 
-import { Log } from '@athenna/logger'
 import { Exception } from '@athenna/common'
 import { ConsoleExceptionHandler } from '#src'
-import { Test, type Context, Mock } from '@athenna/test'
-import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
+import { Log, LoggerProvider } from '@athenna/logger'
+import { Test, Mock, AfterEach, BeforeEach, type Context, type Stub } from '@athenna/test'
 
-export default class ConsoleExceptionHandlerTest extends BaseCommandTest {
-  @Test()
-  public async shouldBeAbleToLogThePrettyExceptionFromErrorInstances({ assert }: Context) {
-    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
+export default class ConsoleExceptionHandlerTest {
+  public processExitMock: Stub
 
-    await new ConsoleExceptionHandler().handle(new Error())
+  @BeforeEach()
+  public beforeEach() {
+    new LoggerProvider().register()
+    this.processExitMock = Mock.when(process, 'exit').return(1)
+  }
 
-    assert.calledWith(stub, 'exception')
-    assert.isTrue(this.processExit.calledOnceWith(1))
+  @AfterEach()
+  public afterEach() {
+    ioc.reconstruct()
+    Mock.restoreAll()
+    Config.clear()
   }
 
   @Test()
-  public async shouldBeAbleToLogThePrettyExceptionFromExceptionInstances({ assert }: Context) {
-    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
+  public async shouldBeAbleToHandleAVanillaError({ assert }: Context) {
+    const error = new Error('Test error')
+    const errorFake = Mock.fake()
+    Log.when('channelOrVanilla').return({
+      error: errorFake
+    })
 
-    await new ConsoleExceptionHandler().handle(new Exception())
+    await new ConsoleExceptionHandler().handle(error)
 
-    assert.calledWith(stub, 'exception')
-    assert.isTrue(this.processExit.calledOnceWith(1))
+    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(errorFake, await error.toAthennaException().prettify())
   }
 
   @Test()
-  public async shouldBeAbleToLogInTheConsoleChannelIfTheExceptionCodeIsE_SIMPLE_CLI({ assert }: Context) {
-    const stub = Log.when('channelOrVanilla').return({ error: () => {} })
+  public async shouldBeAbleToHandleAnAthennaException({ assert }: Context) {
+    const exception = new Exception({ message: 'Test error' })
+    const errorFake = Mock.fake()
+    Log.when('channelOrVanilla').return({
+      error: errorFake
+    })
 
-    await new ConsoleExceptionHandler().handle(new Exception({ code: 'E_SIMPLE_CLI' }))
+    await new ConsoleExceptionHandler().handle(exception)
 
-    assert.calledWith(stub, 'console')
-    assert.isTrue(this.processExit.calledOnceWith(1))
+    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(errorFake, await exception.prettify())
   }
 
   @Test()
-  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalError({ assert }: Context) {
+  public async shouldLogOnlyTheErrorMessageIfTheErrorCodeIsSimpleCLI({ assert }: Context) {
+    const exception = new Exception({ code: 'E_SIMPLE_CLI', message: 'Test error' })
+    const errorFake = Mock.fake()
+    Log.when('channelOrVanilla').return({
+      error: errorFake
+    })
+
+    await new ConsoleExceptionHandler().handle(exception)
+
+    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(errorFake, 'Test error')
+  }
+
+  @Test()
+  public async shouldBeAbleToHideErrorMessageCodeAndStackIfIsInternalErrorAndAppIsNotInDebugMode({ assert }: Context) {
     Config.set('app.debug', false)
 
-    const fake = Mock.sandbox.fake()
-    const stub = Log.when('channelOrVanilla').return({ error: fake })
-
-    await new ConsoleExceptionHandler().handle(new Error('hello'))
-
-    const exception = new Exception({
-      message: 'An internal server exception has occurred.',
-      code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500
+    const error = new Error('Test error')
+    const errorFake = Mock.fake()
+    Log.when('channelOrVanilla').return({
+      error: errorFake
     })
+
+    await new ConsoleExceptionHandler().handle(error)
+
+    const exception = error.toAthennaException()
+
+    exception.name = 'Internal error'
+    exception.code = 'E_INTERNAL_ERROR'
+    exception.message = 'An internal error has occurred.'
 
     delete exception.stack
 
-    assert.calledWith(stub, 'exception')
-    assert.isTrue(fake.calledWith(await exception.prettify()))
-    assert.isTrue(this.processExit.calledOnceWith(1))
-  }
-
-  @Test()
-  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalTypeError({ assert }: Context) {
-    Config.set('app.debug', false)
-
-    const fake = Mock.sandbox.fake()
-    const stub = Log.when('channelOrVanilla').return({ error: fake })
-
-    await new ConsoleExceptionHandler().handle(new TypeError('hello'))
-
-    const exception = new Exception({
-      message: 'An internal server exception has occurred.',
-      code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500
-    })
-
-    delete exception.stack
-
-    assert.calledWith(stub, 'exception')
-    assert.isTrue(fake.calledWith(await exception.prettify()))
-    assert.isTrue(this.processExit.calledOnceWith(1))
-  }
-
-  @Test()
-  public async shouldBeAbleToHideErrorsIfDebugModeIsNotActivatedAndIsInternalSyntaxError({ assert }: Context) {
-    Config.set('app.debug', false)
-
-    const fake = Mock.sandbox.fake()
-    const stub = Log.when('channelOrVanilla').return({ error: fake })
-
-    await new ConsoleExceptionHandler().handle(new SyntaxError('hello'))
-
-    const exception = new Exception({
-      message: 'An internal server exception has occurred.',
-      code: 'E_INTERNAL_SERVER_ERROR',
-      status: 500
-    })
-
-    delete exception.stack
-
-    assert.calledWith(stub, 'exception')
-    assert.isTrue(fake.calledWith(await exception.prettify()))
-    assert.isTrue(this.processExit.calledOnceWith(1))
+    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(errorFake, await exception.prettify())
   }
 }

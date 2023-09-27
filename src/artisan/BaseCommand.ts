@@ -9,11 +9,12 @@
 
 import { Rc } from '@athenna/config'
 import { Color } from '@athenna/common'
-import { Decorator } from '#src/helpers/Decorator'
 import { Prompt } from '#src/helpers/command/Prompt'
 import { Logger } from '#src/helpers/command/Logger'
+import { Annotation } from '#src/helpers/Annotation'
 import type { Commander } from '#src/artisan/Commander'
 import { Generator } from '#src/helpers/command/Generator'
+import { CommanderHandler } from '#src/handlers/CommanderHandler'
 
 export abstract class BaseCommand {
   /**
@@ -71,9 +72,9 @@ export abstract class BaseCommand {
   public prompt = new Prompt()
 
   /**
-   * The geneartor used to make files. The generator uses the
+   * The generator used to make files. The generator uses the
    * athenna/view package to generate files from templates. A
-   * briefly knowlodge about how to setup templates inside
+   * briefly knowledge about how to setup templates inside
    * athenna/view is very good to use this helper.
    */
   public generator = new Generator()
@@ -82,21 +83,24 @@ export abstract class BaseCommand {
    * Execute the command setting args and options in the class
    */
   protected __exec(...args: any[]): Promise<void> {
-    const commander = Decorator.getCommander(this)
-    const artisanOpts = Decorator.getOptions(this)
-    const artisanArgs = Decorator.getArguments(this)
+    const Command = this.constructor as typeof BaseCommand
 
-    const opts = commander.opts()
+    const optsMeta = Annotation.getOptions(this)
+    const argsMeta = Annotation.getArguments(this)
+    const optsValues = CommanderHandler.getCommandOptsValues(
+      Command.signature()
+    )
 
-    artisanArgs.forEach(arg => (this[arg] = args.shift()))
-    Object.keys(opts).forEach(key => (this[artisanOpts[key]] = opts[key]))
+    argsMeta.forEach(arg => (this[arg.key] = args.shift()))
+    optsMeta.forEach(opt => (this[opt.key] = optsValues[opt.signatureName]))
 
-    return this.handle()
+    // TODO test if handle will receive the args properly
+    return this.handle(...args)
   }
 
   /**
    * The command handler. This method will be called
    * to execute your command.
    */
-  public abstract handle(): Promise<void>
+  public abstract handle(...args: any[]): Promise<void>
 }

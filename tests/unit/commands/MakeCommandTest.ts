@@ -7,59 +7,60 @@
  * file that was distributed with this source code.
  */
 
-import { Artisan } from '#src'
-import { File } from '@athenna/common'
-import { Config } from '@athenna/config'
+import { File, Path } from '@athenna/common'
+import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context } from '@athenna/test'
-import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
 
-export default class MakeCommandTest extends BaseCommandTest {
+export default class MakeCommandTest extends BaseTest {
   @Test()
-  public async shouldBeAbleToCreateACommandFile({ assert }: Context) {
-    await Artisan.call('make:command TestCommand', false)
+  public async shouldBeAbleToCreateACommandFile({ assert, command }: Context) {
+    const output = await command.run('make:command TestCommand')
 
-    const path = Path.console('commands/TestCommand.ts')
-
-    assert.isTrue(await File.exists(path))
-    assert.isTrue(this.processExit.calledOnceWith(0))
+    output.assertSucceeded()
+    output.assertLogged('[ MAKING COMMAND ]')
+    output.assertLogged('[  success  ] Command "TestCommand" successfully created.')
+    output.assertLogged(
+      '[  success  ] Athenna RC updated: { commands += "testCommand": "#app/console/commands/TestCommand" }'
+    )
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.containsSubset(Config.get('rc.commands'), {
-      testCommand: '#app/console/commands/TestCommand'
-    })
+    assert.isTrue(await File.exists(Path.commands('TestCommand.ts')))
     assert.containsSubset(athenna.commands, {
       testCommand: '#app/console/commands/TestCommand'
     })
   }
 
   @Test()
-  public async shouldBeAbleToCreateACommandFileWithADifferentDestPathAndImportPath({ assert }: Context) {
-    Config.set('rc.commands.make:command.path', Config.get('rc.commands.make:command'))
-    Config.set('rc.commands.make:command.destination', './tests/fixtures/storage/commands')
+  public async shouldBeAbleToCreateACommandFileWithADifferentDestPathAndImportPath({ assert, command }: Context) {
+    const output = await command.run('make:command TestCommand', {
+      path: Path.fixtures('consoles/console-mock-dest-import.ts')
+    })
 
-    await Artisan.call('make:command TestCommand', false)
-
-    const path = Path.fixtures('storage/commands/TestCommand.ts')
-
-    assert.isTrue(await File.exists(path))
-    assert.isTrue(this.processExit.calledOnceWith(0))
+    output.assertSucceeded()
+    output.assertLogged('[ MAKING COMMAND ]')
+    output.assertLogged('[  success  ] Command "TestCommand" successfully created.')
+    output.assertLogged(
+      '[  success  ] Athenna RC updated: { commands += "testCommand": "#tests/fixtures/storage/commands/TestCommand" }'
+    )
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
-    assert.containsSubset(Config.get('rc.commands'), {
-      testCommand: '#tests/fixtures/storage/commands/TestCommand'
-    })
+    assert.isTrue(await File.exists(Path.fixtures('storage/commands/TestCommand.ts')))
     assert.containsSubset(athenna.commands, {
       testCommand: '#tests/fixtures/storage/commands/TestCommand'
     })
   }
 
   @Test()
-  public async shouldThrowAnExceptionWhenTheFileAlreadyExists({ assert }: Context) {
-    await Artisan.call('make:command TestCommand')
-    await Artisan.call('make:command TestCommand')
+  public async shouldThrowAnExceptionWhenTheFileAlreadyExists({ command }: Context) {
+    await command.run('make:command TestCommand')
+    const output = await command.run('make:command TestCommand')
 
-    assert.isTrue(this.processExit.calledWith(1))
+    output.assertFailed()
+    output.assertLogged('[ MAKING COMMAND ]')
+    output.assertLogged('The file')
+    output.assertLogged('TestCommand.ts')
+    output.assertLogged('already exists')
   }
 }

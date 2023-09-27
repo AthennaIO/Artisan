@@ -20,7 +20,7 @@ export class Generator {
 
   /**
    * Set the file path where the file will be generated.
-   * Rememeber that the file name in the path will be used
+   * Remember that the file name in the path will be used
    * to define the name properties.
    */
   public path(path: string): Generator {
