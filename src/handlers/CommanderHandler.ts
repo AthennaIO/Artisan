@@ -7,52 +7,46 @@
  * file that was distributed with this source code.
  */
 
-import { Command as Commander } from 'commander'
+import { Commander } from '#src/artisan/Commander'
+import type { Argument, Option, OptionValues } from 'commander'
 
 export class CommanderHandler {
   /**
    * Holds the commander error handler.
    */
-  private static exceptionHandler: any
+  public static exceptionHandler: any
 
   /**
    * The commander instance.
    */
-  private static commander = new Commander()
+  public static commander = new Commander()
 
   /**
-   * Get the commander instance.
+   * Simple helper to reconstruct the commander instance.
    */
-  public static getCommander<T = Commander>(): T {
-    return this.commander as Commander as T
+  public static reconstruct(): void {
+    CommanderHandler.commander = new Commander()
   }
 
   /**
    * Parse the command called in the console and execute.
    */
   public static async parse(argv: string[]): Promise<Commander> {
-    return this.commander.parseAsync(argv)
-  }
-
-  /**
-   * Set the exception handler for commander action method.
-   */
-  public static setExceptionHandler(handler: any): void {
-    this.exceptionHandler = handler
+    return CommanderHandler.commander.parseAsync(argv)
   }
 
   /**
    * Bind the exception handler if exists inside the action.
    */
   public static bindHandler(target: any): any {
-    if (!this.exceptionHandler) {
-      return target.__exec.bind(target)
+    if (!CommanderHandler.exceptionHandler) {
+      return (...args: any[]) => target.__exec.bind(target)(...args)
     }
 
     return (...args: any[]) =>
       target.__exec
         .bind(target)(...args)
-        .catch(this.exceptionHandler)
+        .catch(CommanderHandler.exceptionHandler)
   }
 
   /**
@@ -61,28 +55,84 @@ export class CommanderHandler {
   public static setVersion(version?: string): typeof CommanderHandler {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (this.commander._events['option:version']) {
+    if (CommanderHandler.commander._events['option:version']) {
       return this
     }
 
     if (version) {
-      this.commander.version(version, '-v, --version')
+      CommanderHandler.commander.version(version, '-v, --version')
 
       return this
     }
 
-    this.commander.version('Athenna Framework v3.0.0', '-v, --version')
+    CommanderHandler.commander.version(
+      'Athenna Framework v3.0.0',
+      '-v, --version'
+    )
 
     return this
   }
 
   /**
-   * Get all commands registered inside commander or by alias.
+   * Get the arguments of a command.
    */
-  public static getCommands(alias?: string): Record<string, any> {
+  public static getCommandArgs(name: string): Argument[] {
+    const commander: any = this.getCommand(name)
+
+    return commander._args
+  }
+
+  /**
+   * Get the options of a command.
+   */
+  public static getCommandOpts(name: string): Option[] {
+    const commander: any = this.getCommand(name)
+
+    return commander.options
+  }
+
+  /**
+   * Get the option values of a command.
+   */
+  public static getCommandOptsValues(name: string): OptionValues {
+    const commander: any = this.getCommand(name)
+
+    return commander.opts()
+  }
+
+  /**
+   * Get specific command my signature.
+   */
+  public static getCommand(signature: string): Commander {
+    return CommanderHandler.getCommands().find(
+      (command: any) => command._name === signature
+    )
+  }
+
+  /**
+   * Get all commands registered inside commander.
+   */
+  public static getCommands(): Commander[] {
+    return CommanderHandler.commander.commands
+  }
+
+  /**
+   * Verify if the actual commander instance has a command
+   * with the given signature.
+   */
+  public static hasCommand(signature: string): boolean {
+    return !!CommanderHandler.commander.commands.find(
+      (command: any) => command._name === signature
+    )
+  }
+
+  /**
+   * Get commands with arguments and descriptions registered inside commander.
+   */
+  public static getCommandsInfo(alias?: string): Record<string, any> {
     const commands = {}
 
-    this.commander.commands.forEach((command: any) => {
+    CommanderHandler.getCommands().forEach((command: any) => {
       if (alias && !command._name.startsWith(`${alias}:`)) {
         return
       }

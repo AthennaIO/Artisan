@@ -10,7 +10,7 @@
 import 'reflect-metadata'
 
 import { Options } from '@athenna/common'
-import { Decorator } from '#src/helpers/Decorator'
+import { Annotation } from '#src/helpers/Annotation'
 import type { ArgumentOptions } from '#src/types/ArgumentOptions'
 
 /**
@@ -25,8 +25,10 @@ export function Argument(options?: ArgumentOptions): PropertyDecorator {
 
     if (!options.required) {
       options.signature = `[${options.signature}]`
+    } else {
+      options.signature = `<${options.signature}>`
     }
 
-    Decorator.setArgument(target, String(key), options)
+    Annotation.setArgument(target, String(key), options)
   }
 }

@@ -10,26 +10,40 @@
 import figlet from 'figlet'
 import chalkRainbow from 'chalk-rainbow'
 
-import { platform } from 'node:os'
 import { Config } from '@athenna/config'
-import { Decorator } from '#src/helpers/Decorator'
 import { Commander } from '#src/artisan/Commander'
+import { Annotation } from '#src/helpers/Annotation'
 import { BaseCommand } from '#src/artisan/BaseCommand'
 import { CommanderHandler } from '#src/handlers/CommanderHandler'
+import type { CallInChildOptions } from '#src/types/CallInChildOptions'
 import { Exec, Is, Options, Path, type CommandOutput } from '@athenna/common'
 
 export class ArtisanImpl {
   /**
    * Register the command if it is not registered yet.
    */
-  public register(command: any): Commander {
-    const commander = Decorator.getCommander(command)
+  public register(Command: any): Commander {
+    const command = new Command()
 
-    /**
-     * We are not going to register the command in the Decorator
-     * helper because "Option" and "Argument" decorators will
-     * register the command without instantiating the class correctly.
-     */
+    /** Set the command signature and description. */
+    const commander = CommanderHandler.commander
+      .command(Command.signature())
+      .description(Command.description())
+
+    /** Define custom commander options if exists */
+    Command.commander(commander)
+
+    /** Set arguments */
+    Annotation.getArguments(command).forEach(arg => {
+      commander.argument(arg.signature, arg.description, arg.default)
+    })
+
+    /** Set options */
+    Annotation.getOptions(command).forEach(option => {
+      commander.option(option.signature, option.description, option.default)
+    })
+
+    /** Set exception handler and handler */
     return commander
       .action(CommanderHandler.bindHandler(command))
       .showHelpAfterError()
@@ -62,16 +76,13 @@ export class ArtisanImpl {
       protected __exec(...args: any[]) {
         const fn = handler.bind(this)
 
-        const commander: Commander = Reflect.getMetadata(
-          'artisan:commander',
-          this
-        )
+        const commander = CommanderHandler.getCommand(signature)
 
         return fn(...[...args, commander.opts()])
       }
     }
 
-    const commander = this.register(new HandleCommand())
+    const commander = this.register(HandleCommand)
 
     commander.constructor.prototype.settings = function (settings: any) {
       Config.set(`rc.commands.${this.name()}`, settings)
@@ -89,13 +100,20 @@ export class ArtisanImpl {
    * Artisan.call('serve --watch')
    *
    * // Call command and handle settings.
-   * Artisan.call('serve --watch', false)
+   * Artisan.call('serve --watch', { withSettings: true })
    * ```
    */
-  public async call(command: string, ignoreSettings = true): Promise<void> {
-    const argv = ['./node', 'artisan', ...command.split(' ')]
+  public async call(
+    command: string,
+    options: { withSettings?: boolean } = {}
+  ): Promise<void> {
+    options = Options.create(options, {
+      withSettings: false
+    })
 
-    if (ignoreSettings) {
+    const argv = ['node', 'artisan', ...command.split(' ')]
+
+    if (!options.withSettings) {
       await CommanderHandler.setVersion(Config.get('app.version')).parse(argv)
 
       return
@@ -115,35 +133,30 @@ export class ArtisanImpl {
    * Artisan.callInChild('serve --watch')
    * // or
    * Artisan.callInChild('serve --watch', {
-   *   executor: 'node --inspect',
    *   path: Path.pwd('other-artisan.ts')
    * })
    * ```
    */
-  public async callInChild(
+  public callInChild(
     command: string,
-    options?: { path?: string; executor?: string }
+    options?: CallInChildOptions
   ): Promise<CommandOutput> {
     options = Options.create(options, {
-      executor: Config.get('rc.artisan.child.executor', 'sh node'),
       path: Config.get(
         'rc.artisan.child.path',
-        Path.bootstrap(`artisan.${Path.ext()}`)
+        Path.bootstrap(`console.${Path.ext()}`)
       )
     })
 
     options.path = Path.parseExt(options.path)
 
-    const separator = platform() === 'win32' ? '&' : '&&'
-    const executor = `cd ${Path.pwd()} ${separator} ${options.executor}`
+    const parsedCommand = command === '' ? [] : command.split(' ')
 
-    if (Env('NODE_ENV')) {
-      command = `cross-env NODE_ENV=${process.env.NODE_ENV} ${separator} ${executor} ${options.path} ${command}`
-    } else {
-      command = `${executor} ${options.path} ${command}`
-    }
-
-    return Exec.command(command, { ignoreErrors: true })
+    return Exec.node(options.path, parsedCommand, {
+      reject: false,
+      cwd: Path.pwd(),
+      localDir: Path.pwd()
+    })
   }
 
   /**

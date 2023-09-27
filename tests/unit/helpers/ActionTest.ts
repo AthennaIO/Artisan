@@ -26,7 +26,7 @@ export default class ActionTest {
 
   @Test()
   public async shouldBeAbleToLogASucceededActionInTheStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.succeeded('app/Services/Service.ts')
@@ -36,8 +36,8 @@ export default class ActionTest {
   }
 
   @Test()
-  public async shouldBeAbleToLogASkipedActionInTheStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+  public async shouldBeAbleToLogASkippedActionInTheStdout({ assert }: Context) {
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.skipped('app/Services/Service.ts')
@@ -47,8 +47,8 @@ export default class ActionTest {
   }
 
   @Test()
-  public async shouldBeAbleToLogASkipedActionWithReasonInTheStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+  public async shouldBeAbleToLogASkippedActionWithReasonInTheStdout({ assert }: Context) {
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.skipped('app/Services/Service.ts', 'Some reason')
@@ -59,7 +59,7 @@ export default class ActionTest {
 
   @Test()
   public async shouldBeAbleToLogAFailedActionInTheStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.failed('app/Services/Service.ts')
@@ -70,7 +70,7 @@ export default class ActionTest {
 
   @Test()
   public async shouldBeAbleToLogAFailedActionWithReasonInTheStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     this.action.failed('app/Services/Service.ts', 'Some reason')
@@ -82,7 +82,7 @@ export default class ActionTest {
   @Test()
   public async shouldBeAbleToCreateAnActionInstanceWhereTheErrorActionIsTheBiggest({ assert }: Context) {
     const action = new Action('OK')
-    const successFake = Mock.sandbox.fake()
+    const successFake = Mock.fake()
     const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
 
     action.succeeded('app/Services/Service.ts')

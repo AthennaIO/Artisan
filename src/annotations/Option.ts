@@ -9,8 +9,8 @@
 
 import 'reflect-metadata'
 
-import { Options } from '@athenna/common'
-import { Decorator } from '#src/helpers/Decorator'
+import { Options, String } from '@athenna/common'
+import { Annotation } from '#src/helpers/Annotation'
 import type { OptionOptions } from '#src/types/OptionOptions'
 
 /**
@@ -18,10 +18,12 @@ import type { OptionOptions } from '#src/types/OptionOptions'
  */
 export function Option(options?: OptionOptions): PropertyDecorator {
   return (target: any, key: string | symbol) => {
+    key = key.toString()
+
     options = Options.create(options, {
-      signature: `--${String(key)}`
+      signature: `--${String.toDashCase(key.toString())}`
     })
 
-    Decorator.setOption(target, String(key), options)
+    Annotation.setOption(target, key, options)
   }
 }

@@ -7,44 +7,38 @@
  * file that was distributed with this source code.
  */
 
-import { Artisan } from '#src'
-import { Config } from '@athenna/config'
-import { Exec, File } from '@athenna/common'
-import { Test, type Context, Mock } from '@athenna/test'
-import { BaseCommandTest } from '#tests/helpers/BaseCommandTest'
+import { BaseTest } from '#tests/helpers/BaseTest'
+import { Test, type Context } from '@athenna/test'
 
-export default class ConfigureCommandTest extends BaseCommandTest {
+export default class ConfigureCommandTest extends BaseTest {
   @Test()
-  public async shouldBeAbleToConfigurePathsInsideTheApplication({ assert }: Context) {
-    await Artisan.call('configure ./tests/fixtures/library/configurer/index.js')
-
-    const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
-
-    assert.containsSubset(Config.get('rc.providers'), ['./tests/fixtures/library/providers/DatabaseProvider.js'])
-    assert.containsSubset(athenna.providers, ['./tests/fixtures/library/providers/DatabaseProvider.js'])
-
-    assert.containsSubset(athenna.commands, {
-      'make:model': './tests/fixtures/library/commands/MakeModelCommand.js'
+  public async shouldBeAbleToInstallLibrariesBeforeLookingUpTheConfigurer({ command }: Context) {
+    const output = await command.run('configure some-lib-name', {
+      path: Path.fixtures('consoles/console-mock-library.ts')
     })
-    assert.containsSubset(Config.get('rc.commands'), {
-      'make:model': './tests/fixtures/library/commands/MakeModelCommand.js'
-    })
+
+    output.assertSucceeded()
+    output.assertLogged('[  info  ] Configuring some-lib-name')
+    output.assertLogged('✔ Library some-lib-name successfully installed')
   }
 
   @Test()
-  public async shouldBeAbleToConfigureLibrariesInsideTheApplicationAndThrowErrorWhenConfigureDoesNotExist({
-    assert
-  }: Context) {
-    const originalCommand = Exec.command
-    const commandFake = Mock.sandbox.fake()
+  public async shouldBeAbleToRunAConfiguratorFilePathDirectlyInsteadOfInstallingLibraries({ command }: Context) {
+    const output = await command.run('configure ./tests/fixtures/configurators/foo/configure/index.js', {
+      path: Path.fixtures('consoles/console-mock-prompt.ts')
+    })
 
-    Exec.command = (...args: any[]) => Promise.resolve(commandFake(...args))
+    output.assertSucceeded()
+    output.assertLogged('[  info  ] You selected something')
+  }
 
-    await Artisan.call('configure some-lib-name', false)
+  @Test()
+  public async shouldThrowIfTheConfigurerFilePathCannotBeFound({ command }: Context) {
+    const output = await command.run('configure not-found.js', {
+      path: Path.fixtures('consoles/console-mock-prompt.ts')
+    })
 
-    Exec.command = originalCommand
-
-    assert.isTrue(commandFake.calledOnceWith('npm install some-lib-name'))
-    assert.isTrue(this.processExit.calledWith(1)) // <- Means that some error happened
+    output.assertFailed()
+    output.assertLogged('NotFoundConfigurerException')
   }
 }

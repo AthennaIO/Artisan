@@ -14,7 +14,7 @@ import { NotFoundConfigurerException } from '#src/exceptions/NotFoundConfigurerE
 
 export class ConfigureCommand extends BaseCommand {
   @Argument({
-    signature: '<libraries...>',
+    signature: 'libraries...',
     description:
       'One or more libraries to be configured. (Example: artisan configure @athenna/mail @athenna/database)'
   })
@@ -44,13 +44,13 @@ export class ConfigureCommand extends BaseCommand {
         failText: `Failed to install ${Color.chalk.magenta(library)} library`,
         successText: `Library ${Color.chalk.magenta(
           library
-        )} succesfully installed`
+        )} successfully installed`
       })
     }
 
     const path = isFile
       ? resolve(library)
-      : Path.nodeModules(`${library}/configurer/index.js`)
+      : Path.nodeModules(`${library}/configure/index.js`)
 
     if (!(await File.exists(path))) {
       throw new NotFoundConfigurerException(path, library)

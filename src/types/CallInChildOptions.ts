@@ -7,7 +7,12 @@
  * file that was distributed with this source code.
  */
 
-export default {
-  debug: true,
-  version: '1.0.0'
+export type CallInChildOptions = {
+  /**
+   * The artisan file path that will be used to
+   * invoke the child process.
+   *
+   * @default Path.bootstrap(`console.${Path.ext()}`)
+   */
+  path?: string
 }

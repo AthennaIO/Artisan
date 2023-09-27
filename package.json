@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.11.0",
+  "version": "4.12.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -51,6 +51,8 @@
     "#bin": "./bin/index.js",
     "#src/*": "./src/*.js",
     "#src": "./src/index.js",
+    "#src/types": "./src/types/index.js",
+    "#src/debug": "./src/debug/index.js",
     "#tests/*": "./tests/*.js",
     "#tests": "./tests/index.js"
   },
@@ -67,7 +69,7 @@
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
-    "@athenna/common": "^4.14.0",
+    "@athenna/common": "^4.15.4",
     "@athenna/config": "^4.4.0",
     "@athenna/ioc": "^4.4.2",
     "@athenna/logger": "^4.5.0",
@@ -198,28 +200,6 @@
   "athenna": {
     "templates": {
       "command": "./templates/command.edge"
-    },
-    "commands": {
-      "test": {
-        "path": "./tests/fixtures/Test.js"
-      },
-      "list": {
-        "path": "#src/commands/ListCommand",
-        "loadAllCommands": true
-      },
-      "configure": "#src/commands/ConfigureCommand",
-      "loadapp": {
-        "path": "#tests/fixtures/commands/LoadAppCommand",
-        "loadApp": true,
-        "environments": [
-          "worker",
-          "console"
-        ]
-      },
-      "unknown": "#tests/fixtures/commands/UnknownArgsCommand",
-      "make:command": "#src/commands/MakeCommandCommand",
-      "template:customize": "#src/commands/TemplateCustomizeCommand"
-    },
-    "providers": []
+    }
   }
 }

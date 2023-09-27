@@ -26,7 +26,7 @@ export class ListCommand extends BaseCommand {
       `({bold,green} [ LISTING ${this.alias.toUpperCase()} ])\n`
     )
 
-    const commands = CommanderHandler.getCommands(this.alias)
+    const commands = CommanderHandler.getCommandsInfo(this.alias)
 
     this.logger.column(commands, {
       columns: ['COMMAND', 'DESCRIPTION']

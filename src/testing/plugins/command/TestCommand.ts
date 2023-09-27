@@ -11,21 +11,15 @@ import { Artisan } from '#src'
 import { Assert } from '@japa/assert'
 import type { CommandOutput } from '@athenna/common'
 import { TestOutput } from '#src/testing/plugins/command/TestOutput'
+import type { CallInChildOptions } from '#src/types/CallInChildOptions'
 
 export class TestCommand {
   /**
    * The Artisan file path that will be used to run commands.
    *
-   * @default 'Path.bootstrap(`artisan.${Path.ext()}`)'
+   * @default 'Path.bootstrap(`console.${Path.ext()}`)'
    */
-  public static artisanPath = Path.bootstrap(`artisan.${Path.ext()}`)
-
-  /**
-   * The Artisan executor that will be used to run commands.
-   *
-   * @default 'sh node'
-   */
-  public static artisanExecutor = 'sh node'
+  public static artisanPath = Path.bootstrap(`console.${Path.ext()}`)
 
   /**
    * Set the artisan file path.
@@ -52,10 +46,13 @@ export class TestCommand {
    * Run the command and return the TestOutput instance
    * to make assertions.
    */
-  public async run(command: string): Promise<TestOutput> {
+  public async run(
+    command: string,
+    options?: CallInChildOptions
+  ): Promise<TestOutput> {
     return Artisan.callInChild(command, {
       path: TestCommand.artisanPath,
-      executor: TestCommand.artisanExecutor
+      ...options
     }).then(output => this.createOutput(output))
   }
 }

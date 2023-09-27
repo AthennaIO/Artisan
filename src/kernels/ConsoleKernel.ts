@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { isAbsolute, resolve } from 'node:path'
+import { sep, isAbsolute, resolve } from 'node:path'
 import { Exec, File, Is, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
@@ -56,7 +56,7 @@ export class ConsoleKernel {
    */
   public async registerRouteCommands(path: string) {
     if (path.startsWith('#')) {
-      await this.resolvePath(path)
+      await Module.resolve(path, this.getMeta())
 
       return
     }
@@ -65,11 +65,14 @@ export class ConsoleKernel {
       path = resolve(path)
     }
 
-    if (!(await File.exists(path))) {
+    const [pathWithoutQueries, pathQueries] = path.split('?')
+    const parsedExtPath = Path.parseExt(pathWithoutQueries)
+
+    if (!(await File.exists(parsedExtPath))) {
       return
     }
 
-    await this.resolvePath(path)
+    await Module.resolve(parsedExtPath + '?' + pathQueries, this.getMeta())
   }
 
   /**
@@ -79,15 +82,15 @@ export class ConsoleKernel {
     if (!path) {
       const handler = new ConsoleExceptionHandler()
 
-      CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
+      CommanderHandler.exceptionHandler = handler.handle.bind(handler)
 
       return
     }
 
-    const Handler = await this.resolvePath(path)
+    const Handler = await Module.resolve(path, this.getMeta())
     const handler = new Handler()
 
-    CommanderHandler.setExceptionHandler(handler.handle.bind(handler))
+    CommanderHandler.exceptionHandler = handler.handle.bind(handler)
   }
 
   /**
@@ -95,19 +98,9 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string): Promise<void> {
-    const Command = await this.resolvePath(path)
+    const Command = await Module.resolve(path, this.getMeta())
 
-    Artisan.register(new Command())
-  }
-
-  /**
-   * Resolve the import path by meta URL and import it.
-   */
-  private async resolvePath(path: string) {
-    return Module.resolve(
-      `${path}?version=${Math.random()}`,
-      Config.get('rc.meta')
-    )
+    Artisan.register(Command)
   }
 
   /**
@@ -125,5 +118,12 @@ export class ConsoleKernel {
 
       return this.registerCommandByPath(path.path)
     })
+  }
+
+  /**
+   * Get the meta URL of the project.
+   */
+  private getMeta() {
+    return Config.get('rc.meta', Path.toHref(Path.pwd() + sep))
   }
 }
