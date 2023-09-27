@@ -59,8 +59,8 @@ export default class MakeCommandTest extends BaseTest {
 
     output.assertFailed()
     output.assertLogged('[ MAKING COMMAND ]')
-    output.assertLogged(
-      'The file ({yellow} "/Users/jlenon7/Development/Athenna/Artisan/app/console/commands/TestCommand.ts") already exists'
-    )
+    output.assertLogged('The file')
+    output.assertLogged('TestCommand.ts')
+    output.assertLogged('already exists')
   }
 }
