@@ -56,7 +56,7 @@ export class ConsoleKernel {
    */
   public async registerRouteCommands(path: string) {
     if (path.startsWith('#')) {
-      await Module.resolve(path, this.getMeta())
+      await Module.resolve(path, this.getParentURL())
 
       return
     }
@@ -72,7 +72,7 @@ export class ConsoleKernel {
       return
     }
 
-    await Module.resolve(parsedExtPath + '?' + pathQueries, this.getMeta())
+    await Module.resolve(parsedExtPath + '?' + pathQueries, this.getParentURL())
   }
 
   /**
@@ -87,7 +87,7 @@ export class ConsoleKernel {
       return
     }
 
-    const Handler = await Module.resolve(path, this.getMeta())
+    const Handler = await Module.resolve(path, this.getParentURL())
     const handler = new Handler()
 
     CommanderHandler.exceptionHandler = handler.handle.bind(handler)
@@ -98,7 +98,7 @@ export class ConsoleKernel {
    * command inside the service provider and also in Artisan.
    */
   public async registerCommandByPath(path: string): Promise<void> {
-    const Command = await Module.resolve(path, this.getMeta())
+    const Command = await Module.resolve(path, this.getParentURL())
 
     Artisan.register(Command)
   }
@@ -121,9 +121,9 @@ export class ConsoleKernel {
   }
 
   /**
-   * Get the meta URL of the project.
+   * Get the parent URL of the project.
    */
-  private getMeta() {
-    return Config.get('rc.meta', Path.toHref(Path.pwd() + sep))
+  private getParentURL() {
+    return Config.get('rc.parentURL', Path.toHref(Path.pwd() + sep))
   }
 }
