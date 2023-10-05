@@ -73,16 +73,15 @@
     "figlet": "^1.6.0",
     "inquirer": "^9.2.11",
     "log-update": "^5.0.1",
-    "ora": "^6.3.1",
-    "cross-env": "^7.0.3"
+    "ora": "^6.3.1"
   },
   "devDependencies": {
     "@athenna/common": "^4.17.2",
     "@athenna/config": "^4.6.0",
     "@athenna/ioc": "^4.6.0",
     "@athenna/logger": "^4.7.0",
-    "@athenna/tsconfig": "^4.8.2",
     "@athenna/test": "^4.11.0",
+    "@athenna/tsconfig": "^4.8.2",
     "@athenna/view": "^4.5.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
