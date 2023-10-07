@@ -10,6 +10,7 @@
 import { Task } from '#src/helpers/Task'
 import { Test, BeforeEach, type Context } from '@athenna/test'
 import { RunningTaskException } from '#src/exceptions/RunningTaskException'
+import { Exec } from '@athenna/common'
 
 export default class TaskTest {
   @BeforeEach()
@@ -41,6 +42,45 @@ export default class TaskTest {
       .run()
 
     assert.equal(value, 'hello')
+  }
+
+  @Test()
+  public async shouldBeAbleToCreateTasksRunnerUsingPromises({ assert }: Context) {
+    let value = 'hello'
+    Config.set('logging.channels.console.driver', 'null')
+
+    await new Task()
+      .addPromise('Testing 1', async () => {
+        await Exec.sleep(100)
+      })
+      .addPromise('Testing 2', async () => {
+        await Exec.sleep(100)
+      })
+      .addPromise('Testing 3', async () => {
+        value = null
+        await Exec.sleep(100)
+      })
+      .run()
+
+    assert.equal(value, null)
+  }
+
+  @Test()
+  public async shouldThrowIfPromiseDoesNotResolveWhenUsingAddPromise({ assert }: Context) {
+    Config.set('logging.channels.console.driver', 'null')
+
+    const task = new Task()
+      .addPromise('Testing 1', async () => {
+        await Exec.sleep(100)
+      })
+      .addPromise('Testing 2', async () => {
+        await Exec.sleep(100)
+      })
+      .addPromise('Testing 3', async () => {
+        throw new Error('Error')
+      })
+
+    await assert.rejects(() => task.run(), Error)
   }
 
   @Test()

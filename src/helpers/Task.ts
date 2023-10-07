@@ -48,6 +48,39 @@ export class Task {
   }
 
   /**
+   * Same as add but automatically handle the callback
+   * depending on the promise result.
+   *
+   * @example
+   * ```ts
+   * await this.logger
+   *    .task()
+   *    .addPromise('hello', async () => {
+   *      await Exec.sleep(1000)
+   *    })
+   *    .run()
+   * ```
+   * Output:
+   * ```bash
+   * → hello 1005ms
+   * ```
+   */
+  public addPromise(title: string, cb: () => Promise<any>): Task {
+    this.tasks.push({
+      title,
+      cb: async task =>
+        await cb()
+          .then(() => task.complete())
+          .catch(error => {
+            task.fail()
+            throw error
+          })
+    })
+
+    return this
+  }
+
+  /**
    * Run all the tasks added.
    *
    * @example
