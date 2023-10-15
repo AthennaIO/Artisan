@@ -24,7 +24,7 @@ export default class ConfigureCommandTest extends BaseTest {
 
   @Test()
   public async shouldBeAbleToRunAConfiguratorFilePathDirectlyInsteadOfInstallingLibraries({ command }: Context) {
-    const output = await command.run('configure ./tests/fixtures/configurators/foo/configure/index.js', {
+    const output = await command.run('configure ./tests/fixtures/configurators/foo/configurer/index.js', {
       path: Path.fixtures('consoles/console-mock-prompt.ts')
     })
 

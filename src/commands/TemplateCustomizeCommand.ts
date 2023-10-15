@@ -40,10 +40,10 @@ export class TemplateCustomizeCommand extends BaseCommand {
       templates[key] = `./resources/templates/${file.base}`
     })
 
-    await this.rc.setTo('view.templates', templates).save()
+    await this.rc.setTo('templates', templates).save()
 
     this.logger.success(
-      `Athenna RC updated: ({dim,yellow} { view.templates = ${JSON.stringify(
+      `Athenna RC updated: ({dim,yellow} { templates = ${JSON.stringify(
         templates,
         null,
         2
