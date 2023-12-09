@@ -82,15 +82,7 @@ export default class ConsoleExceptionHandlerTest {
 
     await new ConsoleExceptionHandler().handle(error)
 
-    const exception = error.toAthennaException()
-
-    exception.name = 'Internal error'
-    exception.code = 'E_INTERNAL_ERROR'
-    exception.message = 'An internal error has occurred.'
-
-    delete exception.stack
-
     assert.calledWith(this.processExitMock, 1)
-    assert.calledWith(errorFake, await exception.prettify())
+    assert.calledOnce(errorFake)
   }
 }

@@ -34,10 +34,11 @@ export class TemplateCustomizeCommand extends BaseCommand {
       }
 
       const file = new File(path)
+      const copyPath = Path.resources(`templates/${file.base}`)
 
-      await file.copy(Path.resources(`templates/${file.base}`))
+      await file.copy(copyPath)
 
-      templates[key] = `./resources/templates/${file.base}`
+      templates[key] = copyPath.replace(Path.pwd(), '.')
     })
 
     await this.rc.setTo('templates', templates).save()
@@ -51,7 +52,9 @@ export class TemplateCustomizeCommand extends BaseCommand {
     )
 
     this.logger.success(
-      'Template files successfully moved to ({yellow} resources/templates) folder.'
+      `Template files successfully moved to ({yellow} ${Path.resources(
+        'templates'
+      ).replace(Path.pwd(), '.')}) folder.`
     )
   }
 }
