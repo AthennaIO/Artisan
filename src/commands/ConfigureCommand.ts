@@ -16,7 +16,7 @@ export class ConfigureCommand extends BaseCommand {
   @Argument({
     signature: 'libraries...',
     description:
-      'One or more libraries to be configured. (Example: artisan configure @athenna/mail @athenna/database)'
+      'One or more libraries to be configured. (Example: node artisan configure @athenna/mail @athenna/database)'
   })
   public libraries: string[]
 
@@ -35,17 +35,27 @@ export class ConfigureCommand extends BaseCommand {
   }
 
   private async configure(library: string) {
+    this.logger.simple(`({bold,green} [ CONFIGURING ${library} ])\n`)
+
     const isFile = this.isFile(library)
     const isInstalled = await this.isInstalled(library)
 
     if (!isFile && !isInstalled) {
-      await this.logger.promiseSpinner(Exec.command(`npm install ${library}`), {
-        text: `Installing ${Color.chalk.magenta(library)} library`,
-        failText: `Failed to install ${Color.chalk.magenta(library)} library`,
-        successText: `Library ${Color.chalk.magenta(
-          library
-        )} successfully installed`
-      })
+      this.logger.warn(
+        `Library ({dim,yellow} ${library}) is not installed, is recommended to run ({dim,yellow} npm install ${library}) because installing libraries from child process usually don't set the library in your ({dim,yellow} package.json) file.`
+      )
+      await this.logger.promiseSpinner(
+        Exec.command(`npm install ${library}`, { cwd: Path.pwd() }),
+        {
+          text: `Installing ${Color.chalk.dim.magenta(library)} library`,
+          failText: `Failed to install ${Color.chalk.dim.magenta(
+            library
+          )} library`,
+          successText: `Library ${Color.chalk.dim.magenta(
+            library
+          )} successfully installed`
+        }
+      )
     }
 
     const path = isFile
