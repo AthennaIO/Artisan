@@ -9,7 +9,7 @@
 
 import { Mock } from '@athenna/test'
 import { BaseConfigurer, Artisan, ArtisanProvider } from '#src'
-import { Exec, File, Module } from '@athenna/common'
+import { File, Module } from '@athenna/common'
 
 import { Config, Rc } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
@@ -20,7 +20,7 @@ import { TemplateCustomizeCommand } from '#src/commands/TemplateCustomizeCommand
 
 class Configurer extends BaseConfigurer {
   public async configure() {
-    this.logger.info('Configuring some-lib-name')
+    this.logger.info('Configuring @athenna/test')
   }
 }
 
@@ -37,7 +37,6 @@ Artisan.register(ConfigureCommand)
 Artisan.register(MakeCommandCommand)
 Artisan.register(TemplateCustomizeCommand)
 
-Mock.when(Exec, 'command').resolve(undefined)
 Mock.when(File, 'exists').resolve(true)
 Mock.when(Module, 'getFrom').resolve(Configurer)
 

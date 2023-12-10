@@ -13,7 +13,7 @@ export class NotFoundConfigurerException extends Exception {
   public constructor(path: string, library: string) {
     super({
       status: 500,
-      code: 'E_NOT_FOUND',
+      code: 'E_SIMPLE_CLI',
       message: `The configurer file of ({magenta} "${library}") library cannot be found.`,
       help: `Remember that ({magenta} "${library}") needs to implement the Configurer class of Artisan and export it in ({yellow} "${path}").`
     })

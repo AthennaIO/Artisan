@@ -9,7 +9,8 @@
 
 import { extname, resolve } from 'node:path'
 import { Argument, BaseCommand } from '#src'
-import { Color, Exec, File, Module } from '@athenna/common'
+import { File, Module } from '@athenna/common'
+import { NotFoundLibraryException } from '#src/exceptions/NotFoundLibraryException'
 import { NotFoundConfigurerException } from '#src/exceptions/NotFoundConfigurerException'
 
 export class ConfigureCommand extends BaseCommand {
@@ -41,21 +42,7 @@ export class ConfigureCommand extends BaseCommand {
     const isInstalled = await this.isInstalled(library)
 
     if (!isFile && !isInstalled) {
-      this.logger.warn(
-        `Library ({dim,yellow} ${library}) is not installed, is recommended to run ({dim,yellow} npm install ${library}) because installing libraries from child process usually don't set the library in your ({dim,yellow} package.json) file.`
-      )
-      await this.logger.promiseSpinner(
-        Exec.command(`npm install ${library}`, { cwd: Path.pwd() }),
-        {
-          text: `Installing ${Color.chalk.dim.magenta(library)} library`,
-          failText: `Failed to install ${Color.chalk.dim.magenta(
-            library
-          )} library`,
-          successText: `Library ${Color.chalk.dim.magenta(
-            library
-          )} successfully installed`
-        }
-      )
+      throw new NotFoundLibraryException(library)
     }
 
     const path = isFile
