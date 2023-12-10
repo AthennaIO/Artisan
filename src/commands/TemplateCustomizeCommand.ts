@@ -38,7 +38,9 @@ export class TemplateCustomizeCommand extends BaseCommand {
 
       await file.copy(copyPath)
 
-      templates[key] = copyPath.replace(Path.pwd(), '.').replace(sep, '/')
+      templates[key] = copyPath
+        .replace(Path.pwd(), '.')
+        .replace(new RegExp(sep, 'g'), '/')
     })
 
     await this.rc.setTo('templates', templates).save()
@@ -56,7 +58,7 @@ export class TemplateCustomizeCommand extends BaseCommand {
         'templates'
       )
         .replace(Path.pwd(), '.')
-        .replace(sep, '/')}) folder.`
+        .replace(new RegExp(sep, 'g'), '/')}) folder.`
     )
   }
 }
