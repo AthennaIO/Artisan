@@ -9,7 +9,7 @@
 
 import { BaseCommand } from '#src'
 import { Exec, File } from '@athenna/common'
-import { sep, resolve, isAbsolute } from 'node:path'
+import { sep, resolve, relative, isAbsolute } from 'node:path'
 
 export class TemplateCustomizeCommand extends BaseCommand {
   public static signature(): string {
@@ -38,9 +38,7 @@ export class TemplateCustomizeCommand extends BaseCommand {
 
       await file.copy(copyPath)
 
-      templates[key] = copyPath
-        .replace(Path.pwd(), '.')
-        .replace(new RegExp(sep, 'g'), '/')
+      templates[key] = `.${sep}${relative(Path.pwd(), copyPath)}`
     })
 
     await this.rc.setTo('templates', templates).save()
@@ -54,11 +52,10 @@ export class TemplateCustomizeCommand extends BaseCommand {
     )
 
     this.logger.success(
-      `Template files successfully moved to ({yellow} ${Path.resources(
-        'templates'
-      )
-        .replace(Path.pwd(), '.')
-        .replace(new RegExp(sep, 'g'), '/')}) folder.`
+      `Template files successfully moved to ({yellow} ${relative(
+        Path.pwd(),
+        Path.resources('templates')
+      )}) folder`
     )
   }
 }
