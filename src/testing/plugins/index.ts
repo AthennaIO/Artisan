@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { TestContext } from '@japa/runner/core'
 import { TestCommand } from '#src/testing/plugins/command/TestCommand'
 
-declare module '@japa/runner' {
+declare module '@japa/runner/core' {
   interface TestContext {
     command: TestCommand
   }
@@ -22,7 +23,7 @@ export * from '#src/testing/plugins/command/TestOutput'
  * Command plugin registers the command macro to the test context.
  */
 export function command() {
-  return function (_config, _runner, classes) {
-    classes.TestContext.macro('command', new TestCommand())
+  return function () {
+    TestContext.macro('command', new TestCommand())
   }
 }
