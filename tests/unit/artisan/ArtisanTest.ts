@@ -197,4 +197,18 @@ export default class ArtisanTest extends BaseTest {
 
     assert.isTrue(FixtureDatabase.has('simple:command'))
   }
+
+  @Test()
+  public async shouldBeAbleToRegisterAnArtisanCommandWithGlobalOptions({ assert }: Context) {
+    const { GlobalAnnotatedCommand } = await this.import('#tests/fixtures/GlobalAnnotatedCommand')
+
+    Artisan.register(GlobalAnnotatedCommand)
+
+    const opts = CommanderHandler.getCommandOpts(GlobalAnnotatedCommand.signature())
+
+    await Artisan.parse(['node', 'artisan', 'globalAnnotated'])
+
+    assert.isEmpty(opts)
+    assert.deepEqual(FixtureDatabase.get('globalAnnotated:command'), 'local')
+  }
 }

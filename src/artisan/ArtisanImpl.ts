@@ -40,7 +40,7 @@ export class ArtisanImpl {
 
     /** Set options */
     Annotation.getOptions(command).forEach(option => {
-      if (option.isGlobal) {
+      if (option.isFromGlobal) {
         return
       }
 

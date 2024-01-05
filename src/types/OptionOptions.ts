@@ -10,6 +10,6 @@
 export type OptionOptions = {
   signature?: string
   default?: any
-  isGlobal?: boolean
+  isFromGlobal?: boolean
   description?: string
 }
