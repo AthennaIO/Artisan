@@ -40,6 +40,10 @@ export class ArtisanImpl {
 
     /** Set options */
     Annotation.getOptions(command).forEach(option => {
+      if (option.isGlobal) {
+        return
+      }
+
       commander.option(option.signature, option.description, option.default)
     })
 
@@ -165,22 +169,10 @@ export class ArtisanImpl {
    */
   public async parse(argv: string[], appName?: string): Promise<void> {
     if (appName) {
-      /**
-       * If argv is less or equal two, means that
-       * the command that are being run is just
-       * the CLI entrypoint. Example:
-       *
-       * - node artisan
-       *
-       * In CLI entrypoint we are going to log the
-       * chalkRainbow with his application name.
-       */
-      if (argv.length <= 2) {
-        const appNameFiglet = figlet.textSync(appName)
-        const appNameFigletColorized = chalkRainbow(appNameFiglet)
+      const appNameFiglet = figlet.textSync(appName)
+      const appNameFigletColorized = chalkRainbow(appNameFiglet)
 
-        process.stdout.write(appNameFigletColorized + '\n')
-      }
+      CommanderHandler.commander.addHelpText('before', appNameFigletColorized)
     }
 
     await this.parseWithSettings(argv)
