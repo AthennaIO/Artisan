@@ -18,17 +18,22 @@ export default class OptionTest extends BaseTest {
 
     const opts = Reflect.getMetadata(OPTIONS_KEY, annotatedCommand)
 
-    assert.deepEqual(opts[0], { key: 'withName', isGlobal: false, signature: '--with-name', signatureName: 'withName' })
+    assert.deepEqual(opts[0], {
+      key: 'withName',
+      isFromGlobal: false,
+      signature: '--with-name',
+      signatureName: 'withName'
+    })
     assert.deepEqual(opts[1], {
       key: 'withAge',
-      isGlobal: false,
+      isFromGlobal: false,
       signature: '--with-age',
       signatureName: 'withAge',
       description: 'Add the age of the person'
     })
     assert.deepEqual(opts[2], {
       default: true,
-      isGlobal: false,
+      isFromGlobal: false,
       key: 'withEmail',
       signatureName: 'addEmail',
       signature: '-am, --add-email',
@@ -36,7 +41,7 @@ export default class OptionTest extends BaseTest {
     })
     assert.deepEqual(opts[3], {
       key: 'withFoo',
-      isGlobal: false,
+      isFromGlobal: false,
       default: false,
       signature: '--no-foo',
       signatureName: 'foo'

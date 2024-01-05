@@ -20,19 +20,19 @@ export class CommanderHandler {
   /**
    * The commander instance.
    */
-  public static commander = new Commander()
+  public static commander = this.instantiate()
 
   /**
-   * Simple helper to reconstruct the commander instance.
+   * Get a new commander instance with default options.
    */
-  public static reconstruct(): void {
-    CommanderHandler.commander = new Commander()
+  public static instantiate() {
+    return new Commander()
       .addHelpCommand('help [command]', 'Display help for [command]')
       .usage('[command] [arguments] [options]')
       .option(
-        '--env',
+        '--env <env>',
         'The environment the command should run under.',
-        Env('APP_ENV')
+        Env('APP_ENV') || Env('NODE_ENV', 'local')
       )
       .configureHelp({
         sortSubcommands: true,
@@ -47,6 +47,13 @@ export class CommanderHandler {
             .setGlobalOptions()
             .getOutput()
       })
+  }
+
+  /**
+   * Simple helper to reconstruct the commander instance.
+   */
+  public static reconstruct(): void {
+    CommanderHandler.commander = this.instantiate()
   }
 
   /**
@@ -81,14 +88,19 @@ export class CommanderHandler {
     }
 
     if (version) {
-      CommanderHandler.commander.version(version, '-v, --version')
+      CommanderHandler.commander.version(
+        version,
+        '-v, --version',
+        'Output the application version.'
+      )
 
       return this
     }
 
     CommanderHandler.commander.version(
       'Athenna Framework v3.0.0',
-      '-v, --version'
+      '-v, --version',
+      'Output the framework version.'
     )
 
     return this
@@ -116,9 +128,9 @@ export class CommanderHandler {
    * Get the option values of a command.
    */
   public static getCommandOptsValues(name: string): OptionValues {
-    const commander: any = this.getCommand(name)
+    const commander = this.getCommand(name)
 
-    return commander.opts()
+    return commander.optsWithGlobals()
   }
 
   /**

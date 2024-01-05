@@ -21,7 +21,7 @@ export function Option(options?: OptionOptions): PropertyDecorator {
     key = key.toString()
 
     options = Options.create(options, {
-      isGlobal: false,
+      isFromGlobal: false,
       signature: `--${String.toDashCase(key)}`
     })
 

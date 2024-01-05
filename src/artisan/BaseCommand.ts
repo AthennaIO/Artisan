@@ -94,7 +94,6 @@ export abstract class BaseCommand {
     argsMeta.forEach(arg => (this[arg.key] = args.shift()))
     optsMeta.forEach(opt => (this[opt.key] = optsValues[opt.signatureName]))
 
-    // TODO test if handle will receive the args properly
     return this.handle(...args)
   }
 
