@@ -22,7 +22,7 @@ export class Formatter {
   private helpWidth: number = 0
   private indent: string = ''
   private moveOptions: any = false
-  private matchRequiredArgs = /\[(.*?)\]/
+  private matchRequiredArgs = /<(.*?)>/
   private matchOptionsAndOptionalArgs = /\[(.*?)\]/
   private sections = {
     description: '',
