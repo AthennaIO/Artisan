@@ -133,7 +133,7 @@ export default class CommanderHandlerTest {
       .action(() => {
         const opts = CommanderHandler.getCommandOptsValues('test')
 
-        assert.deepEqual(opts, { age: true, env: 'local' })
+        assert.deepEqual(opts, { age: true, env: 'test' })
       })
 
     await CommanderHandler.parse(['node', 'artisan', 'test', 'João Lenon', '--age'])

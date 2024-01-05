@@ -10,6 +10,8 @@
 import { Runner } from '@athenna/test'
 import { command } from '#src/testing/plugins/index'
 
+process.env.APP_ENV = 'test'
+
 await Runner.setTsEnv()
   .addAssertPlugin()
   .addPlugin(command())

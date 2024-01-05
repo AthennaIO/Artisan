@@ -209,6 +209,6 @@ export default class ArtisanTest extends BaseTest {
     await Artisan.parse(['node', 'artisan', 'globalAnnotated'])
 
     assert.isEmpty(opts)
-    assert.deepEqual(FixtureDatabase.get('globalAnnotated:command'), 'local')
+    assert.deepEqual(FixtureDatabase.get('globalAnnotated:command'), 'test')
   }
 }

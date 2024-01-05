@@ -32,7 +32,7 @@ export class CommanderHandler {
       .option(
         '--env <env>',
         'The environment the command should run under.',
-        Env('APP_ENV') || Env('NODE_ENV', 'local')
+        Env('APP_ENV') || Env('NODE_ENV')
       )
       .configureHelp({
         sortSubcommands: true,
