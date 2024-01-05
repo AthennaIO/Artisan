@@ -23,6 +23,10 @@ export function Argument(options?: ArgumentOptions): PropertyDecorator {
       required: true
     })
 
+    if (options.default) {
+      options.required = false
+    }
+
     if (!options.required) {
       options.signature = `[${options.signature}]`
     } else {

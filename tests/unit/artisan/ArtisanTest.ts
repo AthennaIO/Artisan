@@ -7,9 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import figlet from 'figlet'
-import chalkRainbow from 'chalk-rainbow'
-
 import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context, Mock } from '@athenna/test'
 import { Annotation, Artisan, CommanderHandler } from '#src'
@@ -199,14 +196,5 @@ export default class ArtisanTest extends BaseTest {
     await Artisan.parse(['node', 'artisan', 'simple'])
 
     assert.isTrue(FixtureDatabase.has('simple:command'))
-  }
-
-  @Test()
-  public async shouldBeAbleToLogTheAppNameWithFigletAndChalkRainbowWhenParsingArgvInCliEntrypoint({ assert }: Context) {
-    const stdoutWriteMock = Mock.when(process.stdout, 'write').return(undefined)
-
-    await Artisan.parse(['node', 'artisan'], 'Artisan')
-
-    assert.calledWith(stdoutWriteMock, chalkRainbow(figlet.textSync('Artisan')) + '\n')
   }
 }

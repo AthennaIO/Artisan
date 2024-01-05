@@ -8,6 +8,7 @@
  */
 
 import { Commander } from '#src/artisan/Commander'
+import { Formatter } from '#src/helpers/Formatter'
 import type { Argument, Option, OptionValues } from 'commander'
 
 export class CommanderHandler {
@@ -26,6 +27,26 @@ export class CommanderHandler {
    */
   public static reconstruct(): void {
     CommanderHandler.commander = new Commander()
+      .addHelpCommand('help [command]', 'Display help for [command]')
+      .usage('[command] [arguments] [options]')
+      .option(
+        '--env',
+        'The environment the command should run under.',
+        Env('APP_ENV')
+      )
+      .configureHelp({
+        sortSubcommands: true,
+        showGlobalOptions: true,
+        formatHelp: (cmd, helper) =>
+          Formatter.builder(cmd, helper)
+            .setUsage()
+            .setDescription()
+            .setArguments()
+            .setOptions()
+            .setCommands()
+            .setGlobalOptions()
+            .getOutput()
+      })
   }
 
   /**
