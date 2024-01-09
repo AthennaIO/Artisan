@@ -10,11 +10,10 @@
 import { File, Folder, Path } from '@athenna/common'
 import { TestCommand } from '#src/testing/plugins/index'
 import { ArtisanProvider, CommanderHandler } from '#src'
+import { AfterEach, BeforeEach, Mock } from '@athenna/test'
 import { FixtureDatabase } from '#tests/fixtures/FixtureDatabase'
-import { AfterEach, BeforeEach, Mock, type Stub } from '@athenna/test'
 
 export class BaseTest {
-  public processExitMock: Stub
   public originalPJson = new File(Path.pwd('package.json')).getContentAsStringSync()
 
   @BeforeEach()
@@ -23,7 +22,7 @@ export class BaseTest {
 
     TestCommand.setArtisanPath(Path.fixtures('consoles/base-command.ts'))
 
-    this.processExitMock = Mock.when(process, 'exit').return(undefined)
+    Mock.when(process, 'exit').return(undefined)
   }
 
   @AfterEach()

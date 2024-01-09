@@ -27,67 +27,79 @@ export default class ActionTest {
   @Test()
   public async shouldBeAbleToLogASucceededActionInTheStdout({ assert }: Context) {
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     this.action.succeeded('app/Services/Service.ts')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('CREATE: app/Services/Service.ts'))
+    assert.calledWith(successFake, 'CREATE: app/Services/Service.ts')
   }
 
   @Test()
   public async shouldBeAbleToLogASkippedActionInTheStdout({ assert }: Context) {
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     this.action.skipped('app/Services/Service.ts')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('SKIP:   app/Services/Service.ts'))
+    assert.calledWith(successFake, 'SKIP:   app/Services/Service.ts')
   }
 
   @Test()
   public async shouldBeAbleToLogASkippedActionWithReasonInTheStdout({ assert }: Context) {
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     this.action.skipped('app/Services/Service.ts', 'Some reason')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('SKIP:   app/Services/Service.ts (Some reason)'))
+    assert.calledWith(successFake, 'SKIP:   app/Services/Service.ts (Some reason)')
   }
 
   @Test()
   public async shouldBeAbleToLogAFailedActionInTheStdout({ assert }: Context) {
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     this.action.failed('app/Services/Service.ts')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('ERROR:  app/Services/Service.ts'))
+    assert.calledWith(successFake, 'ERROR:  app/Services/Service.ts')
   }
 
   @Test()
   public async shouldBeAbleToLogAFailedActionWithReasonInTheStdout({ assert }: Context) {
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     this.action.failed('app/Services/Service.ts', 'Some reason')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('ERROR:  app/Services/Service.ts (Some reason)'))
+    assert.calledWith(successFake, 'ERROR:  app/Services/Service.ts (Some reason)')
   }
 
   @Test()
   public async shouldBeAbleToCreateAnActionInstanceWhereTheErrorActionIsTheBiggest({ assert }: Context) {
     const action = new Action('OK')
     const successFake = Mock.fake()
-    const stub = Log.when('standalone').return({ success: _args => successFake(Color.removeColors(_args)) })
+    const stub = Log.when('standalone')
+      .return({ success: _args => successFake(Color.removeColors(_args)) })
+      .get()
 
     action.succeeded('app/Services/Service.ts')
 
     assert.calledTimesWith(stub, 1, { level: 'trace', driver: 'null' })
-    assert.isTrue(successFake.calledWith('OK:    app/Services/Service.ts'))
+    assert.calledWith(successFake, 'OK:    app/Services/Service.ts')
   }
 }

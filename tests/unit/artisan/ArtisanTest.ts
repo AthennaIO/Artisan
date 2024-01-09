@@ -82,7 +82,7 @@ export default class ArtisanTest extends BaseTest {
     await Artisan.parse(['node', 'artisan', 'hello', 'world', '--hello=world'])
 
     assert.calledWith(fakeFire, ['hello', 'world'])
-    assert.calledWith(this.processExitMock, 0)
+    assert.calledWith(process.exit, 0)
   }
 
   @Test()
@@ -137,7 +137,7 @@ export default class ArtisanTest extends BaseTest {
     await Artisan.call('simple', { withSettings: true })
 
     assert.isTrue(FixtureDatabase.has('simple:command'))
-    assert.calledWith(this.processExitMock, 0)
+    assert.calledWith(process.exit, 0)
   }
 
   @Test()
