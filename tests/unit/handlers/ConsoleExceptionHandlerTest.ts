@@ -10,15 +10,13 @@
 import { Exception } from '@athenna/common'
 import { ConsoleExceptionHandler } from '#src'
 import { Log, LoggerProvider } from '@athenna/logger'
-import { Test, Mock, AfterEach, BeforeEach, type Context, type Stub } from '@athenna/test'
+import { Test, Mock, AfterEach, BeforeEach, type Context } from '@athenna/test'
 
 export default class ConsoleExceptionHandlerTest {
-  public processExitMock: Stub
-
   @BeforeEach()
   public beforeEach() {
     new LoggerProvider().register()
-    this.processExitMock = Mock.when(process, 'exit').return(1)
+    Mock.when(process, 'exit').return(1)
   }
 
   @AfterEach()
@@ -38,7 +36,7 @@ export default class ConsoleExceptionHandlerTest {
 
     await new ConsoleExceptionHandler().handle(error)
 
-    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(process.exit, 1)
     assert.calledWith(errorFake, await error.toAthennaException().prettify())
   }
 
@@ -52,7 +50,7 @@ export default class ConsoleExceptionHandlerTest {
 
     await new ConsoleExceptionHandler().handle(exception)
 
-    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(process.exit, 1)
     assert.calledWith(errorFake, await exception.prettify())
   }
 
@@ -66,7 +64,7 @@ export default class ConsoleExceptionHandlerTest {
 
     await new ConsoleExceptionHandler().handle(exception)
 
-    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(process.exit, 1)
     assert.calledWith(errorFake, 'Test error')
   }
 
@@ -82,7 +80,7 @@ export default class ConsoleExceptionHandlerTest {
 
     await new ConsoleExceptionHandler().handle(error)
 
-    assert.calledWith(this.processExitMock, 1)
+    assert.calledWith(process.exit, 1)
     assert.calledOnce(errorFake)
   }
 }

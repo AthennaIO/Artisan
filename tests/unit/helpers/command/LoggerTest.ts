@@ -32,7 +32,7 @@ export default class LoggerTest {
 
   @Test()
   public async shouldBeAbleToLogSimpleValuesWithoutAnyFormatInStdout({ assert }: Context) {
-    const successFake = Mock.sandbox.fake()
+    const successFake = Mock.fake()
     const standaloneFake = Mock.sandbox.fake(_configs => ({ success: successFake }))
     this.logger.standalone = standaloneFake as any
 
@@ -44,7 +44,7 @@ export default class LoggerTest {
 
   @Test()
   public async shouldBeAbleToLogRainbowMessagesInStdout({ assert }: Context) {
-    const simpleMock = Mock.sandbox.fake()
+    const simpleMock = Mock.fake()
     this.logger.simple = simpleMock
 
     this.logger.rainbow('hello')
@@ -61,7 +61,7 @@ export default class LoggerTest {
 
   @Test()
   public async shouldBeAbleToLogColumnifiedMessagesInStdout({ assert }: Context) {
-    const simpleMock = Mock.sandbox.fake()
+    const simpleMock = Mock.fake()
     this.logger.simple = simpleMock
 
     this.logger.column({ hello: 'world' })
