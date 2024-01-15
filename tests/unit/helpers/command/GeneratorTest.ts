@@ -89,4 +89,26 @@ export default class GeneratorTest {
     assert.isTrue(await File.exists(path))
     assert.isTrue(new File(path).getContentAsStringSync().includes('GeneratorTestCommandd'))
   }
+
+  @Test()
+  public async shouldBeAbleToGenerateFilesFromTemplatesSettingFileNameDestinationAndExt({ assert }: Context) {
+    const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
+
+    View.createTemplate('command', await new File('../../../../templates/command.edge').getContentAsString())
+
+    assert.isTrue(View.hasTemplate('command'))
+
+    await this.generator
+      .path(path)
+      .fileName('GeneratorTestCommand')
+      .extension('ts')
+      .destination(Path.fixtures('tmp'))
+      .properties({ namePascal: 'GeneratorTestCommandd' })
+      .setNameProperties(true)
+      .template('command')
+      .make()
+
+    assert.isTrue(await File.exists(path))
+    assert.isTrue(new File(path).getContentAsStringSync().includes('GeneratorTestCommandd'))
+  }
 }

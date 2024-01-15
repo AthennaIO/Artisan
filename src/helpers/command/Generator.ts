@@ -9,11 +9,14 @@
 
 import { View } from '@athenna/view'
 import { File, String } from '@athenna/common'
-import { resolve, isAbsolute } from 'node:path'
+import { sep, resolve, isAbsolute } from 'node:path'
 import { AlreadyExistFileException } from '#src/exceptions/AlreadyExistFileException'
 
 export class Generator {
   private _path: string
+  private _fileName: string
+  private _dest: string
+  private _ext = Path.ext()
   private _template: string
   private _properties: any
   private _setNameProperties = true
@@ -22,6 +25,9 @@ export class Generator {
    * Set the file path where the file will be generated.
    * Remember that the file name in the path will be used
    * to define the name properties.
+   *
+   * If defining a path, `fileName()`, `destination()` and
+   * `extension()` will be ignored.
    */
   public path(path: string): Generator {
     this._path = path
@@ -78,6 +84,98 @@ export class Generator {
   }
 
   /**
+   * Set the name of the file that will be generated
+   * and use as reference to define the name properties.
+   */
+  public fileName(name: string) {
+    this._fileName = name
+
+    return this
+  }
+
+  /**
+   * Set the destination where the file should be generated.
+   *
+   * @example
+   * ```ts
+   * this.generator
+   *  .name('UserController')
+   *  .destination(Path.controllers())
+   * ```
+   */
+  public destination(dest: string) {
+    if (!isAbsolute(dest)) {
+      dest = resolve(Path.pwd(), dest)
+    }
+
+    this._dest = dest
+
+    return this
+  }
+
+  /**
+   * Set the file extension.
+   *
+   * @example
+   * ```ts
+   * this.generator
+   *  .name('UserController')
+   *  .extension('ts')
+   *  .destination(Path.controllers())
+   * ```
+   */
+  public extension(ext: string) {
+    this._ext = ext
+
+    return this
+  }
+
+  /**
+   * Get the signature that will be used as key
+   * to be defined in `.athennarc.json` file.
+   *
+   * Only works when defining `fileName()`.
+   *
+   * @example
+   * ```ts
+   * this.generator.fileName('user.controller')
+   *
+   * const name = this.generator.getSignature()
+   *
+   * // userController
+   * ```
+   */
+  public getSignature(): string {
+    return String.toCamelCase(this._fileName)
+  }
+
+  /**
+   * Create a sub path import path for the file
+   * from the destination defined and the
+   * file name.
+   *
+   * Only works when defining `destination()` and
+   * `name()`.
+   *
+   * @example
+   * ```ts
+   * this.generator
+   *   .fileName('UserController')
+   *   .destination(Path.controllers())
+   *
+   * const importPath = this.generator.getImportPath()
+   *
+   * /// #app/http/controllers/UserController
+   * ```
+   */
+  public getImportPath(): string {
+    return `${this._dest
+      .replace(Path.pwd(), '')
+      .replace(/\\/g, '/')
+      .replace('/', '#')}/${this._fileName}`
+  }
+
+  /**
    * Make a new file using templates.
    *
    * @example
@@ -97,20 +195,32 @@ export class Generator {
    * ```
    */
   public async make(): Promise<File> {
+    if (!this._path) {
+      this._path = this._dest.concat(`${sep}${this._fileName}.${this._ext}`)
+    }
+
     const file = new File(this._path, '')
 
     if (file.fileExists) {
       throw new AlreadyExistFileException(this._path)
     }
 
+    if (!this._fileName) {
+      this._fileName = file.name
+    }
+
     if (this._setNameProperties) {
       const timestamp = Date.now()
-      const nameUp = file.name.toUpperCase()
-      const nameCamel = String.toCamelCase(file.name)
-      const namePlural = String.pluralize(file.name)
-      const namePascal = String.toPascalCase(file.name)
-      const namePluralCamel = String.toCamelCase(String.pluralize(file.name))
-      const namePluralPascal = String.toPascalCase(String.pluralize(file.name))
+      const nameUp = this._fileName.toUpperCase()
+      const nameCamel = String.toCamelCase(this._fileName)
+      const namePlural = String.pluralize(this._fileName)
+      const namePascal = String.toPascalCase(this._fileName)
+      const namePluralCamel = String.toCamelCase(
+        String.pluralize(this._fileName)
+      )
+      const namePluralPascal = String.toPascalCase(
+        String.pluralize(this._fileName)
+      )
 
       this.properties({
         nameUp,
@@ -135,7 +245,11 @@ export class Generator {
       return file.setContent(content)
     }
 
-    let templatePath = Config.get(`rc.templates.${this._template}`)
+    const templates = Config.get('rc.templates')
+
+    // Avoid problems when user define template
+    // key with dot notation.
+    let templatePath = templates[this._template]
 
     if (!isAbsolute(templatePath)) {
       templatePath = resolve(templatePath)
