@@ -77,7 +77,7 @@ export default class ArtisanTest extends BaseTest {
     })
       .argument('<hello>', 'Description for hello arg.')
       .option('--hello [hello]', 'Description for hello option.')
-      .settings({ loadApp: true, stayAlive: false, environments: ['hello', 'world'] })
+      .settings({ env: 'test', loadApp: true, stayAlive: false, environments: ['hello', 'world'] })
 
     await Artisan.parse(['node', 'artisan', 'hello', 'world', '--hello=world'])
 
