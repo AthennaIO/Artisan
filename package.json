@@ -1,6 +1,6 @@
 {
   "name": "@athenna/artisan",
-  "version": "4.32.0",
+  "version": "4.33.0",
   "description": "The Athenna CLI application. Built on top of commander and inspired in @adonisjs/ace.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -71,7 +71,7 @@
     "columnify": "^1.6.0",
     "commander": "^9.5.0",
     "figlet": "^1.7.0",
-    "inquirer": "^9.2.12",
+    "inquirer": "^9.2.13",
     "log-update": "^5.0.1",
     "ora": "^6.3.1"
   },

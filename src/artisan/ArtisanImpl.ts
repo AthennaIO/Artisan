@@ -188,11 +188,17 @@ export class ArtisanImpl {
       command = {}
     }
 
-    const { loadApp, stayAlive, environments } = Options.create(command, {
+    const { env, loadApp, stayAlive, environments } = Options.create(command, {
+      env: process.env.APP_ENV || process.env.NODE_ENV,
       loadApp: false,
       stayAlive: false,
       environments: ['console']
     })
+
+    if (env) {
+      process.env.APP_ENV = env
+      process.env.NODE_ENV = env
+    }
 
     if (loadApp) {
       const ignite = ioc.safeUse('Athenna/Core/Ignite')
