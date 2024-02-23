@@ -189,13 +189,16 @@ export class ArtisanImpl {
     }
 
     const { env, loadApp, stayAlive, environments } = Options.create(command, {
-      env: process.env.APP_ENV || process.env.NODE_ENV,
+      env: undefined,
       loadApp: false,
       stayAlive: false,
       environments: ['console']
     })
 
-    if (env) {
+    const hasEnvSet =
+      Env('APP_ENV') || Env('NODE_ENV') || process.argv.includes('--env')
+
+    if (env && !hasEnvSet) {
       process.env.APP_ENV = env
       process.env.NODE_ENV = env
     }
