@@ -255,11 +255,7 @@ export class Generator {
       templatePath = resolve(templatePath)
     }
 
-    const fileTemplate = new File(templatePath)
-
-    View.createTemplate(this._template, await fileTemplate.getContentAsString())
-
-    const content = await View.render(this._template, this._properties)
+    const content = await View.renderRawByPath(templatePath, this._properties)
 
     return file.setContent(content)
   }
