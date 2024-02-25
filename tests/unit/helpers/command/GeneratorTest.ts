@@ -18,8 +18,8 @@ export default class GeneratorTest {
 
   @BeforeEach()
   public async beforeEach() {
-    new ViewProvider().register()
     await Config.load(Path.fixtures('config/rc.ts'))
+    new ViewProvider().register()
     this.generator = new Generator()
   }
 
@@ -75,7 +75,7 @@ export default class GeneratorTest {
   public async shouldBeAbleToGenerateFilesFromTemplatesThatAreAlreadyRegisteredInView({ assert }: Context) {
     const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
-    View.createTemplate('command', await new File('../../../../templates/command.edge').getContentAsString())
+    View.createTemplateByPath('command', 'templates/command.edge')
 
     assert.isTrue(View.hasTemplate('command'))
 
@@ -94,7 +94,7 @@ export default class GeneratorTest {
   public async shouldBeAbleToGenerateFilesFromTemplatesSettingFileNameDestinationAndExt({ assert }: Context) {
     const path = Path.fixtures('tmp/GeneratorTestCommand.ts')
 
-    View.createTemplate('command', await new File('../../../../templates/command.edge').getContentAsString())
+    View.createTemplateByPath('command', 'templates/command.edge')
 
     assert.isTrue(View.hasTemplate('command'))
 
