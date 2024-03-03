@@ -8,7 +8,7 @@
  */
 
 import { sep, isAbsolute, resolve } from 'node:path'
-import { Exec, File, Is, Module } from '@athenna/common'
+import { Path, Exec, File, Is, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
 export class ConsoleKernel {

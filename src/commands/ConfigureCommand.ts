@@ -9,7 +9,7 @@
 
 import { extname, resolve } from 'node:path'
 import { Argument, BaseCommand } from '#src'
-import { File, Module } from '@athenna/common'
+import { Path, File, Module } from '@athenna/common'
 import { NotFoundLibraryException } from '#src/exceptions/NotFoundLibraryException'
 import { NotFoundConfigurerException } from '#src/exceptions/NotFoundConfigurerException'
 

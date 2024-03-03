@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@athenna/common'
 import { ArtisanProvider } from '#src/index'
 import { TestCommand } from '#src/testing/plugins/index'
 import { Test, type Context, BeforeEach, AfterEach, Fails } from '@athenna/test'

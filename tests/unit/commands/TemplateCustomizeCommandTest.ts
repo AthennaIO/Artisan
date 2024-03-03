@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { File, Folder } from '@athenna/common'
 import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context } from '@athenna/test'
+import { Path, File, Folder } from '@athenna/common'
 
 export default class TemplateCustomizeCommandTest extends BaseTest {
   @Test()
@@ -36,6 +36,8 @@ export default class TemplateCustomizeCommandTest extends BaseTest {
     const output = await command.run('template:customize', {
       path: Path.fixtures('consoles/console-mock-test-template.ts')
     })
+
+    console.log(output.output.stderr)
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 

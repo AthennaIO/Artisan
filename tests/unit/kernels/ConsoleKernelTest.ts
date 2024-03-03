@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@athenna/common'
 import { ArtisanProvider, CommanderHandler, ConsoleKernel } from '#src'
 import { Test, BeforeEach, AfterEach, type Context } from '@athenna/test'
 

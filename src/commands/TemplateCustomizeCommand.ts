@@ -8,7 +8,7 @@
  */
 
 import { BaseCommand } from '#src'
-import { Exec, File } from '@athenna/common'
+import { Path, Exec, File } from '@athenna/common'
 import { resolve, relative, isAbsolute } from 'node:path'
 
 export class TemplateCustomizeCommand extends BaseCommand {

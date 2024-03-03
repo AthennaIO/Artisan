@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@athenna/common'
 import { Config, Rc } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
 import { Artisan, ArtisanProvider } from '#src'
