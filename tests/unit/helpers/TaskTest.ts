@@ -8,9 +8,9 @@
  */
 
 import { Task } from '#src/helpers/Task'
+import { Path, Exec } from '@athenna/common'
 import { Test, BeforeEach, type Context } from '@athenna/test'
 import { RunningTaskException } from '#src/exceptions/RunningTaskException'
-import { Exec } from '@athenna/common'
 
 export default class TaskTest {
   @BeforeEach()

@@ -8,12 +8,11 @@
  */
 
 import { Mock } from '@athenna/test'
-import { BaseConfigurer, Artisan, ArtisanProvider } from '#src'
-import { File, Module } from '@athenna/common'
-
 import { Config, Rc } from '@athenna/config'
 import { ViewProvider } from '@athenna/view'
+import { Path, File, Module } from '@athenna/common'
 import { ListCommand } from '#src/commands/ListCommand'
+import { BaseConfigurer, Artisan, ArtisanProvider } from '#src'
 import { ConfigureCommand } from '#src/commands/ConfigureCommand'
 import { MakeCommandCommand } from '#src/commands/MakeCommandCommand'
 import { TemplateCustomizeCommand } from '#src/commands/TemplateCustomizeCommand'

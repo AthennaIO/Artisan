@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@athenna/common'
 import { BaseTest } from '#tests/helpers/BaseTest'
 import { Test, type Context, Mock } from '@athenna/test'
 import { Annotation, Artisan, CommanderHandler } from '#src'

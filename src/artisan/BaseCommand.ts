@@ -9,6 +9,7 @@
 
 import { Rc } from '@athenna/config'
 import { Color } from '@athenna/common'
+import { Npm } from '#src/helpers/command/Npm'
 import { Prompt } from '#src/helpers/command/Prompt'
 import { Logger } from '#src/helpers/command/Logger'
 import { Annotation } from '#src/helpers/Annotation'
@@ -73,11 +74,20 @@ export abstract class BaseCommand {
 
   /**
    * The generator used to make files. The generator uses the
-   * athenna/view package to generate files from templates. A
+   * `@athenna/view` package to generate files from templates. A
    * briefly knowledge about how to setup templates inside
-   * athenna/view is very good to use this helper.
+   * `@athenna/view` is very good to use this helper.
    */
   public generator = new Generator()
+
+  /**
+   * Use the npm helper to perform operations inside child
+   * processes for linking and installing dependencies using
+   * any kind of registry. The npm registry will always be the
+   * default registry, but you can change it setting the registry
+   * in options.
+   */
+  public npm = new Npm()
 
   /**
    * Execute the command setting args and options in the class

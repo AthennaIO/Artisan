@@ -8,7 +8,7 @@
  */
 
 import { View } from '@athenna/view'
-import { File, String } from '@athenna/common'
+import { Path, File, String } from '@athenna/common'
 import { sep, resolve, isAbsolute } from 'node:path'
 import { AlreadyExistFileException } from '#src/exceptions/AlreadyExistFileException'
 
