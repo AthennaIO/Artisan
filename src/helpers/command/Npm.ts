@@ -12,6 +12,7 @@ import {
   type LinkPackageOptions,
   type InstallPackageOptions
 } from '@athenna/common'
+import { Rc } from '@athenna/config'
 
 export class Npm {
   /**
@@ -34,13 +35,29 @@ export class Npm {
     libraries: string | string[],
     options?: LinkPackageOptions
   ) {
-    return Exec.link(libraries, options)
+    await Exec.link(libraries, options).then(() => Rc.reload())
   }
 
+  /**
+   * Run `npm install` command inside a child process.
+   *
+   * @example
+   * ```ts
+   * await this.npm.install('@athenna/common')
+   * ```
+   *
+   * By default the registry used will be `npm`, but you
+   * can change it by adding your registry in options:
+   *
+   * @example
+   * ```ts
+   * await this.npm.install('@athenna/common', { registry: 'yarn' })
+   * ```
+   */
   public async install(
     libraries: string | string[],
     options?: InstallPackageOptions
   ) {
-    return Exec.install(libraries, options)
+    await Exec.install(libraries, options).then(() => Rc.reload())
   }
 }
