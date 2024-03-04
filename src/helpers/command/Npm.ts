@@ -12,6 +12,7 @@ import {
   type LinkPackageOptions,
   type InstallPackageOptions
 } from '@athenna/common'
+
 import { Rc } from '@athenna/config'
 
 export class Npm {
@@ -35,7 +36,11 @@ export class Npm {
     libraries: string | string[],
     options?: LinkPackageOptions
   ) {
-    await Exec.link(libraries, options).then(() => Rc.reload())
+    await Exec.link(libraries, options).then(() => {
+      if (Rc.file.base === 'package.json') {
+        return Rc.reload()
+      }
+    })
   }
 
   /**
@@ -58,6 +63,10 @@ export class Npm {
     libraries: string | string[],
     options?: InstallPackageOptions
   ) {
-    await Exec.install(libraries, options).then(() => Rc.reload())
+    await Exec.install(libraries, options).then(() => {
+      if (Rc.file.base === 'package.json') {
+        return Rc.reload()
+      }
+    })
   }
 }
