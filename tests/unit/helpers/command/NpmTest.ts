@@ -7,7 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Exec } from '@athenna/common'
+import { Rc } from '@athenna/config'
+import { Exec, Path } from '@athenna/common'
 import { Npm } from '#src/helpers/command/Npm'
 import { Test, BeforeEach, type Context, Mock, AfterEach } from '@athenna/test'
 
@@ -17,6 +18,7 @@ export default class NpmTest {
   @BeforeEach()
   public async beforeEach() {
     this.npm = new Npm()
+    Rc.setFile(Path.pwd('package.json'))
   }
 
   @AfterEach()
