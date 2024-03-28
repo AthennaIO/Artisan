@@ -37,7 +37,7 @@ export class Npm {
     options?: LinkPackageOptions
   ) {
     await Exec.link(libraries, options).then(() => {
-      if (Rc.file.base === 'package.json') {
+      if (Rc.file?.base === 'package.json') {
         return Rc.reload()
       }
     })
@@ -64,7 +64,7 @@ export class Npm {
     options?: InstallPackageOptions
   ) {
     await Exec.install(libraries, options).then(() => {
-      if (Rc.file.base === 'package.json') {
+      if (Rc.file?.base === 'package.json') {
         return Rc.reload()
       }
     })
