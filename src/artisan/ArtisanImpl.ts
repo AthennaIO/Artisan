@@ -129,7 +129,7 @@ export class ArtisanImpl {
   /**
    * Call an Artisan command inside a child process.
    * This method needs to execute a file to bootstrap
-   * under the hood, by default the "Path.bootstrap(`artisan.${Path.ext()}`)"
+   * under the hood, by default the "Path.bin(`artisan.${Path.ext()}`)"
    * is used and the executor is "sh node".
    *
    * @example
@@ -148,7 +148,7 @@ export class ArtisanImpl {
     options = Options.create(options, {
       path: Config.get(
         'rc.artisan.child.path',
-        Path.bootstrap(`console.${Path.ext()}`)
+        Path.bin(`console.${Path.ext()}`)
       )
     })
 

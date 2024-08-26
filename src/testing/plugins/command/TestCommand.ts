@@ -17,9 +17,9 @@ export class TestCommand {
   /**
    * The Artisan file path that will be used to run commands.
    *
-   * @default Path.bootstrap(`console.${Path.ext()}`)
+   * @default Path.bin(`console.${Path.ext()}`)
    */
-  public static artisanPath = Path.bootstrap(`console.${Path.ext()}`)
+  public static artisanPath = Path.bin(`console.${Path.ext()}`)
 
   /**
    * Set the artisan file path.

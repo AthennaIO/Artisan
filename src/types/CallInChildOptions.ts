@@ -12,7 +12,7 @@ export type CallInChildOptions = {
    * The artisan file path that will be used to
    * invoke the child process.
    *
-   * @default Path.bootstrap(`console.${Path.ext()}`)
+   * @default Path.bin(`console.${Path.ext()}`)
    */
   path?: string
 }
