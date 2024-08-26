@@ -21,11 +21,11 @@ export default class TemplateCustomizeCommandTest extends BaseTest {
     output.assertSucceeded()
     output.assertLogged('[ MOVING TEMPLATES ]')
     output.assertLogged('Athenna RC updated:')
-    output.assertLogged('"command": "./resources/templates/command.edge"')
-    output.assertLogged('[  success  ] Template files successfully moved to resources/templates folder')
+    output.assertLogged('"command": "./src/resources/templates/command.edge"')
+    output.assertLogged('[  success  ] Template files successfully moved to src/resources/templates folder')
     assert.isTrue(await Folder.exists(Path.resources()))
     assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
-    assert.equal(athenna.templates.command, './resources/templates/command.edge')
+    assert.equal(athenna.templates.command, './src/resources/templates/command.edge')
   }
 
   @Test()
@@ -44,12 +44,12 @@ export default class TemplateCustomizeCommandTest extends BaseTest {
     output.assertSucceeded()
     output.assertLogged('[ MOVING TEMPLATES ]')
     output.assertLogged('Athenna RC updated:')
-    output.assertLogged('"command": "./resources/templates/command.edge"')
-    output.assertLogged('"test": "./resources/templates/test.edge"')
-    output.assertLogged('[  success  ] Template files successfully moved to resources/templates folder')
+    output.assertLogged('"command": "./src/resources/templates/command.edge"')
+    output.assertLogged('"test": "./src/resources/templates/test.edge"')
+    output.assertLogged('[  success  ] Template files successfully moved to src/resources/templates folder')
     assert.isTrue(await Folder.exists(Path.resources()))
     assert.isTrue(await File.exists(Path.resources('templates/test.edge')))
     assert.isTrue(await File.exists(Path.resources('templates/command.edge')))
-    assert.equal(athenna.templates.command, './resources/templates/command.edge')
+    assert.equal(athenna.templates.command, './src/resources/templates/command.edge')
   }
 }

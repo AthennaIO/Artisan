@@ -32,8 +32,7 @@ export class BaseTest {
     CommanderHandler.reconstruct()
     FixtureDatabase.clear()
 
-    await Folder.safeRemove(Path.app())
-    await Folder.safeRemove(Path.resources())
+    await Folder.safeRemove(Path.console())
     await Folder.safeRemove(Path.fixtures('storage'))
 
     await new File(Path.pwd('package.json')).setContent(this.originalPJson)
