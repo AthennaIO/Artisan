@@ -20,14 +20,14 @@ export default class MakeCommandTest extends BaseTest {
     output.assertLogged('[ MAKING COMMAND ]')
     output.assertLogged('[  success  ] Command "TestCommand" successfully created.')
     output.assertLogged(
-      '[  success  ] Athenna RC updated: { commands += "testCommand": "#app/console/commands/TestCommand" }'
+      '[  success  ] Athenna RC updated: { commands += "testCommand": "#src/console/commands/TestCommand" }'
     )
 
     const { athenna } = await new File(Path.pwd('package.json')).getContentAsJson()
 
     assert.isTrue(await File.exists(Path.commands('TestCommand.ts')))
     assert.containsSubset(athenna.commands, {
-      testCommand: '#app/console/commands/TestCommand'
+      testCommand: '#src/console/commands/TestCommand'
     })
   }
 
