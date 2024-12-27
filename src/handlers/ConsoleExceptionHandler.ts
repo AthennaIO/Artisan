@@ -16,7 +16,9 @@ export class ConsoleExceptionHandler {
    * The exception handler of all Artisan commands.
    */
   public async handle(error: any): Promise<void> {
-    error.code = String.toSnakeCase(error.code || error.name).toUpperCase()
+    error.code = String.toSnakeCase(
+      `${error.code}` || `${error.name}`
+    ).toUpperCase()
 
     const isException = Is.Exception(error)
     const isDebugMode = Config.get('app.debug', true)
