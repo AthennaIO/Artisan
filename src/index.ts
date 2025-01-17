@@ -20,6 +20,8 @@ export * from '#src/helpers/Action'
 export * from '#src/helpers/Sticker'
 export * from '#src/helpers/Annotation'
 export * from '#src/helpers/Instruction'
+
+export * from '#src/helpers/command/Npm'
 export * from '#src/helpers/command/Prompt'
 export * from '#src/helpers/command/Logger'
 export * from '#src/helpers/command/Generator'
