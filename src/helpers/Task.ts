@@ -10,13 +10,13 @@
 import ora, { type Ora } from 'ora'
 
 import type { ChalkInstance } from 'chalk'
-import { Is, Color } from '@athenna/common'
+import { Is, Color, Macroable } from '@athenna/common'
 import type { TaskCallback } from '#src/types/TaskCallback'
 import { RunningTaskException } from '#src/exceptions/RunningTaskException'
 
 export type TaskMap = { title: string; cb: TaskCallback }
 
-export class Task {
+export class Task extends Macroable {
   /**
    * The tasks saved by "add" method.
    */
@@ -30,7 +30,7 @@ export class Task {
    * await this.logger
    *    .task()
    *    .add('hello', async task => {
-   *      await Exec.sleep(1000)
+   *      await Sleep.for(1).seconds().wait()
    *      await task.complete('world')
    *    })
    *    .run()
@@ -56,7 +56,7 @@ export class Task {
    * await this.logger
    *    .task()
    *    .addPromise('hello', async () => {
-   *      await Exec.sleep(1000)
+   *      await Sleep.for(1).seconds().wait()
    *    })
    *    .run()
    * ```
@@ -88,7 +88,7 @@ export class Task {
    * await this.logger
    *    .task()
    *    .add('hello', async task => {
-   *      await Exec.sleep(1000)
+   *      await Sleep.for(1).seconds().wait()
    *      await task.fail('Something went wrong')
    *    })
    *    .run()

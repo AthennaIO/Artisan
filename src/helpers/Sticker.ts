@@ -11,8 +11,9 @@ import boxes from 'cli-boxes'
 import CliTable3 from 'cli-table3'
 
 import { Table } from '#src/helpers/Table'
+import { Macroable } from '@athenna/common'
 
-export class Sticker {
+export class Sticker extends Macroable {
   /**
    * The head of the instruction.
    */

@@ -122,7 +122,7 @@ export class Logger extends AthennaLogger {
    * @example
    * ```ts
    * async function test() {
-   *   await Exec.sleep(2000)
+   *   await Sleep.for(2).seconds().wait()
    *   return { hello: 'world' }
    * }
    *
@@ -309,7 +309,7 @@ export class Logger extends AthennaLogger {
    * await this.logger
    *    .task()
    *    .add('hello', async task => {
-   *      await Exec.sleep(1000)
+   *      await Sleep.for(2).seconds().wait()
    *      await task.complete('world')
    *    })
    *    .run()

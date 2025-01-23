@@ -8,7 +8,7 @@
  */
 
 import { BaseCommand } from '#src'
-import { Path, Exec, File } from '@athenna/common'
+import { Path, File } from '@athenna/common'
 import { resolve, relative, isAbsolute } from 'node:path'
 
 export class TemplateCustomizeCommand extends BaseCommand {
@@ -26,7 +26,7 @@ export class TemplateCustomizeCommand extends BaseCommand {
     const templates: any = {}
     const paths = Config.get('rc.templates')
 
-    await Exec.concurrently(Object.keys(paths), async key => {
+    await Object.keys(paths).athenna.concurrently(async key => {
       let path = paths[key]
 
       if (!isAbsolute(path)) {

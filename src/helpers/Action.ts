@@ -8,9 +8,9 @@
  */
 
 import { Log } from '@athenna/logger'
-import { Color } from '@athenna/common'
+import { Color, Macroable } from '@athenna/common'
 
-export class Action {
+export class Action extends Macroable {
   /**
    * The main action that is being executed.
    *
@@ -30,6 +30,8 @@ export class Action {
   private biggestAction: string
 
   public constructor(action: string) {
+    super()
+
     this.action = action
     this.biggestAction = this.getBiggestAction(action)
   }

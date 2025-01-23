@@ -9,9 +9,9 @@
 
 import { inspect } from 'node:util'
 import type { Assert } from '@athenna/test'
-import type { CommandOutput } from '@athenna/common'
+import { Macroable, type CommandOutput } from '@athenna/common'
 
-export class TestOutput {
+export class TestOutput extends Macroable {
   /**
    * Japa assert class instance.
    */
@@ -23,6 +23,8 @@ export class TestOutput {
   public output: CommandOutput
 
   public constructor(assert: Assert, output: CommandOutput) {
+    super()
+
     this.assert = assert
     this.output = output
   }

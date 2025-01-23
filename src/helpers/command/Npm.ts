@@ -9,13 +9,14 @@
 
 import {
   Exec,
+  Macroable,
   type LinkPackageOptions,
   type InstallPackageOptions
 } from '@athenna/common'
 
 import { Rc } from '@athenna/config'
 
-export class Npm {
+export class Npm extends Macroable {
   /**
    * Run `npm link` command inside a child process.
    *

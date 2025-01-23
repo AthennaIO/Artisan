@@ -8,7 +8,7 @@
  */
 
 import { Task } from '#src/helpers/Task'
-import { Path, Exec } from '@athenna/common'
+import { Path, Sleep } from '@athenna/common'
 import { Test, BeforeEach, type Context } from '@athenna/test'
 import { RunningTaskException } from '#src/exceptions/RunningTaskException'
 
@@ -51,14 +51,14 @@ export default class TaskTest {
 
     await new Task()
       .addPromise('Testing 1', async () => {
-        await Exec.sleep(100)
+        await Sleep.for(100).milliseconds().wait()
       })
       .addPromise('Testing 2', async () => {
-        await Exec.sleep(100)
+        await Sleep.for(100).milliseconds().wait()
       })
       .addPromise('Testing 3', async () => {
         value = null
-        await Exec.sleep(100)
+        await Sleep.for(100).milliseconds().wait()
       })
       .run()
 
@@ -71,10 +71,10 @@ export default class TaskTest {
 
     const task = new Task()
       .addPromise('Testing 1', async () => {
-        await Exec.sleep(100)
+        await Sleep.for(100).milliseconds().wait()
       })
       .addPromise('Testing 2', async () => {
-        await Exec.sleep(100)
+        await Sleep.for(100).milliseconds().wait()
       })
       .addPromise('Testing 3', async () => {
         throw new Error('Error')

@@ -10,10 +10,10 @@
 import CliTable from 'cli-table3'
 
 import { Log } from '@athenna/logger'
-import { Color } from '@athenna/common'
+import { Color, Macroable } from '@athenna/common'
 import type { TableRow } from '#src/types/TableRow'
 
-export class Table {
+export class Table extends Macroable {
   /**
    * The state of the table. This property will
    * have the head and rows of your table.
