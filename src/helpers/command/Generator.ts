@@ -8,11 +8,11 @@
  */
 
 import { View } from '@athenna/view'
-import { Path, File, String } from '@athenna/common'
 import { sep, resolve, isAbsolute } from 'node:path'
+import { Path, File, String, Macroable } from '@athenna/common'
 import { AlreadyExistFileException } from '#src/exceptions/AlreadyExistFileException'
 
-export class Generator {
+export class Generator extends Macroable {
   private _path: string
   private _fileName: string
   private _dest: string

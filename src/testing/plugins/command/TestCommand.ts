@@ -9,11 +9,11 @@
 
 import { Artisan } from '#src'
 import { Assert } from '@japa/assert'
-import { Path, type CommandOutput } from '@athenna/common'
+import { Macroable, Path, type CommandOutput } from '@athenna/common'
 import { TestOutput } from '#src/testing/plugins/command/TestOutput'
 import type { CallInChildOptions } from '#src/types/CallInChildOptions'
 
-export class TestCommand {
+export class TestCommand extends Macroable {
   /**
    * The Artisan file path that will be used to run commands.
    *

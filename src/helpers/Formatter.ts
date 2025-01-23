@@ -8,9 +8,9 @@
  */
 
 import { Command, type Help } from 'commander'
-import { Color, Options } from '@athenna/common'
+import { Color, Options, Macroable } from '@athenna/common'
 
-export class Formatter {
+export class Formatter extends Macroable {
   public static builder(cmd: Command, help: Help) {
     return new Formatter(cmd, help)
   }
@@ -34,6 +34,8 @@ export class Formatter {
   }
 
   public constructor(cmd: Command, help: Help) {
+    super()
+
     this.cmd = cmd
     this.help = help
 

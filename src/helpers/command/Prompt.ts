@@ -19,10 +19,10 @@ import type {
   CheckboxQuestionOptions
 } from 'inquirer'
 
-import { Options } from '@athenna/common'
+import { Options, Macroable } from '@athenna/common'
 import { InquirerPromptException } from '#src/exceptions/InquirerPromptException'
 
-export class Prompt {
+export class Prompt extends Macroable {
   /**
    * The inquirer prompt API.
    */

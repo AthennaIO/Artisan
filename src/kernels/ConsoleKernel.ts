@@ -8,7 +8,7 @@
  */
 
 import { sep, isAbsolute, resolve } from 'node:path'
-import { Path, Exec, File, Is, Module } from '@athenna/common'
+import { Path, File, Is, Module } from '@athenna/common'
 import { Artisan, CommanderHandler, ConsoleExceptionHandler } from '#src'
 
 export class ConsoleKernel {
@@ -109,7 +109,7 @@ export class ConsoleKernel {
   private async registerAllCommands() {
     const keys = Object.keys(Config.get('rc.commands', {}))
 
-    return Exec.concurrently(keys, key => {
+    return keys.athenna.concurrently(key => {
       const path = Config.get(`rc.commands.${key}`)
 
       if (Is.String(path)) {

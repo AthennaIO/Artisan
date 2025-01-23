@@ -8,8 +8,8 @@
  */
 
 import { Rc } from '@athenna/config'
-import { Color } from '@athenna/common'
 import { Npm } from '#src/helpers/command/Npm'
+import { Color, Macroable } from '@athenna/common'
 import { Prompt } from '#src/helpers/command/Prompt'
 import { Logger } from '#src/helpers/command/Logger'
 import { Annotation } from '#src/helpers/Annotation'
@@ -17,7 +17,7 @@ import type { Commander } from '#src/artisan/Commander'
 import { Generator } from '#src/helpers/command/Generator'
 import { CommanderHandler } from '#src/handlers/CommanderHandler'
 
-export abstract class BaseCommand {
+export abstract class BaseCommand extends Macroable {
   /**
    * The command signature/name. This option will
    * define how the command should be called.
