@@ -16,9 +16,16 @@ import { Annotation } from '#src/helpers/Annotation'
 import { BaseCommand } from '#src/artisan/BaseCommand'
 import { CommanderHandler } from '#src/handlers/CommanderHandler'
 import type { CallInChildOptions } from '#src/types/CallInChildOptions'
-import { Exec, Is, Options, Path, type CommandOutput } from '@athenna/common'
+import {
+  Exec,
+  Is,
+  Macroable,
+  Options,
+  Path,
+  type CommandOutput
+} from '@athenna/common'
 
-export class ArtisanImpl {
+export class ArtisanImpl extends Macroable {
   /**
    * Register the command if it is not registered yet.
    */
