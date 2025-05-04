@@ -70,7 +70,7 @@
     "cli-table3": "^0.6.5",
     "columnify": "^1.6.0",
     "commander": "^9.5.0",
-    "figlet": "^1.8.0",
+    "figlet": "^1.8.1",
     "inquirer": "^9.3.7",
     "log-update": "^5.0.1",
     "ora": "^6.3.1"
