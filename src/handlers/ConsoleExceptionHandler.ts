@@ -44,7 +44,13 @@ export class ConsoleExceptionHandler {
       return process.exit(1)
     }
 
-    Log.channelOrVanilla('exception').error(await error.prettify())
+    if (Config.is('app.logger.prettifyException', true)) {
+      Log.channelOrVanilla('exception').error(await error.prettify())
+
+      return process.exit(1)
+    }
+
+    Log.channelOrVanilla('exception').error(error)
 
     return process.exit(1)
   }
