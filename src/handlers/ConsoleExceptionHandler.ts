@@ -16,7 +16,7 @@ export class ConsoleExceptionHandler {
    * The exception handler of all Artisan commands.
    */
   public async handle(error: any): Promise<void> {
-    if (error.code === undefined) {
+    if (!Is.String(error.code) || Is.Undefined(error.code)) {
       error.code = error.name || 'E_INTERNAL_SERVER'
     }
 
