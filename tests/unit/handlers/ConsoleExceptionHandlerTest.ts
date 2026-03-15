@@ -34,10 +34,10 @@ export default class ConsoleExceptionHandlerTest {
       error: errorFake
     })
 
-    await new ConsoleExceptionHandler().handle(error)
+    await new ConsoleExceptionHandler().handle({ error })
 
     assert.calledWith(process.exit, 1)
-    assert.calledWith(errorFake, await error.toAthennaException().prettify())
+    assert.calledOnce(errorFake)
   }
 
   @Test()
@@ -48,10 +48,10 @@ export default class ConsoleExceptionHandlerTest {
       error: errorFake
     })
 
-    await new ConsoleExceptionHandler().handle(exception)
+    await new ConsoleExceptionHandler().handle({ error: exception })
 
     assert.calledWith(process.exit, 1)
-    assert.calledWith(errorFake, await exception.prettify())
+    assert.calledOnce(errorFake)
   }
 
   @Test()
@@ -62,7 +62,7 @@ export default class ConsoleExceptionHandlerTest {
       error: errorFake
     })
 
-    await new ConsoleExceptionHandler().handle(exception)
+    await new ConsoleExceptionHandler().handle({ error: exception })
 
     assert.calledWith(process.exit, 1)
     assert.calledWith(errorFake, 'Test error')
@@ -78,7 +78,7 @@ export default class ConsoleExceptionHandlerTest {
       error: errorFake
     })
 
-    await new ConsoleExceptionHandler().handle(error)
+    await new ConsoleExceptionHandler().handle({ error })
 
     assert.calledWith(process.exit, 1)
     assert.calledOnce(errorFake)

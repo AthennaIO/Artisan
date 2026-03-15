@@ -7,15 +7,21 @@
  * file that was distributed with this source code.
  */
 
+import {
+  Is,
+  String,
+  ExceptionHandler,
+  type ExceptionHandlerContext
+} from '@athenna/common'
+
 import { Log } from '@athenna/logger'
 import { Config } from '@athenna/config'
-import { Is, String } from '@athenna/common'
 
-export class ConsoleExceptionHandler {
+export class ConsoleExceptionHandler extends ExceptionHandler {
   /**
    * The exception handler of all Artisan commands.
    */
-  public async handle(error: any): Promise<void> {
+  public async handle({ error }: ExceptionHandlerContext): Promise<void> {
     if (!Is.String(error.code) || Is.Undefined(error.code)) {
       error.code = error.name || 'E_INTERNAL_SERVER'
     }

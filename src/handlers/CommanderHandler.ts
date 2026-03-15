@@ -74,7 +74,7 @@ export class CommanderHandler {
     return (...args: any[]) =>
       target.__exec
         .bind(target)(...args)
-        .catch(CommanderHandler.exceptionHandler)
+        .catch(error => CommanderHandler.exceptionHandler({ error }))
   }
 
   /**
