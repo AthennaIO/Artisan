@@ -47,16 +47,22 @@ export class ConsoleExceptionHandler extends ExceptionHandler {
     if (error.code === 'E_SIMPLE_CLI') {
       Log.channelOrVanilla('console').error(error.message)
 
+      await super.handle({ error })
+
       return process.exit(1)
     }
 
     if (Config.is('app.logger.prettifyException', true)) {
       Log.channelOrVanilla('exception').error(await error.prettify())
 
+      await super.handle({ error })
+
       return process.exit(1)
     }
 
     Log.channelOrVanilla('exception').error(error)
+
+    await super.handle({ error })
 
     return process.exit(1)
   }
