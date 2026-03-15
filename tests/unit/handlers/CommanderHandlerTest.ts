@@ -203,7 +203,7 @@ export default class CommanderHandlerTest {
       }
     }
 
-    CommanderHandler.exceptionHandler = (error: Error) => {
+    CommanderHandler.exceptionHandler = ({ error }: { error: Error }) => {
       assert.equal(error.message, 'error')
     }
 
