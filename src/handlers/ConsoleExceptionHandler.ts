@@ -29,19 +29,9 @@ export class ConsoleExceptionHandler extends ExceptionHandler {
     error.code = String.toConstantCase(error.code)
 
     const isException = Is.Exception(error)
-    const isDebugMode = Config.get('app.debug', true)
-    const isInternalServerError = Is.Error(error) && !isException
 
     if (!isException) {
       error = error.toAthennaException()
-    }
-
-    if (isInternalServerError && !isDebugMode) {
-      error.name = 'Internal error'
-      error.code = 'E_INTERNAL_ERROR'
-      error.message = 'An internal error has occurred.'
-
-      delete error.stack
     }
 
     if (error.code === 'E_SIMPLE_CLI') {
